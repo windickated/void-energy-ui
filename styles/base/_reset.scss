@@ -1,0 +1,215 @@
+@use '/src/styles/abstracts' as *;
+@use 'typography' as *;
+
+/* =========================================
+   1. BOX SIZING & DEFAULTS
+   ========================================= */
+*,
+*::before,
+*::after {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+  // Font inherit ensures inputs/buttons match the atmosphere's font stack
+  font-family: inherit; 
+}
+
+/* =========================================
+   2. THE VOID CANVAS (HTML/BODY)
+   ========================================= */
+html {
+  // --- LAYOUT & SCROLL ---
+  scroll-behavior: smooth;
+  overscroll-behavior-y: none; // Prevents pull-to-refresh on mobile
+  padding-block: 0;
+  overflow-x: hidden; // Prevents horizontal scroll from glowing borders
+
+  // --- APPEARANCE ---
+  // The absolute floor (Switches to White in Paper mode)
+  background-color: var(--bg-canvas);
+
+  // --- TYPOGRAPHY INITIALIZATION ---
+  // Sets Font Family + Base Size (calculated by scale)
+  @include typography('body'); 
+  
+  // Text Luminance: Layer 2 (Dimmed) is default for reading
+  color: var(--text-dim); 
+  transition:
+    background-color var(--speed-base) var(--ease-flow), 
+    color var(--speed-base) var(--ease-flow);
+  
+  // Rendering & Spacing
+  -webkit-font-smoothing: antialiased; // Critical for "Neon" legibility
+  text-align: left;
+  letter-spacing: 0.015rem;
+  word-spacing: 0.05em;
+
+  // --- ELECTRIC SCROLLBAR ---
+  &::-webkit-scrollbar {
+    width: 6px; // Thin, precise rail
+    height: 6px;
+  }
+
+  &::-webkit-scrollbar-track {
+    background: var(--bg-sink); // Sunk track
+  }
+
+  &::-webkit-scrollbar-thumb {
+    background: var(--energy-secondary); // Structural color
+    border-radius: 3px;
+    opacity: 0.5;
+  }
+  
+  &::-webkit-scrollbar-thumb:hover {
+    background: var(--energy-primary); // Glows active color
+  }
+}
+
+// Ensure body fills the specific height if needed, 
+// otherwise it inherits naturally.
+body {
+  min-height: 100vh;
+}
+
+/* =========================================
+   3. GLOBAL SELECTION STATE
+   ========================================= */
+::selection {
+  background: var(--energy-primary); // Neon Cyan / Red
+  color: var(--bg-canvas); // Contrast text (Black/Dark Blue)
+  text-shadow: none;
+}
+
+/* =========================================
+   4. INTERACTIVE ELEMENTS
+   ========================================= */
+a,
+button,
+[role='button'],
+select,
+input,
+textarea {
+  outline: none;
+  border: none;
+  background: transparent;
+  color: inherit;
+  font-family: inherit;
+  
+  // Performance: Only animate composite properties
+  transition:
+    color var(--speed-fast) var(--ease-flow), 
+    opacity var(--speed-fast) var(--ease-flow),
+    border-color var(--speed-fast) var(--ease-snap),
+    box-shadow var(--speed-fast) var(--ease-snap),
+    transform var(--speed-fast) var(--ease-stabilize);
+
+  &:focus-visible {
+    // Focus states snap to Primary Energy
+    outline: 1px solid var(--energy-primary);
+    box-shadow: 0 0 8px var(--energy-primary); 
+    z-index: 1; 
+  }
+}
+
+a,
+button,
+[role='button'] {
+  cursor: pointer;
+}
+
+/* =========================================
+   5. DISABLED STATES (Void Logic)
+   ========================================= */
+button:disabled,
+input:disabled,
+select:disabled,
+textarea:disabled {
+  cursor: not-allowed;
+  opacity: 0.5;
+  
+  // Sunk Surfaces for inactive/disabled
+  background-color: var(--bg-sink); 
+  border: 1px solid var(--border-shadow); 
+  color: var(--text-mute);
+}
+
+/* =========================================
+   6. MEDIA & LISTS
+   ========================================= */
+ul, ol {
+  list-style: none;
+}
+
+img, picture, video, canvas, svg {
+  display: block;
+  max-width: 100%;
+  height: auto;
+  // Visual for broken images in void
+  background-color: var(--bg-sink); 
+}
+
+/* =========================================
+   7. VOID SPECIFIC ELEMENTS
+   ========================================= */
+
+// Dividers
+hr {
+  border: 0;
+  height: 1px;
+  background: var(--energy-secondary);
+  opacity: 0.3;
+  margin: 1.5rem 0;
+}
+
+// Code blocks (Sunk Surfaces)
+code, pre {
+  // Use abstract variable or fallback to mono
+  font-family: $font-code; 
+  
+  // "Inner Sink" shadow logic
+  background: var(--bg-sink); 
+  box-shadow: inset 0 2px 4px rgba(0,0,0,0.5); 
+  
+  // "High Energy" Data Flow
+  color: var(--energy-primary); 
+  
+  padding: 0.2em 0.4em;
+  border-radius: 4px;
+}
+
+pre {
+  padding: 1rem;
+  overflow-x: auto;
+  
+  code {
+    background: transparent;
+    box-shadow: none;
+    padding: 0;
+    color: inherit;
+  }
+}
+
+/* =========================================
+   8. SEMANTIC TYPOGRAPHY DEFAULTS
+   ========================================= */
+// Note: _typography.scss handles the sizes via mixins. 
+// These are just browser defaults for semantic tags.
+
+:where(h1, h2, h3, h4, h5) {
+  // Headers are Layer 1 (Active/White)
+  color: var(--text-main);
+  font-weight: 700;
+  line-height: 1.2;
+  margin-bottom: 0.5em;
+}
+
+p {
+  // Paragraphs are Layer 2
+  color: var(--text-dim);
+  line-height: 1.6;
+  margin-bottom: 1em;
+}
+
+small {
+  color: var(--text-mute);
+}

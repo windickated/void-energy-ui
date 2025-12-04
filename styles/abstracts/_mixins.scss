@@ -1,0 +1,165 @@
+@use 'variables' as *;
+
+// ==========================================================================
+// MIXINS (The Physics Engine)
+// ==========================================================================
+
+// 1. SURFACES
+// --------------------------------------------------------------------------
+
+// MIXIN: Floating Surface (Cards, Modals)
+// Context: Positive Z-Index. Floats above the void.
+// $interactive: boolean - Set to true ONLY if the element is clickable (Link/Button)
+@mixin glass-float($interactive: false) {
+  background: var(--bg-surface);
+  
+  // Physics: Blur
+  backdrop-filter: blur(var(--physics-blur));
+  -webkit-backdrop-filter: blur(var(--physics-blur));
+
+  // The Lighting Model
+  border-width: var(--physics-border-width);
+  border-style: solid;
+  border-top-color: var(--border-highlight);   
+  border-bottom-color: var(--border-shadow);   
+  border-left-color: var(--border-shadow);     
+  border-right-color: var(--border-shadow);    
+
+  // "Void Shadow"
+  box-shadow: var(--void-shadow);
+
+  transition: 
+    transform var(--speed-base) var(--ease-stabilize), 
+    border-color var(--speed-base) var(--ease-snap),
+    background-color var(--speed-base) var(--ease-flow),
+    box-shadow var(--speed-base) var(--ease-snap);
+
+  // --- INTERACTION LOGIC ---
+  @media (hover: hover) {
+    &:hover {
+      @if $interactive {
+        // CASE A: Interactive (It moves and energizes)
+        transform: translateY(-2px); 
+        
+        // FIX: Don't use raw variable. Mix it to keep transparency.
+        // This results in ~50% opacity color, not 100% solid.
+        border-top-color: color-mix(in srgb, var(--energy-primary), transparent 50%); 
+        
+        // Glow calculation
+        box-shadow: 
+          0 12px 40px rgba(0, 0, 0, 0.6), 
+          0 0 15px color-mix(in srgb, var(--energy-primary), transparent 80%);
+          
+      } @else {
+        // CASE B: Static (Layout Only)
+        // No movement. No glow.
+        // We just slightly brighten the border to acknowledge the cursor exists,
+        // but not enough to suggest "Click Me".
+        border-top-color: color-mix(in srgb, var(--border-highlight), white 10%);
+        transform: none;
+        box-shadow: var(--void-shadow); // Keep original shadow
+      }
+    }
+  }
+}
+
+// MIXIN: Sunk Surface (Inputs, Sidebars)
+// Context: Negative Z-Index. Carved into the void.
+@mixin glass-sunk {
+  background: var(--bg-sink);
+  
+  // Keep blur consistent
+  backdrop-filter: blur(var(--physics-blur));
+  -webkit-backdrop-filter: blur(var(--physics-blur));
+
+  // Faint ambient rim
+  border: var(--physics-border-width) solid var(--border-shadow);
+  
+  // "Inner Sink" shadow
+  box-shadow: inset 0 2px 8px rgba(0, 0, 0, 0.5);
+  
+  color: var(--text-main);
+  transition:
+    border-color var(--speed-fast) var(--ease-snap),
+    box-shadow var(--speed-fast) var(--ease-snap);
+
+  // Focus State
+  &:focus-visible, 
+  &:focus-within {
+    border-color: var(--energy-primary);
+    outline: none;
+    box-shadow: 
+      inset 0 2px 8px rgba(0, 0, 0, 0.5),
+      0 0 10px color-mix(in srgb, var(--energy-primary), transparent 70%);
+  }
+}
+
+// 2. TYPOGRAPHY & ENERGY
+// --------------------------------------------------------------------------
+
+// MIXIN: Neon Text Glow
+@mixin text-glow($color: var(--energy-primary)) {
+  color: $color;
+  text-shadow: 0 0 15px color-mix(in srgb, $color, transparent 40%);
+}
+
+// MIXIN: The "Gemini Laser" Structure
+@mixin gemini-laser {
+  position: relative;
+  background: transparent; 
+  border: none; 
+  overflow: hidden;
+  z-index: 1;
+  color: var(--text-main);
+  
+  // Important: Border radius must be set on parent to clip the laser
+  border-radius: 4px; 
+
+  // 1. THE ROTATING BEAM (The Gradient)
+  &::before {
+    content: '';
+    position: absolute;
+    top: 50%; left: 50%;
+    width: 400%; height: 400%; 
+    border-radius: 50%;
+    
+    // The "Tail" Effect Gradient
+    background: conic-gradient(
+      from 0deg,
+      transparent 0deg,
+      var(--energy-secondary) 100deg,
+      var(--energy-primary) 160deg,
+      var(--energy-primary) 200deg,
+      var(--energy-secondary) 260deg,
+      transparent 360deg
+    );
+
+    transition: background-color var(--speed-base) var(--ease-flow);
+    
+    transform: translate(-50%, -50%);
+    animation: rotate-laser 4s linear infinite;
+    z-index: -1;
+    opacity: 1; 
+  }
+
+  // 2. THE INNER MASK (The "Solid" Button)
+  &::after {
+    content: '';
+    position: absolute;
+    inset: 2px; // The border thickness
+    
+    // Use Solid Color, NOT Glass.
+    background: var(--bg-canvas); 
+    
+    z-index: -1;
+    border-radius: 2px; 
+  }
+  
+  // HOVER EFFECT: SURGE (Brightness + Width)
+  @media (hover: hover) {
+    &:hover::before {
+      background-color: var(--energy-primary);
+      animation-play-state: paused;
+    }
+  }
+}

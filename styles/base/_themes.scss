@@ -1,0 +1,242 @@
+@use '/src/styles/abstracts/variables' as *;
+
+/* =========================================
+   1. THE ROOT (Global Logic)
+   ========================================= */
+:root {
+  /* --- GLOBAL SCALING (User Preference) --- */
+  --text-scale: 1; /* Multiplier: 0.85 (Compact) to 1.2 (Large) */
+
+  /* --- TYPOGRAPHY LOGIC --- */
+  /* 1. Atmosphere Defaults (Set by the data-attribute below)
+     2. User Overrides (Set by JS via inline styles)
+     3. Final Result (The variable used in components)
+  */
+  
+  /* Defaults (Fallback to Void) */
+  --font-atmos-heading: #{$font-tech};
+  --font-atmos-body:    #{$font-tech};
+
+  /* The Computed Variables */
+  --font-heading: var(--user-font-heading, var(--font-atmos-heading));
+  --font-body:    var(--user-font-body,    var(--font-atmos-body));
+
+  /* --- DEFAULT ATMOSPHERE: VOID --- */
+  --bg-canvas: #{$void-deep};
+  --bg-spotlight: #{$void-spotlight};
+  --bg-surface: #{$void-navy};
+  --bg-sink: rgba(0, 2, 41, 0.6);
+
+  --energy-primary: #{$void-cyan};
+  --energy-secondary: #{$void-blue};
+  --border-highlight: rgba(56, 117, 250, 0.3);
+  --border-shadow: rgba(56, 117, 250, 0.1);
+
+  --text-main: #FFFFFF;
+  --text-dim: rgba(255, 255, 255, 0.85);
+  --text-mute: rgba(255, 255, 255, 0.60);
+
+  /* --- SEMANTIC ZONES (The "Meaning" Colors) --- */
+  
+  /* PREMIUM (Web3 / Money / Wallet) */
+  --color-premium: #{$semantic-dark-premium}; 
+  --gradient-premium: linear-gradient(to right, #FFA528, #FF8C00);
+  
+  /* SYSTEM (Config / AI / Depth) */
+  --color-system: #{$semantic-dark-system};
+  
+  /* STATUS (Feedback) */
+  --color-success: #{$semantic-dark-success};
+  --color-error: #{$semantic-dark-error};
+
+  /* --- PHYSICS ENGINE --- */
+  --physics-blur: 20px;
+  --physics-border-width: 1px;
+  --glow-strength: 1;
+  --void-shadow: 0 10px 30px rgba(0,0,0,0.5);
+
+  //* --- MOTION PHYSICS (The Time) --- */
+  
+  /* 1. The Stabilizer (Movement/Transform) */
+  /* Snappy start, precise deceleration. Used for Modals, Cards, Hover states. */
+  --ease-stabilize: cubic-bezier(0.16, 1, 0.3, 1); 
+
+  /* 2. The Dematerializer (Exits) */
+  /* Slow start to build tension, rapid exit. */
+  --ease-dematerialize: cubic-bezier(0.7, 0, 0.84, 0);
+
+  /* 3. The Cyber Pulse (Loops/Glows) */
+  /* Sharp, mechanical breathing. */
+  --ease-pulse: cubic-bezier(0.4, 0, 0.6, 1);
+  
+  /* 4. The Snap (UI Inputs/Borders) */
+  /* Quick mechanical response. */
+  --ease-snap: cubic-bezier(0.34, 1.56, 0.64, 1); 
+
+  /* 5. The Flow (Colors/Opacity) - NEW */
+  /* Used for background-color, color, and opacity fades. */
+  --ease-flow: ease;
+
+  /* --- TIME PHYSICS --- */
+  /* Void: Fast but perceptible (0.2s) */
+  --speed-fast: 0.2s; 
+  
+  /* Void: Slower for stabilization (0.3s) */
+  --speed-base: 0.3s;
+}
+
+/* =========================================
+   2. ATMOSPHERE DEFINITIONS
+   ========================================= */
+
+/* CRIMSON (Horror) */
+[data-atmosphere='crimson'] {
+  --font-atmos-heading: #{$font-horror};
+  --font-atmos-body:    #{$font-horror};
+
+  --bg-canvas: #{$crimson-deep};
+  --bg-spotlight: #{$crimson-spotlight};
+  --bg-surface: #{$crimson-blood};
+  --bg-sink: rgba(20, 0, 0, 0.8);
+
+  --energy-primary: #{$crimson-flare};
+  --energy-secondary: #{$crimson-dark};
+  --border-highlight: rgba(255, 60, 64, 0.3);
+  --border-shadow: rgba(255, 60, 64, 0.1);
+
+  --text-main: #FFE5E5;
+  --text-dim: rgba(255, 200, 200, 0.8);
+
+  // SEMANTIC EXCEPTION:
+  // In a Red theme, "Error" (Red) needs to be very bright to stand out 
+  // against the dark red background. The default Neon Red works well here.
+  // For now, keeping it consistent is best for UX.
+}
+
+/* OVERGROWTH (Nature) */
+[data-atmosphere='overgrowth'] {
+  --font-atmos-heading: #{$font-nature};
+  --font-atmos-body:    #{$font-nature};
+
+  --bg-canvas: #{$nature-deep};
+  --bg-spotlight: #{$nature-spotlight};
+  --bg-surface: #{$nature-moss};
+  --bg-sink: rgba(0, 20, 5, 0.8);
+
+  --energy-primary: #{$nature-neon};
+  --energy-secondary: #{$nature-gold};
+  --border-highlight: rgba(0, 224, 85, 0.3);
+  --border-shadow: rgba(0, 224, 85, 0.1);
+
+  --text-main: #F0FFF4;
+  --text-dim: rgba(200, 255, 200, 0.8);
+
+  // SEMANTIC NOTE:
+  // In a Green theme, "Success" (Green) blends in. 
+  // Ensure that Success Toasts use a bright glow (box-shadow) so they are visible.
+}
+
+/* VELVET (Romance) */
+[data-atmosphere='velvet'] {
+  --font-atmos-heading: #{$font-hand};
+  --font-atmos-body:    #{$font-hand};
+
+  --bg-canvas: #{$velvet-deep};
+  --bg-spotlight: #{$velvet-spotlight};
+  --bg-surface: #{$velvet-silk};
+  --bg-sink: rgba(30, 0, 10, 0.8);
+
+  --energy-primary: #{$velvet-pink};
+  --energy-secondary: #{$velvet-rose};
+  --border-highlight: rgba(255, 128, 160, 0.3);
+  --border-shadow: rgba(255, 128, 160, 0.1);
+
+  --text-main: #FFF0F5;
+  --text-dim: rgba(255, 200, 220, 0.8);
+}
+
+/* TERMINAL (Hacker) */
+[data-atmosphere='terminal'] {
+  --font-atmos-heading: #{$font-code};
+  --font-atmos-body:    #{$font-code};
+
+  --bg-canvas: #{$term-deep};
+  --bg-spotlight: #{$term-spotlight};
+  --bg-surface: #{$term-screen};
+  --bg-sink: #000000;
+
+  --energy-primary: #{$term-amber};
+  --energy-secondary: #{$term-amber};
+  --border-highlight: #{$term-amber};
+  --border-shadow: #{$term-amber};
+
+  --text-main: #{$term-amber};
+  --text-dim: rgba(245, 197, 24, 0.7);
+
+  --color-premium: #F5C518;
+  --color-error: #FF3333;
+  --color-success: #00FF41;
+
+  /* Physics Override: Low-Fi */
+  --physics-blur: 2px;
+  --physics-border-width: 2px;
+  --void-shadow: none;
+
+  /* Physics Override: Robotic / Low-Fi */
+  /* steps(X) ensures no smooth fading. It blinks instantly. */
+  --ease-stabilize: steps(4); 
+  --ease-dematerialize: steps(10); /* CRT Scanline off */
+  --ease-pulse: steps(2); /* Blink On/Off */
+  --ease-snap: steps(2);  /* Instant Border Toggle */
+  --ease-flow: steps(2);  /* Instant Color Change (The fix for smoothness) */
+
+  /* TERMINAL TIME: ZERO LATENCY */
+  /* This forces true instant state changes, ignoring the ease curve entirely. */
+  --speed-fast: 0s;
+  --speed-base: 0s;
+}
+
+/* PAPER (Light Mode / Exception) */
+[data-atmosphere='paper'] {
+  --font-atmos-heading: #{$font-book};
+  --font-atmos-body:    #{$font-book};
+
+  --bg-canvas: #{$paper-white};
+  --bg-spotlight: #{$paper-spotlight};
+  --bg-surface: #{$paper-sheet};
+  --bg-sink: rgba(0, 0, 0, 0.05);
+
+  --energy-primary: #{$paper-ink};
+  --energy-secondary: #{$paper-pencil};
+  --border-highlight: #{$paper-pencil};
+  --border-shadow: #{$paper-pencil};
+
+  --text-main: #000000;
+  --text-dim: #333333;
+  --text-mute: #666666;
+
+  /* --- LIGHT MODE SEMANTICS (Crucial for Contrast) --- */
+  
+  /* We switch to darker, ink-like colors because white text 
+     doesn't exist here, and neon text on white bg is unreadable. */
+     
+  --color-premium: #{$semantic-light-premium};
+  --gradient-premium: linear-gradient(to right, #F59E0B, #D97706);
+
+  --color-system: #{$semantic-light-system};
+  
+  --color-success: #{$semantic-light-success};
+  --color-error: #{$semantic-light-error};
+
+  /* Physics Override: Flatten */
+  --physics-blur: 0px;
+  --glow-strength: 0;
+  --void-shadow: 0 2px 4px rgba(0,0,0,0.1);
+
+  /* Physics Override: Standard Web Material */
+  --ease-stabilize: cubic-bezier(0.25, 0.8, 0.25, 1); 
+  --ease-dematerialize: ease-in;                      
+  --ease-pulse: linear;
+  --ease-snap: ease-out;                             
+  --ease-flow: ease-out; /* Clean fade */
+}

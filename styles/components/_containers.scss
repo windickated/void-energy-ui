@@ -1,0 +1,78 @@
+@use 'sass:map';
+@use '/src/styles/abstracts' as *;
+
+// ==========================================================================
+// CONTAINER COMPONENT
+// Role: Handles max-widths and margins across breakpoints.
+// Logic: Pure layout. No visuals (blur/glow) by default.
+// ==========================================================================
+
+.container {
+  // 1. Base Mobile Styles (Zero config)
+  width: 100%;
+  margin-inline: auto; // Centers the container
+  
+  // Use 'base' padding from the map (16px)
+  padding-inline: map.get($container-paddings, 'base');
+
+  // 2. Responsive Loop
+  // We iterate through the breakpoints map defined in _variables.scss
+  @each $breakpoint-name, $breakpoint-width in $breakpoints {
+    
+    // Check if we have defined values for this specific breakpoint
+    $target-width: map.get($container-widths, $breakpoint-name);
+    $target-padding: map.get($container-paddings, $breakpoint-name);
+
+    // Only generate media query if values exist
+    @if $target-width and $target-padding {
+      @media (min-width: $breakpoint-width) {
+        max-width: $target-width;
+        padding-inline: $target-padding;
+      }
+    }
+  }
+}
+
+// ==========================================================================
+// OPTIONAL: VISUAL MODIFIERS
+// Usage: <div class="container card-glass">
+// ==========================================================================
+
+.card-glass {
+  @include glass-float;
+  border-radius: 16px;
+  margin-block: 2rem; // Adds vertical breathing room
+  
+  // Ensure the glass container usually needs internal padding
+  // varying by breakpoint (optional, but recommended)
+  padding-block: 2rem;
+}
+
+.card-sunk {
+  @include glass-sunk;
+  border-radius: 16px;
+  margin-block: 2rem;
+  padding-block: 2rem;
+}
+
+// ==========================================================================
+// FULL WIDTH FLUID CONTAINER
+// Usage: Background sections that span viewport edge-to-edge
+// ==========================================================================
+.container-fluid {
+  width: 100%;
+  padding-inline: map.get($container-paddings, 'base');
+  margin-inline: auto;
+  max-width: none; // Unset the limit
+
+  // Still respect responsive edge padding
+  @each $breakpoint-name, $breakpoint-width in $breakpoints {
+    $target-padding: map.get($container-paddings, $breakpoint-name);
+    
+    @if $target-padding {
+      @media (min-width: $breakpoint-width) {
+        padding-inline: $target-padding;
+      }
+    }
+  }
+}

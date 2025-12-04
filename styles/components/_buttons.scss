@@ -1,0 +1,207 @@
+@use '../abstracts/variables' as *;
+@use '../abstracts/mixins' as *;
+
+// ==========================================================================
+// BUTTONS
+// Mantra: "Interaction is Energy."
+// ==========================================================================
+
+// 1. BASE BUTTON & VARIANTS
+// --------------------------------------------------------------------------
+// We define everything inside this block to ensure specificity works correctly.
+button:not(.btn-void),
+.btn {
+  // --- A. Layout & Accessibility ---
+  min-width: 2.75rem; 
+  min-height: 2.75rem;
+  display: inline-flex;
+  justify-content: center;
+  align-items: center;
+  gap: 0.75rem;
+  padding: 0 1.25rem;
+  
+  // --- B. Typography ---
+  font-family: var(--font-body);
+  font-weight: 600;
+  font-size: 0.875rem;
+  letter-spacing: 0.05em;
+  text-transform: uppercase;
+  color: var(--text-main);
+  text-decoration: none;
+  line-height: 1;
+
+  // --- C. The Physics (Glass) ---
+  background: var(--bg-surface);
+  
+  // Borders rely on the physics engine variables
+  border: var(--physics-border-width) solid var(--border-highlight);
+  border-radius: 4px; 
+
+  // --- PAPER MODE RESTING STATE ---
+  @at-root [data-atmosphere='paper'] & {
+    background: #F5F5F7; 
+    border: 1px solid var(--energy-secondary); // Graphite Grey
+    color: var(--energy-primary);
+  }
+
+  // Transitions
+  transition: 
+    color var(--speed-fast) var(--ease-flow),
+    background-color var(--speed-fast) var(--ease-flow),
+    border-color var(--speed-fast) var(--ease-snap),
+    box-shadow var(--speed-fast) var(--ease-snap),
+    transform var(--speed-fast) var(--ease-stabilize);
+
+  cursor: pointer;
+  position: relative;
+  overflow: hidden;
+  
+  // --- D. Interaction States ---
+  
+  &:focus-visible {
+    outline: none;
+    border-color: var(--energy-primary);
+    box-shadow: 0 0 0 2px rgba(0,0,0,0.5), 0 0 0 4px var(--energy-primary);
+  }
+
+  @media (hover: hover) {
+    &:hover:not(:disabled) {
+      border-color: var(--energy-primary);
+      transform: translateY(-2px);
+      
+      // Default (Void) Behavior
+      color: #FFFFFF; 
+      box-shadow: 
+        0 0 10px color-mix(in srgb, var(--energy-primary), transparent 60%), 
+        inset 0 0 5px color-mix(in srgb, var(--energy-primary), transparent 80%);
+      text-shadow: 0 0 8px color-mix(in srgb, var(--energy-primary), transparent 40%);
+
+      // Paper Mode Override
+      @at-root [data-atmosphere='paper'] & {
+        color: var(--energy-primary); 
+        background: rgba(0, 0, 0, 0.05);
+        border-color: var(--energy-primary);
+        box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+        text-shadow: none;
+      }
+    }
+  }
+
+  &:active:not(:disabled) {
+    transform: translateY(0);
+    border-color: var(--energy-secondary);
+    box-shadow: none;
+  }
+
+  &:disabled {
+    background: rgba(125, 125, 125, 0.1);
+    border-color: transparent;
+    color: var(--text-mute);
+    cursor: not-allowed;
+    box-shadow: none;
+  }
+
+  // ========================================================================
+  // 2. THE GEMINI LASER (CTA)
+  // Nested to override Base Styles properly
+  // ========================================================================
+  &.btn-cta:not(:disabled) {
+    @include gemini-laser; 
+    
+    // Explicitly kill the base button background/border
+    background: transparent; 
+    border: none; 
+    
+    color: var(--energy-primary);
+    font-weight: 800;
+    min-height: 3rem;
+    padding-inline: 1.5rem;
+
+    @media (hover: hover) {
+      &:hover:not(:disabled) {
+        // Reset base button hover effects that clash
+        background: transparent; 
+        border: none;
+        
+        color: #FFFFFF;
+        
+        // The Glow (Halo around the box)
+        box-shadow: 0 0 30px color-mix(in srgb, var(--energy-primary), transparent 50%);
+        text-shadow: 0 0 10px var(--energy-primary);
+        
+        // CTA Paper Mode
+        @at-root [data-atmosphere='paper'] & {
+          color: var(--energy-primary); 
+          text-shadow: none;
+          box-shadow: 0 4px 12px rgba(0,0,0,0.15);
+        }
+      }
+    }
+  }
+
+  // ========================================================================
+  // 3. SEMANTIC VARIANTS
+  // Nested to override Base Styles properly
+  // ========================================================================
+  
+  // Mixin for clean overrides
+  @mixin btn-variant($color-var) {
+    border-color: color-mix(in srgb, $color-var, transparent 50%);
+    background: color-mix(in srgb, $color-var, transparent 90%);
+    color: $color-var;
+
+    @media (hover: hover) {
+      &:hover:not(:disabled) {
+        border-color: $color-var;
+        background: color-mix(in srgb, $color-var, transparent 85%);
+        color: #FFFFFF;
+        
+        box-shadow: 
+          0 0 10px color-mix(in srgb, $color-var, transparent 60%), 
+          inset 0 0 5px color-mix(in srgb, $color-var, transparent 80%);
+        text-shadow: 0 0 8px color-mix(in srgb, $color-var, transparent 40%);
+
+        @at-root [data-atmosphere='paper'] & {
+           color: $color-var; 
+           background: color-mix(in srgb, $color-var, transparent 90%);
+           box-shadow: none;
+           text-shadow: none;
+        }
+      }
+    }
+  }
+
+  &.btn-orb:not(:disabled)    { @include btn-variant(var(--color-premium)); }
+  &.btn-system:not(:disabled) { @include btn-variant(var(--color-system)); }
+  &.btn-signal:not(:disabled) { @include btn-variant(var(--color-success)); }
+  &.btn-alert:not(:disabled)  { @include btn-variant(var(--color-error)); }
+}
+
+// 4. UTILITIES
+// --------------------------------------------------------------------------
+
+// Naked Reset (Use this class to opt-out of the block above)
+.btn-void {
+  appearance: none;
+  background: transparent;
+  border: none;
+  padding: 0;
+  margin: 0;
+  cursor: pointer;
+  color: inherit;
+  font: inherit;
+  min-width: unset;
+  min-height: unset;
+  display: inline-flex; 
+}
+
+// Icon Button
+.btn-icon {
+  padding: 0;
+  width: 2.75rem; 
+  height: 2.75rem;
+  border-radius: 50%; 
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}

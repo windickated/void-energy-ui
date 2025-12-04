@@ -1,0 +1,155 @@
+@use 'sass:map';
+@use '/src/styles/abstracts/breakpoints' as *;
+
+/* =========================================
+   1. THE LOGIC (Scales & Weights)
+   ========================================= */
+
+// Size Logic (Your original clamps, verified safe)
+$font-scale: (
+  'body':    clamp(1rem, 1.5vw, 1.05rem),       // 16px -> 16.8px
+  'small':   clamp(0.875rem, 1.2vw, 1rem),      // 14px -> 16px
+  'caption': clamp(0.75rem, 1vw, 0.875rem),     // 12px -> 14px
+  
+  'h1':      clamp(1.5rem, 3vw, 2.5rem),        // 24px -> 40px (Mobile-friendly)
+  'h2':      clamp(1.75rem, 4vw, 3rem),         // 28px -> 48px
+  'h3':      clamp(1.5rem, 3vw, 2.5rem),        // 24px -> 40px
+  'h4':      clamp(1.25rem, 2.5vw, 1.5rem),     // 20px -> 24px
+  'h5':      clamp(1.125rem, 1.5vw, 1.25rem),   // 18px -> 20px
+);
+
+// Weight Logic (Graduated hierarchy)
+$font-weights: (
+  'h1': 700, // Structural (Bold)
+  'h2': 700, // Structural (Bold)
+  'h3': 600, // Section (SemiBold)
+  'h4': 600, // Subsection (SemiBold)
+  'h5': 500, // Card Title (Medium)
+  'body': 400,
+  'input': 400 // Input data should be legible (Regular)
+);
+
+/* =========================================
+   2. THE MIXIN
+   ========================================= */
+@mixin typography($level: 'body', $is-input: false) {
+  @if map.has-key($font-scale, $level) {
+    
+    // 1. FAMILY & WEIGHT ASSIGNMENT
+    // -----------------------------
+    @if ($level == 'h1' or $level == 'h2' or $level == 'h3' or $level == 'h4' or $level == 'h5') {
+      font-family: var(--font-heading);
+      // Use mapped weight, unless overridden
+      font-weight: map.get($font-weights, $level);
+    } @else {
+      font-family: var(--font-body);
+      
+      // Special check: Is this an input or just h5-sized text?
+      @if $is-input {
+        font-weight: map.get($font-weights, 'input');
+      } @else {
+        font-weight: map.get($font-weights, 'body');
+      }
+    }
+
+    // 2. SIZE CALCULATION (With User Scale Multiplier)
+    // -----------------------------
+    $base-clamp: map.get($font-scale, $level);
+    // This math prevents conflicts. The H1 calculates its OWN size based on the multiplier.
+    font-size: calc(#{$base-clamp} * var(--text-scale));
+    line-height: 1.5;
+
+    // 3. RESPONSIVE OVERRIDES
+    // -----------------------------
+    
+    // Tablet Override for H1
+    @if $level == 'h1' {
+      @include respond-up(tablet) {
+        font-size: calc(clamp(2rem, 5vw, 3.5rem) * var(--text-scale));
+      }
+    }
+
+    // Quad-HD (4K) Logic
+    @include respond-up(quad-hd) {
+      $vw-size: null;
+      
+      // For Headings: VW scaling is fine (big screens = big titles)
+      @if $level == 'h1' { $vw-size: 1.88vw; }
+      @else if $level == 'h2' { $vw-size: 1.56vw; }
+      @else if $level == 'h3' { $vw-size: 1.25vw; }
+      @else if $level == 'h4' { $vw-size: 0.94vw; }
+      
+      // For Body/Inputs: CAP the size. 
+      // 0.65vw on 4K is 25px (Too big). We cap it at a static max.
+      @else {
+         // No VW scaling for body text on huge screens. 
+         // Just stick to the max clamp value defined in $font-scale.
+         // This is safer for dashboards.
+      }
+
+      @if $vw-size {
+        font-size: calc(#{$vw-size} * var(--text-scale));
+      }
+    }
+
+  } @else {
+    @warn "Typography level `#{$level}` not found in scale.";
+  }
+}
+
+/* =========================================
+   3. GLOBAL ELEMENTS (Void Semantics)
+   ========================================= */
+
+body {
+  // This variable automatically switches between Atmosphere Default 
+  // and User Override based on the logic above.
+  font-family: var(--font-body);
+  
+  // Applies the scale factor
+  font-size: calc(1rem * var(--text-scale));
+}
+
+h1, h2, h3 {
+  // Usually we keep headings locked to the atmosphere for flavor
+  font-family: var(--font-heading); 
+}
+
+/* Layer 1: Headers (100% Opacity) */
+h1 { @include typography('h1'); color: var(--text-main); }
+h2 { @include typography('h2'); color: var(--text-main); }
+h3 { @include typography('h3'); color: var(--text-main); }
+
+/* Layer 2: Subheaders/Body (85% Opacity) */
+h4 { @include typography('h4'); color: var(--text-dim); } // H4 often acts as subheader
+h5 { @include typography('h5'); color: var(--text-dim); }
+
+p, ul, ol, li, label, button { 
+  @include typography('body'); 
+  color: var(--text-dim); 
+}
+
+/* Layer 3: Metadata (60% Opacity) */
+.validation, caption, small { 
+  @include typography('small'); 
+  color: var(--text-mute); 
+}
+
+/* INPUTS (Special Case) */
+/* Inputs share H5 size but need 'input' weight (Regular) and bright text for data */
+input, select, textarea {
+  @include typography('h5', $is-input: true); // Pass flag to force weight: 400
+  color: var(--text-main); // Input data is "Active", so it uses Main color (White)
+}
+
+/* =========================================
+   4. UTILITY CLASSES
+   ========================================= */
+.text-caption { @include typography('caption'); }
+.text-small   { @include typography('small'); }
+.text-body    { @include typography('body'); }
+.text-h1      { @include typography('h1'); }
+.text-h2      { @include typography('h2'); }
+.text-h3      { @include typography('h3'); }
+.text-h4      { @include typography('h4'); }
+.text-h5      { @include typography('h5'); }

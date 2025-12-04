@@ -1,0 +1,150 @@
+/* =========================================
+   1. THE VOID ENERGY PALETTE SYSTEM
+    // This file defines the raw primitive color tokens for all Atmospheres.
+    // Do not use these variables directly in components.
+    // Map them to CSS Custom Properties in `_themes.scss`.
+   ========================================= */
+
+// --------------------------------------------------------------------------
+// 1. THE VOID (Default Atmosphere)
+// --------------------------------------------------------------------------
+// Vibe:   Deep Tech, Cyberpunk, Web3, "The Matrix"
+// Usage:  The standard look. Cold, precise, and digital.
+// --------------------------------------------------------------------------
+$void-deep:       #010020;               // The Canvas: Deepest Navy. Never Black.
+$void-spotlight:  #0a0c2b;               // The Light: A subtle, slightly lighter blue center.
+$void-navy:       rgba(22, 30, 95, 0.4); // The Glass: Used for floating cards.
+$void-cyan:       #33E2E6;               // Primary Energy: Data, flow, focus.
+$void-blue:       #3875FA;               // Structure: Borders, dividers, stability.
+
+// --------------------------------------------------------------------------
+// 2. CRIMSON (Horror / Action)
+// --------------------------------------------------------------------------
+// Vibe:   Danger, Urgent, "Resident Evil", High Stress
+// Usage:  For users who want an aggressive, high-contrast "Gamified" look.
+// --------------------------------------------------------------------------
+$crimson-deep:      #1a0505;             // The Canvas: Dried blood darkness.
+$crimson-spotlight: #2f0a0a;             // The Light: A faint red glow in the dark.
+$crimson-blood:     rgba(60, 0, 0, 0.6); // The Glass: Viscous, thick transparency.
+$crimson-flare:     #FF3C40;             // Primary Energy: Warning lights, lasers.
+$crimson-dark:      #8a0000;             // Structure: Dark red steel.
+
+// --------------------------------------------------------------------------
+// 3. OVERGROWTH (Nature / Fantasy)
+// --------------------------------------------------------------------------
+// Vibe:   Calm, Organic, "Zelda", Restoration
+// Usage:  For users seeking a relaxing, less eye-straining dark mode.
+// --------------------------------------------------------------------------
+$nature-deep:       #051a0a;             // The Canvas: Deep forest night.
+$nature-spotlight:  #0b2910;             // The Light: Moonlight filtering through leaves.
+$nature-moss:       rgba(0, 40, 10, 0.5);// The Glass: Bio-luminescent flora.
+$nature-neon:       #00E055;             // Primary Energy: Life, growth, toxicity.
+$nature-gold:       #FFD700;             // Structure: Ancient relics, sun accents.
+
+// --------------------------------------------------------------------------
+// 4. VELVET (Romance / Pop / Kids)
+// --------------------------------------------------------------------------
+// Vibe:   Playful, Soft, "Synthwave", Friendly
+// Usage:  A softer, welcoming dark mode. Great for kids or creative moods.
+// --------------------------------------------------------------------------
+$velvet-deep:       #1a0510;             // The Canvas: Deep plum/dark velvet.
+$velvet-spotlight:  #2e091c;             // The Light: A stage spotlight warmth.
+$velvet-silk:       rgba(50, 0, 20, 0.5);// The Glass: Tinted rose glass.
+$velvet-pink:       #FF80A0;             // Primary Energy: Neon pink, bubblegum.
+$velvet-rose:       #C71585;             // Structure: Magenta, rich fabric.
+
+// --------------------------------------------------------------------------
+// 5. TERMINAL (Hacker / Noir)
+// --------------------------------------------------------------------------
+// Vibe:   Retro, Monospaced, "Mr. Robot", Industrial
+// Usage:  For developers and power users. High contrast, no distractions.
+// --------------------------------------------------------------------------
+$term-deep:         #050505;             // The Canvas: CRT Monitor off-black.
+$term-spotlight:    #121212;             // The Light: The "glow" of the screen center.
+$term-screen:       rgba(0, 20, 0, 0.9); // The Glass: Heavy, almost opaque terminal windows.
+$term-amber:        #F5C518;             // Primary Energy: Old school monochrome phosphor.
+
+// --------------------------------------------------------------------------
+// 6. PAPER (Light Mode / The Exception)
+// --------------------------------------------------------------------------
+// Vibe:   Traditional, "Newspaper", Corporate, Reading
+// Usage:  The only Light Mode. Breaks "Void" physics for readability.
+// --------------------------------------------------------------------------
+$paper-white:       #F9F9F6;             // The Canvas: Creamy off-white paper.
+$paper-spotlight:   #FFFFFF;             // The Light: Pure white source (sunlight).
+$paper-sheet:       #FFFFFF;             // The Surface: A sheet of white paper on the desk.
+$paper-ink:         #161E5F;             // Primary Energy: Navy Blue Ink (Text).
+$paper-pencil:      #E0E0E0;             // Structure: Graphite grey lines.
+
+/* =========================================
+   2. TYPOGRAPHY STACKS
+   ========================================= */
+$font-tech:       'Hanken Grotesk', sans-serif; // Void
+$font-horror:     'Merriweather', serif;        // Crimson
+$font-nature:     'Lora', serif;                // Overgrowth
+$font-hand:       'Caveat', cursive;            // Velvet
+$font-code:       'Courier Prime', monospace;   // Terminal
+$font-book:       'PT Serif Caption', serif;    // Paper
+
+// ==========================================================================
+// SHARED SEMANTIC CONSTANTS (The Logic Layer)
+// ==========================================================================
+
+// 1. DARK MODE SEMANTICS (High Energy / Neon)
+// Used in Void, Crimson, Overgrowth, Velvet, Terminal
+$semantic-dark-premium:   #FF8C00; // Orb Orange
+$semantic-dark-system:    #A078FF; // Deep Purple
+$semantic-dark-success:   #00E055; // Signal Green
+$semantic-dark-error:     #FF3C40; // Alert Red
+
+// 2. LIGHT MODE SEMANTICS (High Contrast / Ink)
+// Used EXCLUSIVELY in Paper theme
+$semantic-light-premium:  #B45309; // Ochre Ink
+$semantic-light-system:   #6D28D9; // Royal Purple Ink
+$semantic-light-success:  #15803D; // Emerald Stamp
+$semantic-light-error:    #DC2626; // Red Pen Correction
+
+/* =========================================
+   3. DEPTH LOGIC (Z-Index)
+   ========================================= */
+// Based on "Depth is Logic"
+$z-layers: (
+    'sink':      -1,   // Inputs, Sidebars (Carved into void)
+    'floor':      0,   // Background Canvas
+    'float':     10,   // Cards, Panels
+    'dropdown':  50,   // Select menus
+    'modal':    100,   // Holographic Overlays
+    'toast':    200,   // System Alerts
+    'cursor':   999    // Custom Cursor
+);
+
+/* =========================================
+   4. SPACING & LAYOUT
+   ========================================= */
+
+// Responsive styling up to 2k resolution
+$breakpoints: (
+  'mobile': 0,
+  'tablet': 768px,
+  'small-desktop': 1024px,
+  'large-desktop': 1440px,
+  'full-hd': 1920px,
+  'quad-hd': 2560px, // 'ultra-hd': 3840px,
+);
+
+$container-widths: (
+  'tablet': 720px,
+  'small-desktop': 960px,
+  'large-desktop': 1320px, // 1440 screen - 1320 content = nice gaps
+  'full-hd': 1600px,   // 1920 screen - 1600 content = wide margins
+  'quad-hd': 1920px    // 4k screen - 1920 content = centered look
+);
+
+$container-paddings: (
+  'base': 16px,        // Mobile
+  'tablet': 24px,
+  'small-desktop': 32px,
+  'large-desktop': 40px,
+  'full-hd': 48px,
+  'quad-hd': 64px
+);
