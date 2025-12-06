@@ -1,6 +1,7 @@
 <script lang="ts">
   import { onMount, onDestroy } from "svelte";
 
+  import { theme } from "../stores/theme.svelte";
   import { showModal } from "../stores/modal.svelte";
   import Modal from "./Modal.svelte";
 
@@ -46,7 +47,6 @@
   let canvas: HTMLCanvasElement;
   let ctx: CanvasRenderingContext2D;
   let frameId: number;
-  let observer: MutationObserver;
 
   let width = 0;
   let height = 0;
@@ -159,6 +159,16 @@
     frameId = requestAnimationFrame(render);
   }
 
+  // --- REPLACED: State Logic ---
+  // Reactive Rune that runs whenever theme.value changes
+  $effect(() => {
+    // This line registers a dependency on the store
+    const currentTheme = theme.atmosphere;
+
+    // Trigger the palette fetch because the DOM attribute just changed
+    if (currentTheme) updatePalette();
+  });
+
   onMount(() => {
     ctx = canvas.getContext("2d", { alpha: false })!;
 
@@ -173,22 +183,6 @@
     window.addEventListener("mousemove", handleMove);
     window.addEventListener("touchmove", handleMove);
 
-    observer = new MutationObserver((mutations) => {
-      mutations.forEach((mutation) => {
-        if (
-          mutation.type === "attributes" &&
-          mutation.attributeName === "data-atmosphere"
-        ) {
-          updatePalette();
-        }
-      });
-    });
-
-    observer.observe(document.documentElement, {
-      attributes: true,
-      attributeFilter: ["data-atmosphere"],
-    });
-
     frameId = requestAnimationFrame(render);
   });
 
@@ -198,17 +192,7 @@
       window.removeEventListener("mousemove", handleMove);
       window.removeEventListener("touchmove", handleMove);
       cancelAnimationFrame(frameId);
-      if (observer) observer.disconnect();
     }
-  });
-
-  // Simplified State Logic for Demo
-  let atmosphere = $state("void");
-  function setAtmosphere(atmosphereName: string) {
-    document.documentElement.setAttribute("data-atmosphere", atmosphereName);
-  }
-  $effect(() => {
-    setAtmosphere(atmosphere);
   });
 </script>
 
@@ -219,7 +203,7 @@
 
     <div class="flex-col pad-24 gap-16 round-16 surface-glass">
       <p>System Architecture // Component Library</p>
-      <select bind:value={atmosphere}>
+      <select bind:value={theme.atmosphere}>
         <option value="void">Void Atmosphere</option>
         <option value="crimson">Crimson Atmosphere</option>
         <option value="overgrowth">Overgrowth Atmosphere</option>
