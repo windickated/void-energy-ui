@@ -1,3 +1,5 @@
+@use 'sass:map';
+
 /* =========================================
    1. THE VOID ENERGY PALETTE SYSTEM
     // This file defines the raw primitive color tokens for all Atmospheres.
@@ -109,13 +111,26 @@ $semantic-light-error:    #DC2626; // Red Pen Correction
    ========================================= */
 // Based on "Depth is Logic"
 $z-layers: (
-    'sink':      -1,   // Inputs, Sidebars (Carved into void)
-    'floor':      0,   // Background Canvas
-    'float':     10,   // Cards, Panels
-    'dropdown':  50,   // Select menus
-    'modal':    100,   // Holographic Overlays
-    'toast':    200    // System Alerts
+   'sink':      -1,   // Inputs, Sidebars (Carved into void)
+   'floor':      0,   // Background Canvas
+   'base':       1,   // Standard content (Text, Images) inside a stacking context
+   'decorate':   2,   // Visual flourishes (Lasers, Borders) sitting on base
+   'float':     10,   // Cards, Panels (The standard UI layer)
+   'sticky':    20,   // Section Headers that stick
+   'header':    40,   // Global Navbar
+   'dropdown':  50,   // Select menus / Tooltips
+   'overlay':   90,   // The darkened backdrop for modals
+   'modal':    100,   // Holographic Overlays
+   'toast':    200    // System Alerts
 );
+
+// The Accessor Function
+@function z($layer) {
+  @if not map.has-key($z-layers, $layer) {
+    @warn "No layer found for `#{$layer}` in $z-layers map. Property omitted.";
+  }
+  @return map.get($z-layers, $layer);
+}
 
 /* =========================================
    4. SPACING & LAYOUT

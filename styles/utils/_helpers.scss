@@ -258,16 +258,8 @@
 // Loading Shimmer (Skeleton)
 // Usage: <div class="shimmer round-8" style="height: 20px;"></div>
 .shimmer {
-  background: linear-gradient(
-    90deg,
-    var(--bg-sink) 0%, 
-    var(--bg-sink) 40%, 
-    color-mix(in srgb, var(--energy-primary), transparent 80%) 50%,
-    var(--bg-sink) 60%, 
-    var(--bg-sink) 100%
-  );
-  background-size: 200% 100%;
-  animation: shimmer 2s infinite linear;
+  // Apply the animation mixin
+  @include shimmer;
 }
 
 // Interactive Loop (Breathing Glow)

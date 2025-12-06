@@ -4,14 +4,11 @@
   import { showModal } from "../stores/modal.svelte";
   import Modal from "./Modal.svelte";
 
-  let dialogElement: HTMLDialogElement;
   let rangeValue = $state(50);
-  let isModalOpen = $state(false);
-  let isDragging = $state(false);
 
   // --- Configuration ---
   const SPOTLIGHT_RADIUS = 600;
-  const MOUSE_LERP = 0.05; // Speed of light movement
+  const MOUSE_LERP = 0.15; // Speed of light movement
   const COLOR_LERP = 0.15; // Speed of color transition (Lower = Smoother/Slower)
 
   // --- Helpers: Color Math ---
@@ -330,7 +327,12 @@
           <a class="link" href="https://dgrslabs.ink/"
             >Visit DGRS LABS website</a
           >
-          <button class="btn-cta" onclick={() => (isModalOpen = true)}>
+          <button
+            class="btn-cta"
+            onclick={() => {
+              $showModal = true;
+            }}
+          >
             INITIATE SEQUENCE
           </button>
         </div>
@@ -389,31 +391,9 @@
       <div class="loading-tile"></div>
     </div>
   </section>
-
-  <dialog bind:this={dialogElement} class:open={isModalOpen}>
-    {#if isModalOpen}
-      <div>
-        <h2 class="text-highlight">CONFIRM INITIATION?</h2>
-        <p>
-          You are about to deploy the production build. This action cannot be
-          undone by standard protocols.
-        </p>
-
-        <div class="surface-sunk round-8 pad-16 flex-row gap-16 items-center">
-          <span class="text-highlight">⚠</span>
-          <span>This action will consume 500 Credits.</span>
-        </div>
-
-        <div class="flex-row justify-end gap-16 margin-top-16">
-          <button onclick={() => (isModalOpen = false)}>Abort</button>
-          <button class="btn-signal" onclick={() => (isModalOpen = false)}
-            >Confirm</button
-          >
-        </div>
-      </div>
-    {/if}
-  </dialog>
 </main>
+
+<Modal />
 
 <canvas bind:this={canvas}></canvas>
 

@@ -87,6 +87,18 @@
       inset 0 2px 8px rgba(0, 0, 0, 0.5),
       0 0 10px color-mix(in srgb, var(--energy-primary), transparent 70%);
   }
+
+  // Paper Mode Override
+  @at-root [data-atmosphere='paper'] & {
+    box-shadow: inset var(--void-shadow);
+
+    &:focus-visible, 
+    &:focus-within {
+      box-shadow: 
+        inset var(--void-shadow),
+        0 0 5px color-mix(in srgb, var(--energy-primary), transparent 70%);
+    }
+  }
 }
 
 // 2. TYPOGRAPHY & ENERGY
@@ -108,7 +120,7 @@
   background: transparent; 
   border: none; 
   overflow: hidden;
-  z-index: 1;
+  z-index: z('base');
   color: var(--text-main);
   
   // Important: Border radius must be set on parent to clip the laser
@@ -137,7 +149,7 @@
     
     transform: translate(-50%, -50%);
     animation: rotate-laser 4s linear infinite;
-    z-index: -1;
+    z-index: z('sink');
     opacity: 1; 
 
     // TERMINAL OVERRIDE: The "Segmented" Radar
@@ -173,7 +185,7 @@
     // Use Solid Color, NOT Glass.
     background: var(--bg-canvas); 
     
-    z-index: -1;
+    z-index: z('sink');
     border-radius: 999px; // Pill Shape
   }
   
@@ -183,5 +195,54 @@
       background-color: var(--energy-primary);
       animation-play-state: paused;
     }
+  }
+}
+
+// 3. ANIMATIONS
+// --------------------------------------------------------------------------
+
+// MIXIN: Atmospheric Shimmer
+// Usage: Include in any element that acts as a loading skeleton.
+@mixin shimmer {
+  // 1. THE DELAY LOGIC (400% Width Trick)
+  background-size: 400% 100%;
+  
+  // 2. THE ANIMATION
+  animation: shimmer 3s infinite linear;
+
+  // 3. VOID GRADIENT (Default)
+  background-image: linear-gradient(
+    90deg,
+    transparent 0%,
+    transparent 30%,
+    color-mix(in srgb, var(--energy-primary), transparent 85%) 50%,
+    transparent 70%,
+    transparent 100%
+  );
+
+  // 4. PAPER OVERRIDE (White Reflection)
+  @at-root [data-atmosphere='paper'] & {
+    background-image: linear-gradient(
+      90deg,
+      transparent 0%,
+      transparent 30%,
+      rgba(255, 255, 255, 0.6) 50%,
+      transparent 70%,
+      transparent 100%
+    );
+  }
+
+  // 5. TERMINAL OVERRIDE (The Scanline)
+  @at-root [data-atmosphere='terminal'] & {
+    opacity: 0.5;
+    background-image: linear-gradient(
+      90deg,
+      transparent 0%,
+      transparent 43%, 
+      var(--energy-primary) 43%, // Hard Start
+      var(--energy-primary) 47%, // Hard End (Block width)
+      transparent 47%,           
+      transparent 100%
+    );
   }
 }

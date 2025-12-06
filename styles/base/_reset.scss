@@ -107,7 +107,7 @@ textarea {
     // Focus states snap to Primary Energy
     outline: 1px solid var(--energy-primary);
     box-shadow: 0 0 8px var(--energy-primary); 
-    z-index: 1; 
+    z-index: z('base'); 
   }
 }
 

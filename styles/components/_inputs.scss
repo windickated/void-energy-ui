@@ -89,10 +89,6 @@ select {
   // Background color fix for Chrome/Safari to ensure options are readable
   // (The dropdown menu itself is handled by the OS/Browser)
   background-color: var(--bg-sink);
-  
-  @at-root [data-atmosphere='paper'] & {
-    background-color: #FFFFFF;
-  }
 }
 
 // 4. RANGE SLIDERS (Native + Accent)
@@ -190,7 +186,7 @@ input[type='radio'] {
     height: 100%;
     opacity: 0;         // Invisible but clickable
     cursor: pointer;
-    z-index: 10;        // Sit on top
+    z-index: z('float'); // Sit on top
   }
 
   // --- B. THE FAKE CONTENT (Visible Layer) ---
@@ -201,7 +197,7 @@ input[type='radio'] {
     align-items: center;
     gap: 1rem;
     pointer-events: none; // Let clicks pass through to the input
-    z-index: 1;
+    z-index: z('base'); // Sit above the sunk background
     
     // Icon styling
     svg, .btn-icon {

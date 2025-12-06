@@ -14,7 +14,7 @@ dialog {
   
   width: min(90%, 30rem); 
   max-height: 85vh;
-  z-index: 100; // Layer: Modal
+  z-index: z('modal'); // Layer: Modal
 
   // --- 2. VOID STYLING ---
   border: none;
