@@ -66,7 +66,7 @@ a {
       opacity: 1; // Ensure full visibility
       
       // Text Glow
-      text-shadow: 0 0 8px color-mix(in srgb, var(--energy-primary), transparent 60%);
+      text-shadow: 0 0 8px fade(var(--energy-primary), 60%);
 
       // Line Animation: Expand
       &::after {
@@ -83,7 +83,7 @@ a {
     
     // In Paper mode, links are traditionally underlined by default.
     // We can keep a faint underline that darkens on hover.
-    border-bottom: 1px solid color-mix(in srgb, var(--energy-primary), transparent 80%);
+    border-bottom: var(--physics-border-width) solid fade(var(--energy-primary), 80%);
     
     &::after {
       height: 2px; // Thicker pen stroke

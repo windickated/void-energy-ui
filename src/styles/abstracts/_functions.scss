@@ -1,0 +1,30 @@
+@use 'sass:color';
+
+// ==========================================================================
+// COLOR FUNCTIONS (The "Photoshop" Layer)
+// ==========================================================================
+
+// 1. TINT (Make Lighter / Mix with White)
+// Usage: background: tint(var(--energy-primary), 20%);
+@function tint($color, $percentage) {
+  @return color-mix(in srgb, $color, white $percentage);
+}
+
+// 2. SHADE (Make Darker / Mix with Black)
+// Usage: background: shade(var(--energy-primary), 20%);
+@function shade($color, $percentage) {
+  @return color-mix(in srgb, $color, black $percentage);
+}
+
+// 3. FADE (Make Transparent)
+// Usage: background: fade(var(--energy-primary), 50%);
+// Note: This mixes with transparent, effectively lowering alpha visually
+@function fade($color, $percentage) {
+  @return color-mix(in srgb, $color, transparent $percentage);
+}
+
+// 4. BLEND (Mix Two Colors)
+// Usage: background: blend(var(--bg-sink), var(--energy-primary), 5%);
+@function blend($color, $other, $other-percentage) {
+  @return color-mix(in srgb, $color, $other $other-percentage);
+}

@@ -105,7 +105,7 @@ textarea {
 
   &:focus-visible {
     // Focus states snap to Primary Energy
-    outline: 1px solid var(--energy-primary);
+    outline: var(--physics-border-width) solid var(--energy-primary);
     box-shadow: 0 0 8px var(--energy-primary); 
     z-index: z('base'); 
   }
@@ -129,7 +129,7 @@ textarea:disabled {
   
   // Sunk Surfaces for inactive/disabled
   background-color: var(--bg-sink); 
-  border: 1px solid var(--border-shadow); 
+  border: var(--physics-border-width) solid var(--border-shadow); 
   color: var(--text-mute);
 }
 

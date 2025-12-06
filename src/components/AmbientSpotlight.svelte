@@ -75,10 +75,7 @@
 
     // Get Raw Hex Strings
     const rawCanvas = styles.getPropertyValue("--bg-canvas").trim();
-    // Use fallback if spotlight is missing
-    const rawSpotlight =
-      styles.getPropertyValue("--bg-spotlight").trim() ||
-      styles.getPropertyValue("--neon-cyan").trim();
+    const rawSpotlight = styles.getPropertyValue("--bg-spotlight").trim();
 
     // Parse and set TARGET only. Current will chase it in the render loop.
     if (rawCanvas) targetPalette.canvas = hexToRgb(rawCanvas);
@@ -432,17 +429,17 @@
             <div
               class="surface-sunk round-8 pad-16 flex-row gap-8 flex-wrap justify-center"
             >
-              <button class="tile-small tile-system">
-                <h5>Neural Net</h5>
-                <p class="btn-void">✕</p>
+              <button class="tile-small">
+                <p class="tile-label">Neural Net</p>
+                <span class="tile-remove">✕</span>
               </button>
-              <button class="tile-small tile-error">
-                <h5>Firewall</h5>
-                <p class="btn-void">✕</p>
+              <button class="tile-small">
+                <p class="tile-label">Firewall</p>
+                <span class="tile-remove">✕</span>
               </button>
-              <button class="tile-small tile-secondary">
-                <h5>Log v.1</h5>
-                <p class="btn-void">✕</p>
+              <button class="tile-small">
+                <p class="tile-label">Log v.1</p>
+                <span class="tile-remove">✕</span>
               </button>
             </div>
 
@@ -474,36 +471,36 @@
     </div>
   </section>
 
-  <section class="flex-col gap-24 mar-y-24">
-    <h2 class="container">06 // ENTITY TAGS</h2>
+  <section class="container flex-col gap-24 mar-y-24">
+    <h2>06 // ENTITY TAGS</h2>
 
-    <div class="container flex-col gap-32">
+    <div class="container card-glass mar-top-0">
       <div class="flex-col gap-16">
         <h5 class="text-dim">Standard Entities</h5>
         <div class="flex-row flex-wrap gap-16">
-          <button class="tile-small tile-system">
-            <h5>System</h5>
-            <p>v2.4</p>
+          <button class="tile-small-system">
+            <p class="tile-label">System</p>
+            <span class="tile-remove">✕</span>
           </button>
 
-          <button class="tile-small tile-premium">
-            <h5>Premium</h5>
-            <p>Gold</p>
+          <button class="tile-small-premium">
+            <p class="tile-label">Premium</p>
+            <span class="tile-remove">✕</span>
           </button>
 
-          <button class="tile-small tile-success">
-            <h5>Status</h5>
-            <p>Online</p>
+          <button class="tile-small-success">
+            <p class="tile-label">Status</p>
+            <span class="tile-remove">✕</span>
           </button>
 
-          <button class="tile-small tile-error">
-            <h5>Threat</h5>
-            <p>Critical</p>
+          <button class="tile-small-error">
+            <p class="tile-label">Threat</p>
+            <span class="tile-remove">✕</span>
           </button>
 
-          <button class="tile-small tile-secondary">
-            <h5>Archive</h5>
-            <p>Read-Only</p>
+          <button class="tile-small">
+            <p class="tile-label">Archive</p>
+            <span class="tile-remove">✕</span>
           </button>
         </div>
       </div>
@@ -511,19 +508,19 @@
       <div class="flex-col gap-16">
         <h5 class="text-dim">Labeled Entities (Data-Attribute)</h5>
         <div class="flex-row flex-wrap gap-16 pad-top-16">
-          <div class="tile-small tile-system tile-labeled" data-label="Config">
-            <h5>AI Model</h5>
-            <p>GPT-4</p>
+          <div class="tile-small-system tile-labeled" data-label="Config">
+            <p class="tile-label">AI Model</p>
+            <p class="tile-label-sunken">GPT-4</p>
           </div>
 
-          <div class="tile-small tile-premium tile-labeled" data-label="Web3">
-            <h5>Wallet</h5>
-            <p>0x...8F</p>
+          <div class="tile-small-premium tile-labeled" data-label="Web3">
+            <p class="tile-label">Wallet</p>
+            <p class="tile-label-sunken">0x...8F</p>
           </div>
 
-          <div class="tile-small tile-success tile-labeled" data-label="Active">
-            <h5>Connection</h5>
-            <p>Stable</p>
+          <div class="tile-small-success tile-labeled" data-label="Active">
+            <p class="tile-label">Connected</p>
+            <span class="tile-remove">✕</span>
           </div>
         </div>
       </div>
@@ -531,14 +528,16 @@
       <div class="flex-col gap-16">
         <h5 class="text-dim">Interactive States</h5>
         <div class="flex-row flex-wrap gap-16">
-          <button class="tile-small tile-secondary">
-            <h5>Hover Me</h5>
-            <p>Interactive</p>
+          <button class="tile-small">
+            <p class="tile-label">Hover Me</p>
+            <p class="tile-label-sunken">Interactive</p>
+            <span class="tile-remove">✕</span>
           </button>
 
-          <button class="tile-small tile-secondary" disabled>
-            <h5>Disabled</h5>
-            <p>Offline</p>
+          <button class="tile-small" disabled>
+            <p class="tile-label">Disabled</p>
+            <p class="tile-label-sunken">Offline</p>
+            <span class="tile-remove">✕</span>
           </button>
         </div>
       </div>
@@ -548,7 +547,7 @@
 
 <Modal />
 
-<canvas bind:this={canvas}></canvas>
+<canvas bind:this={canvas} aria-hidden="true"></canvas>
 
 <style>
   canvas {

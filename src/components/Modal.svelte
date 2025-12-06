@@ -11,7 +11,6 @@
   $effect(() => {
     if (!dialog) return;
     if ($showModal) {
-      dialog.classList.remove("dialog-fade-out");
       dialog.showModal();
     } else if (dialog.open) {
       closeDialog();

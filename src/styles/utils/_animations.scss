@@ -1,4 +1,4 @@
-@use '../abstracts/variables' as *;
+@use '/src/styles/abstracts' as *;
 
 /* ==========================================================================
    VOID ENERGY ANIMATION LOGIC
@@ -60,11 +60,11 @@
 @keyframes cyber-pulse {
   0%, 100% {
     opacity: 1;
-    box-shadow: 0 0 10px color-mix(in srgb, var(--energy-primary), transparent 60%);
+    box-shadow: 0 0 10px fade(var(--energy-primary), 60%);
   }
   50% {
     opacity: 0.9;
-    box-shadow: 0 0 20px color-mix(in srgb, var(--energy-primary), transparent 20%);
+    box-shadow: 0 0 20px fade(var(--energy-primary), 20%);
   }
 }
 

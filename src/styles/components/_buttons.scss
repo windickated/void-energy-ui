@@ -1,5 +1,4 @@
-@use '../abstracts/variables' as *;
-@use '../abstracts/mixins' as *;
+@use '/src/styles/abstracts' as *;
 
 /* ==========================================================================
    VOID ENERGY BUTTON SYSTEM
@@ -55,7 +54,7 @@ button:not(.btn-void),
   // --- PAPER MODE RESTING STATE ---
   @at-root [data-atmosphere='paper'] & {
     background: #F5F5F7; 
-    border: 1px solid var(--energy-secondary); // Graphite Grey
+    border: var(--physics-border-width) solid var(--energy-secondary); // Graphite Grey
     color: var(--energy-primary);
   }
 
@@ -87,9 +86,9 @@ button:not(.btn-void),
       // Default (Void) Behavior
       color: #FFFFFF; 
       box-shadow: 
-        0 0 10px color-mix(in srgb, var(--energy-primary), transparent 60%), 
-        inset 0 0 5px color-mix(in srgb, var(--energy-primary), transparent 80%);
-      text-shadow: 0 0 8px color-mix(in srgb, var(--energy-primary), transparent 40%);
+        0 0 10px fade(var(--energy-primary), 60%), 
+        inset 0 0 5px fade(var(--energy-primary), 80%);
+      text-shadow: 0 0 8px fade(var(--energy-primary), 40%);
 
       // Paper Mode Override
       @at-root [data-atmosphere='paper'] & {
@@ -143,7 +142,7 @@ button:not(.btn-void),
         color: #FFFFFF;
         
         // The Glow (Halo around the box)
-        box-shadow: 0 0 30px color-mix(in srgb, var(--energy-primary), transparent 50%);
+        box-shadow: 0 0 30px fade(var(--energy-primary), 50%);
         text-shadow: 0 0 10px var(--energy-primary);
         
         // CTA Paper Mode
@@ -168,24 +167,24 @@ button:not(.btn-void),
   
   // Mixin for clean overrides
   @mixin btn-variant($color-var) {
-    border-color: color-mix(in srgb, $color-var, transparent 50%);
-    background: color-mix(in srgb, $color-var, transparent 90%);
+    border-color: fade($color-var, 50%);
+    background: fade($color-var, 90%);
     color: $color-var;
 
     @media (hover: hover) {
       &:hover:not(:disabled) {
         border-color: $color-var;
-        background: color-mix(in srgb, $color-var, transparent 85%);
+        background: fade($color-var, 85%);
         color: #FFFFFF;
         
         box-shadow: 
-          0 0 10px color-mix(in srgb, $color-var, transparent 60%), 
-          inset 0 0 5px color-mix(in srgb, $color-var, transparent 80%);
-        text-shadow: 0 0 8px color-mix(in srgb, $color-var, transparent 40%);
+          0 0 10px fade($color-var, 60%), 
+          inset 0 0 5px fade($color-var, 80%);
+        text-shadow: 0 0 8px fade($color-var, 40%);
 
         @at-root [data-atmosphere='paper'] & {
            color: $color-var; 
-           background: color-mix(in srgb, $color-var, transparent 90%);
+           background: fade($color-var, 90%);
            box-shadow: none;
            text-shadow: none;
         }

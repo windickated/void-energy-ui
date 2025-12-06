@@ -1,4 +1,6 @@
 @use '/src/styles/abstracts' as *;
+@use '/src/styles/base/typography' as *;
+@use 'buttons';
 
 // ==========================================================================
 // TILES & COLLECTIONS
@@ -49,7 +51,7 @@
     &:hover { 
       background: var(--energy-primary); 
       // Glow works in Void, becomes simple color in Paper
-      box-shadow: 0 0 10px color-mix(in srgb, var(--energy-primary), transparent 40%);
+      box-shadow: 0 0 10px fade(var(--energy-primary), 40%);
     }
   }
 }
@@ -105,8 +107,8 @@
       to bottom,
       transparent 0%,
       transparent 40%,        // Keep top clear
-      color-mix(in srgb, var(--bg-canvas), transparent 60%) 60%, 
-      color-mix(in srgb, var(--bg-canvas), transparent 10%) 80%, 
+      fade(var(--bg-canvas), 60%) 60%, 
+      fade(var(--bg-canvas), 10%) 80%, 
       var(--bg-canvas) 100%   // Solid Floor
     );
     z-index: z('base');
@@ -204,143 +206,238 @@
 }
 
 // ==========================================================================
-// 4. SMALL TILES (Chips / Tags / Selection Items)
+// 4. SMALL TILES ARCHITECTURE
 // ==========================================================================
 
-.tile-small {
+// A. THE MIXIN (Structural DNA)
+@mixin tile-structure {
+  @extend .btn-void; 
+  
   // Layout
   display: inline-flex;
   flex-flow: row nowrap;
-  align-items: center;
+  align-items: stretch;
   justify-content: space-between;
-  gap: 0.75rem;
-  padding: 0.5rem 0.75rem;
+  gap: 0;
   
   // Sizing
-  width: 100%; // Default to full width on mobile
-  @media (min-width: 768px) { width: auto; } // Shrink to fit on tablet+
-
-  // Physics (Glass Base)
-  @include glass-float($interactive: true);
-  border-radius: 8px;
-  background: var(--bg-surface);
+  min-height: 2.25rem;
+  padding: 0;
   
-  // Transition (Matching your legacy speed)
-  transition: 
-    all 0.3s var(--ease-snap);
-
   // Typography
-  h5 {
-    margin: 0;
-    font-size: 0.875rem;
-    font-weight: 600;
-    white-space: nowrap;
-    color: var(--text-main);
+  color: var(--text-main);
+
+  // Transitions
+  transition: 
+    transform var(--speed-base) var(--ease-snap),
+    box-shadow var(--speed-base) var(--ease-snap),
+    border-color var(--speed-base) var(--ease-snap),
+    background-color var(--speed-base) var(--ease-snap);
+
+  // Physics Base
+  border-radius: 8px;
+  @include glass-float($interactive: true);
+
+  // 1. LABEL
+  .tile-label {
+    display: flex; align-items: center; padding: 0 0.75rem;
+    white-space: nowrap; color: inherit; font-weight: 600;
   }
 
-  // Inner Content (The "p" tag in your legacy code)
-  // We make this generic so it can be a <div>, <p>, or <span>
-  & > .tile-content, 
-  & > p {
-    padding: 0.25rem 0.5rem;
-    border-radius: 4px;
-    background: color-mix(in srgb, var(--bg-canvas), transparent 50%);
+  // 2. SUNKEN VARIANT
+  .tile-label-sunken {
+    background: var(--bg-sink);
+    border: 1px solid var(--border-shadow);
     color: var(--text-dim);
-    font-size: 0.75rem;
-    box-shadow: inset 0 1px 3px rgba(0,0,0,0.3);
+    padding: 0.1rem 0.5rem; margin-block: auto; margin-right: 0.5rem;
+    border-radius: 4px;
+    @include typography('caption');
   }
 
-  // ENTRY ANIMATION (@starting-style)
-  @starting-style {
-    opacity: 0;
-    transform: scale(0.975) skew(1deg, -1deg); // Kept your specific skew!
-    filter: brightness(125%) contrast(125%);
+  // 3. REMOVE BUTTON
+  .tile-remove {
+    @extend .btn-void;
+    display: flex; align-items: center; justify-content: center;
+    width: 2.25rem;
+    
+    // Default Separation (Variant mixin overrides this)
+    border-left: var(--physics-border-width) solid fade(white, 10%);
+    color: var(--text-mute);
+    
+    border-top-right-radius: 8px; border-bottom-right-radius: 8px;
+    transition: background-color 0.2s ease, color 0.2s ease;
+
+    &:hover {
+      background: fade(black, 30%);
+      color: var(--text-main);
+    }
   }
 
-  // HOVER STATES
+  // DISABLED STATE
+  &:disabled {
+    cursor: not-allowed;
+    background: shade(var(--bg-sink), 50%);
+    color: shade(var(--text-mute), 20%);
+    border-color: shade(var(--text-mute), 50%) !important;
+    box-shadow: none !important;
+    opacity: 0.8; transform: none;
+
+    .tile-remove {
+      cursor: not-allowed; border-left-color: shade(var(--text-mute), 50%);
+      color: shade(var(--text-mute), 20%); background: transparent;
+      &:hover { background: transparent; color: inherit; }
+    }
+  }
+
+  // HOVER
   @media (hover: hover) {
     &:hover:not(:disabled) {
-      transform: translateY(-2px) scale(1.02);
-      filter: brightness(1.1);
+      transform: translateY(-2px);
+      box-shadow: 0 4px 12px fade(black, 30%);
+    }
+  }
+  
+  @starting-style { opacity: 0; transform: scale(0.9); }
+}
+
+// B. THE VARIANT MIXIN (Color Logic)
+@mixin tile-variant($color) {
+  // --- 1. DEFAULT (VOID / GLASS) ---
+  background: fade($color, 20%); 
+  border-color: tint($color, 20%);
+  box-shadow: 0 0 15px fade($color, 80%);
+  color: var(--text-main); 
+
+  .tile-remove {
+    background: shade($color, 30%);
+    color: var(--text-dim);
+    border-left-color: tint($color, 20%);
+    &:hover {
+      background: shade($color, 50%);
+      color: white;
+    }
+  }
+
+  @media (hover: hover) {
+    &:hover:not(:disabled) {
+      border-color: tint($color, 50%);
+      box-shadow: 0 0 20px fade($color, 60%);
+    }
+  }
+
+  // --- 2. TERMINAL OVERRIDE (Retro / Contrast) ---
+  @at-root [data-atmosphere='terminal'] & {
+    background: black; // Opaque
+    border: 2px solid $color; // Hard border
+    box-shadow: none; // No soft glow
+    color: $color;
+
+    .tile-remove {
+      background: transparent;
+      border-left: 2px solid $color;
+      border-top-right-radius: 5px; border-bottom-right-radius: 5px;
+      color: $color;
       
-      & > .tile-content, & > p {
-        background: var(--bg-canvas);
-        color: var(--text-main);
+      &:hover {
+        background: $color; // Invert on hover
+        color: black;
       }
     }
-  }
-
-  // DISABLED
-  &:disabled {
-    opacity: 0.5;
-    filter: grayscale(1);
-    cursor: not-allowed;
-  }
-}
-
-// 5. COLOR VARIANTS (Semantic Mapping)
-// --------------------------------------------------------------------------
-// Usage: <div class="tile-small tile-purple">
-
-@mixin tile-variant($color) {
-  border-color: color-mix(in srgb, $color, transparent 50%);
-  background: color-mix(in srgb, $color, transparent 90%);
-
-  h5 { color: $color; }
-  
-  & > .tile-content, & > p {
-    // Inner box is a darker version of the main color
-    background: color-mix(in srgb, $color, black 40%); 
-    color: color-mix(in srgb, $color, white 80%);
-  }
-
-  @media (hover: hover) {
+    
     &:hover:not(:disabled) {
-      border-color: $color;
-      background: color-mix(in srgb, $color, transparent 80%);
-      box-shadow: 0 4px 12px color-mix(in srgb, $color, transparent 30%);
+      box-shadow: 4px 4px 0px fade($color, 50%); // Hard shadow, no blur
+    }
+  }
+
+  // --- 3. PAPER OVERRIDE (Ink / Pastel) ---
+  @at-root [data-atmosphere='paper'] & {
+    // Pastel background
+    background: tint($color, 85%); 
+    border: 1px solid $color;
+    box-shadow: 0 1px 3px rgba(0,0,0,0.1);
+    // Darker text for readability on light bg
+    color: shade($color, 60%); 
+
+    .tile-remove {
+      // Slightly darker pastel for the button
+      background: tint($color, 70%); 
+      border-left: 1px solid $color;
+      color: shade($color, 50%);
+      
+      &:hover {
+        background: $color; // Full saturation on hover
+        color: white;
+      }
+    }
+
+    &:hover:not(:disabled) {
+      box-shadow: 0 4px 8px rgba(0,0,0,0.15);
+      transform: translateY(-1px);
+    }
+
+    &:disabled {
+      border-color: fade(shade($color, 60%), 90%) !important;
     }
   }
 }
 
-.tile-system { @include tile-variant(var(--color-system)); }  // Maps to System (Purple)
-.tile-premium { @include tile-variant(var(--color-premium)); } // Maps to Premium (Orange)
-.tile-success  { @include tile-variant(var(--color-success)); } // Maps to Signal (Green)
-.tile-error   { @include tile-variant(var(--color-error)); }   // Maps to Alert (Red/Rose)
-.tile-secondary   { @include tile-variant(var(--energy-secondary)); } // Maps to Void Blue
+// ==========================================================================
+// 5. IMPLEMENTATION
+// ==========================================================================
 
+// Base Class (Void Blue Default)
+.tile-small { 
+  @include tile-structure; 
+  @include tile-variant(var(--energy-secondary)); 
+}
+
+// Semantic Variants
+.tile-small-system    { @include tile-structure; @include tile-variant(var(--color-system)); }
+.tile-small-premium   { @include tile-structure; @include tile-variant(var(--color-premium)); }
+.tile-small-success   { @include tile-structure; @include tile-variant(var(--color-success)); }
+.tile-small-error     { @include tile-structure; @include tile-variant(var(--color-error)); }
+
+// ==========================================================================
 // 6. THE ADDON (Label on Top)
-// --------------------------------------------------------------------------
-// Usage: <div class="tile-small tile-purple tile-labeled" data-label="Active">
-
+// ==========================================================================
 .tile-labeled {
-  position: relative;
-  margin-top: 1rem; // Make room for the label
-  border-top-left-radius: 0; // The "Tab" look
+  margin-top: 1rem;
+  border-top-left-radius: 0; 
 
   &::before {
     content: attr(data-label);
     position: absolute;
-    top: -1.25rem; // Move up
-    left: -1px;    // Align with border
+    top: -1.5rem; left: -1px;
+    height: 1.5rem; padding: 0 0.5rem;
     
-    // Style matches the border/bg of the tile
-    height: 1.25rem;
-    padding: 0 0.5rem;
+    background: inherit;     
+    border: inherit; border-bottom: none;     
+    border-top-left-radius: 8px; border-top-right-radius: 8px;
     
-    background: inherit;     // Steals background from parent
-    border: inherit;         // Steals border from parent
-    border-bottom: none;     // Connect to main tile
-    border-top-left-radius: 8px;
-    border-top-right-radius: 8px;
-    
-    font-size: 0.65rem;
-    font-weight: 700;
     text-transform: uppercase;
-    color: inherit;          // Steals text color from parent h5
-    
-    display: flex;
-    align-items: center;
-    z-index: 1;
+    display: flex; align-items: center; z-index: 1;
+    @include typography('caption');
+
+    // Default Text Color (Glass/Void)
+    color: shade(var(--bg-canvas), 50%);
+    text-shadow: none; 
+    mix-blend-mode: normal;
+    // Force readability on glass
+    color: var(--text-dim);
+
+    // TERMINAL LABEL
+    @at-root [data-atmosphere='terminal'] & {
+      left: -2px;
+      background: black;
+      border: 2px solid currentColor;
+      border-bottom: none;
+      color: inherit; // Amber/Green
+    }
+
+    // PAPER LABEL
+    @at-root [data-atmosphere='paper'] & {
+       color: inherit; // Dark Ink
+       font-weight: 700;
+    }
   }
 }

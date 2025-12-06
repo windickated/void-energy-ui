@@ -1,4 +1,5 @@
 @use 'variables' as *;
+@use 'functions' as *;
 
 // ==========================================================================
 // MIXINS (The Physics Engine)
@@ -43,12 +44,12 @@
         
         // FIX: Don't use raw variable. Mix it to keep transparency.
         // This results in ~50% opacity color, not 100% solid.
-        border-color: color-mix(in srgb, var(--energy-primary), transparent 50%);
+        border-color: fade(var(--energy-primary), 50%);
         
         // Glow calculation
         box-shadow: 
           0 12px 40px rgba(0, 0, 0, 0.6), 
-          0 0 15px color-mix(in srgb, var(--energy-primary), transparent 80%);
+          0 0 15px fade(var(--energy-primary), 80%);
         
         @at-root [data-atmosphere='paper'] & {
           box-shadow: 0 4px 10px rgba(0,0,0,0.2);
@@ -79,13 +80,12 @@
     box-shadow var(--speed-fast) var(--ease-snap);
 
   // Focus State
-  &:focus-visible, 
-  &:focus-within {
+  &:focus-visible {
     border-color: var(--energy-primary);
     outline: none;
-    box-shadow: 
-      inset 0 2px 8px rgba(0, 0, 0, 0.5),
-      0 0 10px color-mix(in srgb, var(--energy-primary), transparent 70%);
+      box-shadow: 
+        inset 0 2px 8px rgba(0, 0, 0, 0.5),
+        0 0 10px fade(var(--energy-primary), 70%);
   }
 
   // Paper Mode Override
@@ -96,7 +96,7 @@
     &:focus-within {
       box-shadow: 
         inset var(--void-shadow),
-        0 0 5px color-mix(in srgb, var(--energy-primary), transparent 70%);
+        0 0 5px fade(var(--energy-primary), 70%);
     }
   }
 }
@@ -107,10 +107,10 @@
 // MIXIN: Neon Text Glow
 @mixin text-glow($color: var(--energy-primary)) {
   color: $color;
-  text-shadow: 0 0 15px color-mix(in srgb, $color, transparent 40%);
+  text-shadow: 0 0 15px fade($color, 40%);
 
   @at-root [data-atmosphere='paper'] & {
-    text-shadow: 0 0 5px color-mix(in srgb, $color, transparent 40%);
+    text-shadow: 0 0 5px fade($color, 40%);
   }
 }
 
@@ -215,7 +215,7 @@
     90deg,
     transparent 0%,
     transparent 30%,
-    color-mix(in srgb, var(--energy-primary), transparent 85%) 50%,
+    fade(var(--energy-primary), 85%) 50%,
     transparent 70%,
     transparent 100%
   );

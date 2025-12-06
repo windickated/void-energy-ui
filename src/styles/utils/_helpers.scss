@@ -190,7 +190,7 @@ $spacing-aliases: (
     display: block;
     height: 100%;
     background: linear-gradient(135deg, var(--energy-primary), var(--energy-secondary));
-    box-shadow: 0 0 10px color-mix(in srgb, var(--energy-primary), transparent 40%);
+    box-shadow: 0 0 10px fade(var(--energy-primary), 40%);
     border-radius: inherit;
     animation: progress-fill 2s ease-out forwards;
   }

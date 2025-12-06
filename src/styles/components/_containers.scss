@@ -182,13 +182,13 @@
 .surface-void {
   background: var(--bg-canvas);
   // Optional: add a subtle border to define edges against other void elements
-  border: 1px solid var(--border-shadow); 
+  border: var(--physics-border-width) solid var(--border-shadow); 
 }
 
 // Spotlight Background (Slightly lighter, useful for active sections)
 .surface-spotlight {
   background: var(--bg-spotlight);
-  border: 1px solid var(--border-shadow);
+  border: var(--physics-border-width) solid var(--border-shadow);
 }
 
 // 4. CANVAS-LEVEL INPUTS (The Exception)
@@ -203,12 +203,12 @@
   // Since we don't have the glass card contrast, we brighten the border,
   // and darken the current canvas color
   border-color: var(--border-highlight); // 30% opacity (Brighter)
-  background: color-mix(in srgb, var(--bg-canvas), black 20%);
+  background: shade(var(--bg-canvas), 20%);
   
   // Paper Mode Override
   @at-root [data-atmosphere='paper'] & {
     background: #FFFFFF;
-    border: 1px solid var(--energy-secondary);
+    border: var(--physics-border-width) solid var(--energy-secondary);
   }
 }
 

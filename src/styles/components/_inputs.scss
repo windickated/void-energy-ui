@@ -170,7 +170,7 @@ input[type='radio'] {
   border-radius: 1rem;
   
   // Style
-  border: 2px dashed color-mix(in srgb, var(--energy-secondary), transparent 70%);
+  border: 2px dashed fade(var(--energy-secondary), 70%);
   @include glass-sunk; 
   border-style: dashed; // Override sunk solid border
   
@@ -230,7 +230,7 @@ input[type='radio'] {
   &.drag-active,
   &:focus-within {
     border-color: var(--energy-primary);
-    background-color: color-mix(in srgb, var(--bg-sink), var(--energy-primary) 5%);
+    background-color: blend(var(--bg-sink), var(--energy-primary), 5%);
     
     // Energize the content
     .dropzone-content {
