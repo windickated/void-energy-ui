@@ -14,35 +14,7 @@
    - Hover/Focus = Kinetic Energy (Glow, Rise, Brightness).
    
    --------------------------------------------------------------------------
-   CHEAT SHEET & API REFERENCE
-   --------------------------------------------------------------------------
-
-   1. THE BASE CLASS
-      - .btn or <button>  Standard Glass Button. Used for secondary actions.
-                          (Cancel, Back, Open Settings).
-
-   2. THE PRIMARY ACTION (The "Gemini Laser")
-      - .btn-cta          High-visibility button with a rotating gradient border.
-                          Usage: ONE per view (e.g., "Connect Wallet", "Submit").
-
-   3. SEMANTIC VARIANTS (Contextual Energy)
-      - .btn-orb          Premium / Web3 / Value (Gold/Cyan in Terminal).
-      - .btn-signal       Success / Safe Action (Green).
-      - .btn-alert        Destructive / Error (Red).
-      - .btn-system       Configuration / AI (Purple).
-
-   4. UTILITIES
-      - .btn-icon         Forces a perfect circle (44x44px) for SVGs.
-      - .btn-void         "Naked" reset. Strips all styles. Used for text links
-                          or wrapping complex clickable areas.
-
-   --------------------------------------------------------------------------
-   ATMOSPHERE BEHAVIOR
-   --------------------------------------------------------------------------
-   - Void (Default):   Glass surface. Hover emits a Neon Glow.
-   - Paper (Light):    Graphite outline. Hover resembles Ink density (Darker).
-   - Terminal:         Instant state changes (0s latency). High contrast.
-
+   See global.scss for full API documentation.
    -------------------------------------------------------------------------- */
 
 // ==========================================================================

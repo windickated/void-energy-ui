@@ -14,46 +14,25 @@
    2. Surfaces handle BACKGROUNDS, BLURS, and BORDERS.
    
    --------------------------------------------------------------------------
-   CHEAT SHEET & API REFERENCE
-   --------------------------------------------------------------------------
-
-   1. LAYOUT CONTAINERS (Structure Only)
-      - .container        Responsive max-width + padding. Centers content.
-      - .container-fluid  100% width + responsive padding. 
-
-   2. PRESET CARDS (Layout + Visuals)
-      - .card-glass       A standard glass container with vertical spacing.
-      - .card-sunk        A recessed container (sidebar style) with vertical spacing.
-
-   3. ATOMIC SURFACES (Texture Only - No Padding/Layout)
-      Combine these with utility classes from _helpers.scss (.pad-*, .round-*).
-      
-      - .surface-glass        Static glass layer (Background/Blur).
-      - .surface-glass-action Interactive glass (Rises & Glows on hover).
-      - .surface-sunk         Recessed layer (Inner shadow).
-      - .surface-void         Solid canvas color (Opaque masking).
-      - .surface-spotlight    Slightly lighter solid background.
-
-   4. CANVAS-LEVEL INPUTS (The Exception)
-      - .sunk-on-canvas   Use this when an input must sit directly on the --bg-canvas
+   See global.scss for full API documentation.
 
    --------------------------------------------------------------------------
    COMMON PATTERNS (Copy-Paste)
    --------------------------------------------------------------------------
 
    A. THE STANDARD PAGE LAYOUT
-      <div class="container flex-col gap-24">
+      <div class="container flex-col gap-md">
          <h1>Title</h1>
          <p>Content...</p>
       </div>
 
    B. THE COMPOSABLE GLASS CARD (Preferred)
-      <div class="surface-glass round-16 pad-24 flex-col gap-16">
+      <div class="surface-glass round-16 pad-md flex-col gap-md">
          <h2>Card Title</h2>
       </div>
 
    C. THE CLICKABLE WIDGET
-      <div class="surface-glass-action round-12 pad-16 flex-center">
+      <div class="surface-glass-action round-16 pad-md flex-center">
          <span>Click Me</span>
       </div>
 
@@ -147,12 +126,22 @@
   @include glass-float();
   border-radius: 16px;
   @include responsive-vertical-spacing;
+
+  // OPINIONATED DEFAULTS:
+  display: flex;
+  flex-direction: column; 
+  gap: 1.5rem; // Default gap
 }
 
 .card-sunk {
   @include glass-sunk;
   border-radius: 16px;
   @include responsive-vertical-spacing;
+
+  // OPINIONATED DEFAULTS:
+  display: flex;
+  flex-direction: column; 
+  gap: 1.5rem; // Default gap
 }
 
 // ==========================================================================

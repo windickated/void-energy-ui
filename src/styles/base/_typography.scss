@@ -153,3 +153,70 @@ input, select, textarea {
 .text-h3      { @include typography('h3'); }
 .text-h4      { @include typography('h4'); }
 .text-h5      { @include typography('h5'); }
+
+/* =========================================
+   5. LONG-FORM CONTENT (Legal / Docs)
+   ========================================= */
+// Usage: Wrap your Markdown or Legal Text in <div class="legal-content">
+// This re-enables lists ONLY inside this wrapper.
+
+.legal-content {
+  color: var(--text-dim); // Ensure readable contrast
+
+  // 1. RE-ENABLE STANDARD LISTS
+  ul, ol {
+    margin-bottom: 1.5rem;
+    padding-left: 1.5rem; // Indent lists
+    line-height: 1.6;
+  }
+
+  ul { list-style-type: disc; }
+  ol { list-style-type: decimal; }
+
+  // Nested Logic
+  ul ul { list-style-type: circle; margin-bottom: 0; }
+  ul ul ul { list-style-type: square; }
+
+  // 2. UTILITY LIST STYLES
+  ol.uppercase { list-style-type: upper-alpha; }
+  ol.lowercase { list-style-type: lower-alpha; }
+
+  // 3. LEGAL SUB-ORDERED (1.1, 1.2)
+  // Your logic was good, just cleaned up spacing
+  ol.subordered {
+    list-style-type: none;
+    counter-reset: item;
+    padding-left: 0; // These usually align left
+
+    & > li {
+      display: table;
+      counter-increment: item;
+      margin-bottom: 0.5rem;
+      
+      &:before {
+        content: counters(item, '.') '. ';
+        display: table-cell;
+        padding-right: 0.75rem;
+        color: var(--text-main); // Make numbers brighter than text
+        font-weight: 600;
+        white-space: nowrap;
+      }
+    }
+    
+    // Recursive nesting support
+    li ol.subordered > li:before {
+      content: counters(item, '.') ' ';
+    }
+  }
+
+  // 4. TYPOGRAPHY FIXES
+  // Legal docs need clear distinction between bold/headings
+  strong, b {
+    color: var(--text-main); // Highlight key terms (e.g., "SECTION 1")
+    font-weight: 700;
+  }
+  
+  a {
+    @extend .link; // Force your Laser Link style on all anchors
+  }
+}

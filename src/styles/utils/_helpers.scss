@@ -1,3 +1,4 @@
+@use 'sass:map';
 @use '/src/styles/abstracts' as *;
 @use 'animations' as *;
 
@@ -6,269 +7,178 @@
    ==========================================================================
    
    PURPOSE:
-   This file provides atomic, immutable utility classes to build layouts and 
-   interactions rapidly. It replaces rigid CSS with composable logic.
-
-   PHILOSOPHY: "Composition over Inheritance"
-   Do not force styles. Stack them.
-   - ❌ Avoid: .sidebar { display: flex; flex-direction: column; gap: 1rem; }
-   - ✅ Prefer: <aside class="sidebar flex-col gap-16">
+   Atomic, immutable utility classes for rapid UI composition.
+   Now features RESPONSIVE prefixes and SEMANTIC aliases.
 
    --------------------------------------------------------------------------
-   CHEAT SHEET & API REFERENCE
-   --------------------------------------------------------------------------
-
-   1. LAYOUT (Flexbox)
-      - Base:       .flex (Just display:flex, no alignment)
-      - Direction:  .flex-row | .flex-col
-      - Shortcuts:  .flex-center (Perfect center) | .flex-center-col
-      - Alignment:  .items-center | .items-start | .items-end | .items-stretch
-      - Justify:    .justify-center | .justify-between | .justify-start | .justify-end
-      - Wrapping:   .flex-wrap | .flex-nowrap
-      - Sizing:     .full-w (width 100%) | .full-h (height 100%) | .flex-1 (fill space)
-
-   2. SIZING (Dimensions)
-      - Width:      .w-full (100%) | .w-screen (100vw) | .w-auto
-      - Height:     .h-full (100%) | .h-screen (100vh) | .h-auto
-      - Min-Height: .min-h-screen (Crucial for app wrapper)
-      - Constraints:.max-w-full (Prevent overflow)
-
-   3. SPACING (1 unit = 1px visual reference, mostly REM based)
-      - Gaps:       .gap-0 | .gap-8 | .gap-16 | .gap-24 | .gap-32 | .gap-64
-      - Padding:    .pad-0 | .pad-16 | .pad-24 | .pad-32 | .pad-inline (24px horizontal)
-      - Margin:     .mar-0 | .mar-16 | .mar-auto (Horizontal Center)
-      - Margin Top: .mar-top-8 | .mar-top-16 | .mar-top-24 | .mar-top-32 | .mar-top-64
-      - Margin Bot: .mar-bot-8 | .mar-bot-16 | .mar-bot-24 | .mar-bot-32 | .mar-bot-64
-      - Margin Y:   .mar-y-16 | .mar-y-24 | .mar-y-32 | .mar-y-64
-
-   4. PHYSICS & SHAPE (Atmosphere Aware)
-      - Radius:     .round-8 | .round-12 | .round-16 | .round-24 | .round-full
-      - Blur:       .blur (Adapts: 20px in Void, 0px in Paper, 2px in Terminal)
-
-   5. ANIMATION (Time)
-      - Entry:      .fade-in (add .delay-1 through .delay-5)
-      - Loading:    .shimmer (Adapts color to current atmosphere)
-      - Action:     .cyber-pulse (Breathing glow for active states)
-      - Progress:   .progress-bar > <span> (Inner span animates fill)
-      - Logo Load:  .loading-logo (Holographic materialization effect)
-
-   6. TEXT (Typography)
-      - Alignment:  .text-center (Center text horizontally)
-      - Highlight:  .text-highlight (Neon glow using current atmosphere energy)
-      - Accessibility: .sr-only (Screen reader only content)
-      - Status Colors: .text-success | .text-error | .text-premium | .text-system
-
-   --------------------------------------------------------------------------
-   COMMON PATTERNS (Copy-Paste)
-   --------------------------------------------------------------------------
-
-   A. THE STANDARD PAGE SECTION (Vertical Stack)
-      Combines the responsive container width with a vertical column layout.
-      <section class="container flex-col gap-24">
-        <h2>Title</h2>
-        <p>Content...</p>
-      </section>
-
-   B. THE CENTERED HERO (Hero Section)
-      Centers text and buttons in the middle of the container.
-      <div class="container flex-center-col gap-16 pad-32">
-         <h1>Welcome</h1>
-         <button>Start</button>
-      </div>
-
-   C. THE NAVBAR (Full width glass, constrained content)
-      The outer nav is full width/glass, the inner div constrains content.
-      <nav class="w-full blur pad-16">
-         <div class="container flex-row justify-between items-center">
-            <div class="logo">Logo</div>
-            <div class="links">...</div>
-         </div>
-      </nav>
-      
+   See global.scss for full API documentation.
    -------------------------------------------------------------------------- */
 
 // ==========================================================================
-// UTILITY CLASSES (The Public API)
+// 0. CONFIGURATION (Local Maps)
 // ==========================================================================
 
-// --------------------------------------------------------------------------
-// 1. LAYOUT & FLEXBOX
-// --------------------------------------------------------------------------
+// Map pixels to semantic sizes
+$spacing-scale: (
+  '0': 0,
+  '8': 0.5rem,
+  '16': 1rem,
+  '24': 1.5rem,
+  '32': 2rem,
+  '48': 3rem, 
+  '64': 4rem
+);
 
-// A. The Base (Pure)
-.flex {
-  display: flex;
-  // No direction/alignment defined by default. 
-  // This allows it to wrap inputs or text without centering them weirdly.
+$spacing-aliases: (
+  'xs': '8',
+  'sm': '16',
+  'md': '24',
+  'lg': '32',
+  'xl': '64'
+);
+
+// ==========================================================================
+// 1. UTILITY GENERATOR MIXIN
+// ==========================================================================
+// This mixin contains all classes that need to be responsive.
+// We call this once for base styles, and again for every breakpoint.
+
+@mixin generate-utilities($prefix: '') {
+  
+  // --- LAYOUT & DISPLAY ---
+  .#{$prefix}hidden { display: none !important; }
+  .#{$prefix}block  { display: block; }
+  .#{$prefix}inline { display: inline-block; }
+  
+  .#{$prefix}flex { display: flex; }
+  .#{$prefix}flex-col { display: flex; flex-direction: column; }
+  .#{$prefix}flex-row { display: flex; flex-direction: row; }
+  
+  // Alignment Shortcuts
+  .#{$prefix}flex-center { 
+    display: flex; align-items: center; justify-content: center; 
+  }
+  .#{$prefix}flex-center-col { 
+    display: flex; flex-direction: column; align-items: center; justify-content: center; 
+  }
+
+  // Flex Modifiers
+  .#{$prefix}items-center { align-items: center; }
+  .#{$prefix}items-start  { align-items: flex-start; }
+  .#{$prefix}items-end    { align-items: flex-end; }
+  .#{$prefix}items-stretch{ align-items: stretch; }
+
+  .#{$prefix}justify-center { justify-content: center; }
+  .#{$prefix}justify-between{ justify-content: space-between; }
+  .#{$prefix}justify-start  { justify-content: flex-start; }
+  .#{$prefix}justify-end    { justify-content: flex-end; }
+
+  .#{$prefix}flex-wrap    { flex-wrap: wrap; }
+  .#{$prefix}flex-nowrap  { flex-wrap: nowrap; }
+  .#{$prefix}flex-1       { flex: 1; }
+
+  // --- SIZING ---
+  .#{$prefix}w-full { width: 100%; }
+  .#{$prefix}w-auto { width: auto; }
+  .#{$prefix}h-full { height: 100%; }
+  .#{$prefix}h-auto { height: auto; }
+
+  // --- SPACING LOOP (Gaps, Padding, Margins) ---
+  @each $key, $val in $spacing-scale {
+    
+    // 1. Pixel Literals (e.g., .gap-16)
+    .#{$prefix}gap-#{$key} { gap: $val; }
+    .#{$prefix}pad-#{$key} { padding: $val; }
+    .#{$prefix}mar-#{$key} { margin: $val; }
+    
+    .#{$prefix}pad-top-#{$key} { padding-top: $val; }
+    .#{$prefix}pad-bot-#{$key} { padding-bottom: $val; }
+    
+    .#{$prefix}mar-top-#{$key} { margin-top: $val; }
+    .#{$prefix}mar-bot-#{$key} { margin-bottom: $val; }
+    .#{$prefix}mar-y-#{$key}   { margin-block: $val; }
+  }
+
+  // --- SEMANTIC ALIASES (e.g., .gap-md) ---
+  @each $alias, $key in $spacing-aliases {
+    $val: map.get($spacing-scale, $key);
+
+    .#{$prefix}gap-#{$alias} { gap: $val; }
+    .#{$prefix}pad-#{$alias} { padding: $val; }
+    .#{$prefix}mar-#{$alias} { margin: $val; }
+    .#{$prefix}mar-y-#{$alias} { margin-block: $val; }
+  }
 }
 
-// B. Direction Shortcuts
-.flex-col {
-  display: flex;
-  flex-direction: column;
-}
+// ==========================================================================
+// 2. GENERATE CLASSES
+// ==========================================================================
 
-.flex-row {
-  display: flex;
-  flex-direction: row;
-}
+// A. BASE CLASSES (Mobile / Default)
+// No prefix. Works everywhere.
+@include generate-utilities('');
 
-// C. Alignment Shortcuts (The "Void" Center)
-// Use this when you specifically want that "Centered Card" look
-.flex-center {
-  display: flex;
-  align-items: center;
-  justify-content: center;
-}
-
-.flex-center-col {
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  justify-content: center;
-}
-
-// D. Alignment Modifiers
-.items-center { align-items: center; }
-.items-start  { align-items: flex-start; }
-.items-end    { align-items: flex-end; }
-.items-stretch{ align-items: stretch; }
-
-.justify-center { justify-content: center; }
-.justify-between{ justify-content: space-between; }
-.justify-start  { justify-content: flex-start; }
-.justify-end    { justify-content: flex-end; }
-
-.flex-wrap    { flex-wrap: wrap; }
-.flex-nowrap  { flex-wrap: nowrap; }
-.flex-1       { flex: 1; } // Fills remaining space
-.full-w       { width: 100%; }
-.full-h       { height: 100%; }
-
-// --------------------------------------------------------------------------
-// 2. SIZING & DIMENSIONS
-// --------------------------------------------------------------------------
-
-// Widths
-.w-full       { width: 100%; } // Safest: fits inside parent/scrollbar
-.w-auto       { width: auto; }
+// Special non-responsive base helpers
+.w-screen     { width: 100vw; }
+.h-screen     { height: 100vh; height: 100dvh; }
+.min-h-screen { min-height: 100vh; min-height: 100dvh; }
 .max-w-full   { max-width: 100%; }
+.mar-auto     { margin-inline: auto; }
+.pad-inline   { padding-inline: 1.5rem; }
 
-// Viewport Width (Use with caution: can cause horizontal scrollbars on Windows)
-.w-screen     { width: 100vw; } 
-
-// Heights
-.h-full       { height: 100%; }
-.h-auto       { height: auto; }
-
-// Viewport Height (The Fix)
-// 100vh = Fixed (Hidden by address bar on mobile)
-// 100dvh = Dynamic (Updates when address bar shrinks/grows)
-.h-screen     { 
-  height: 100vh; // Fallback
-  height: 100dvh; 
+// B. RESPONSIVE LOOP
+// Iterates through your global $breakpoints map
+@each $bp-name, $bp-value in $breakpoints {
+  
+  // Skip the 'mobile' 0 value, as that is the base above
+  @if $bp-value != 0 {
+    
+    @media (min-width: $bp-value) {
+      // The slash \ is needed to escape the colon in CSS class names
+      @include generate-utilities('#{$bp-name}\\:');
+    }
+  }
 }
 
-// Minimum Heights (Crucial for App Wrapper)
-.min-h-screen { 
-  min-height: 100vh; // Fallback
-  min-height: 100dvh; 
-}
+// ==========================================================================
+// 3. VISUAL PHYSICS & ANIMATIONS (Static / Non-Responsive)
+// ==========================================================================
 
-// --------------------------------------------------------------------------
-// 3. SPACING 
-// --------------------------------------------------------------------------
-
-// A. GAPS (Flex/Grid Parents)
-.gap-0  { gap: 0; }
-.gap-8  { gap: 0.5rem; }
-.gap-16 { gap: 1rem; }
-.gap-24 { gap: 1.5rem; }
-.gap-32 { gap: 2rem; }
-.gap-64 { gap: 4rem; }
-
-// B. PADDING (Internal Space)
-.pad-0  { padding: 0; }
-.pad-16 { padding: 1rem; }
-.pad-24 { padding: 1.5rem; }
-.pad-32 { padding: 2rem; }
-.pad-inline { padding-inline: 1.5rem; }
-
-// C. MARGINS (External Space)
-// Base
-.mar-0  { margin: 0; }
-.mar-16 { margin: 1rem; }
-.mar-auto { margin-inline: auto; }
-
-// Top (Push down)
-.mar-top-8  { margin-top: 0.5rem; }
-.mar-top-16 { margin-top: 1rem; }
-.mar-top-24 { margin-top: 1.5rem; }
-.mar-top-32 { margin-top: 2rem; }
-.mar-top-64 { margin-top: 4rem; }
-
-// Bottom (Push up)
-.mar-bot-8  { margin-bottom: 0.5rem; }
-.mar-bot-16 { margin-bottom: 1rem; }
-.mar-bot-24 { margin-bottom: 1.5rem; }
-.mar-bot-32 { margin-bottom: 2rem; }
-.mar-bot-64 { margin-bottom: 4rem; }
-
-// Vertical Axis (Top & Bottom) - Very useful for sections
-.mar-y-16 { margin-block: 1rem; }
-.mar-y-24 { margin-block: 1.5rem; }
-.mar-y-32 { margin-block: 2rem; }
-.mar-y-64 { margin-block: 4rem; }
-
-// --------------------------------------------------------------------------
-// 4. VISUAL PHYSICS & SHAPE
-// --------------------------------------------------------------------------
-
-// Dynamic Blur
-// Adapts to atmosphere: 20px (Void) / 2px (Terminal) / 0px (Paper)
+// Blur
 .blur {
   -webkit-backdrop-filter: blur(var(--physics-blur));
   backdrop-filter: blur(var(--physics-blur));
 }
 
 // Border Radius
-.round-8    { border-radius: 0.5rem; }   // Inner elements (buttons, inputs)
-.round-12   { border-radius: 0.75rem; }  // Tiles
-.round-16   { border-radius: 1rem; }     // Containers
-.round-24   { border-radius: 1.5rem; }   // Modals
-.round-full { border-radius: 9999px; }   // Circles
-
-// --------------------------------------------------------------------------
-// 5. ANIMATION UTILITIES
-// --------------------------------------------------------------------------
+.round-8    { border-radius: 0.5rem; }
+.round-12   { border-radius: 0.75rem; }
+.round-16   { border-radius: 1rem; }
+.round-24   { border-radius: 1.5rem; }
+.round-full { border-radius: 9999px; }
 
 // Entry Animations
-// Usage: <div class="fade-in delay-1">
-.fade-in {
-  @include entry-transition;
-}
+.fade-in { @include entry-transition; }
 
-// Staggered Delays
+// Delays
 .delay-1 { transition-delay: 50ms; }
 .delay-2 { transition-delay: 100ms; }
 .delay-3 { transition-delay: 150ms; }
 .delay-4 { transition-delay: 200ms; }
 .delay-5 { transition-delay: 250ms; }
 
-// Loading Shimmer (Skeleton)
-// Usage: <div class="shimmer round-8" style="height: 20px;"></div>
-.shimmer {
-  // Apply the animation mixin
-  @include shimmer;
+// Loading
+.shimmer { @include shimmer; }
+.loading-logo {
+  width: 8rem; 
+  aspect-ratio: 1/1;
+  animation: logo-enter 1.2s var(--ease-snap) forwards;
 }
 
-// Interactive Loop (Breathing Glow)
-.cyber-pulse {
-  animation: cyber-pulse 3s var(--ease-pulse) infinite;
-}
+// Interactive
+.cyber-pulse { animation: cyber-pulse 3s var(--ease-pulse) infinite; }
 
-// Progress Bar
-// Usage: <div class="progress-bar"><span></span></div>
+// Progress
 .progress-bar {
   width: 100%;
   height: 4px;
@@ -286,43 +196,24 @@
   }
 }
 
-// Logo Loader (Splash Screen)
-// Usage: <img src="/logo.svg" class="loading-logo" />
-.loading-logo {
-  // Sizing (Adjustable via inline styles if needed)
-  width: 8rem; 
-  aspect-ratio: 1/1;
-  
-  // The Animation
-  // 1.2s duration gives it a "Cinematic" feel (not too fast)
-  // var(--ease-snap) makes it settle firmly into place
-  animation: logo-enter 1.2s var(--ease-snap) forwards;
-
-  // OPTIONAL: If the load takes > 2s, you can chain the "Pulse" animation 
-  // to start after the entry finishes.
-  // animation: 
-  //   logo-enter 1.2s var(--ease-snap) forwards,
-  //   cyber-pulse 3s var(--ease-pulse) infinite 1.2s; // Starts after 1.2s delay
-}
-
-// --------------------------------------------------------------------------
-// 6. TEXT UTILITIES
-// --------------------------------------------------------------------------
+// ==========================================================================
+// 4. TEXT UTILITIES
+// ==========================================================================
 
 .text-center { text-align: center; }
+.text-right  { text-align: right; }
+.text-left   { text-align: left; }
 
 .text-success { color: var(--color-success); }
 .text-error   { color: var(--color-error); }
 .text-premium { color: var(--color-premium); }
 .text-system  { color: var(--color-system); }
 
-// Neon Highlight
 .text-highlight {
-  @include text-glow; // Uses current atmosphere primary energy
+  @include text-glow;
   font-weight: 600;
 }
 
-// Accessibility
 .sr-only {
   position: absolute;
   width: 1px;
