@@ -7,7 +7,7 @@
   let rangeValue = $state(50);
 
   // --- Configuration ---
-  const SPOTLIGHT_RADIUS = 600;
+  const SPOTLIGHT_RADIUS = 800;
   const MOUSE_LERP = 0.15; // Speed of light movement
   const COLOR_LERP = 0.15; // Speed of color transition (Lower = Smoother/Slower)
 
