@@ -4,6 +4,9 @@
    1. THE ROOT (Global Logic)
    ========================================= */
 :root {
+  /* Default to dark for scrollbars and system widgets */
+  color-scheme: dark;
+
   /* --- GLOBAL SCALING (User Preference) --- */
   --text-scale: 1; /* Multiplier: 0.85 (Compact) to 1.2 (Large) */
 
@@ -198,6 +201,9 @@
 
 /* PAPER (Light Mode / Exception) */
 [data-atmosphere='paper'] {
+  /* Crucial: Tells browser to use white scrollbars/inputs */
+  color-scheme: light;
+  
   --font-atmos-heading: #{$font-book};
   --font-atmos-body:    #{$font-book};
 
