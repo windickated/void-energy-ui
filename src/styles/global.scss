@@ -1,8 +1,11 @@
+/* ==========================================================================
+   🌌 VOID ENERGY UI: GLOBAL ENTRY POINT
+   ========================================================================== */
+
 /* 1. ABSTRACTS (Tools, Variables, Mixins) - No Output */
 @use 'abstracts' as *;
 
 /* 2. BASE (Resets, Typography, Themes) - Output Styles */
-// This now includes the reset, the html/body setup, and the CSS Variables
 @use 'base';
 
 /* 3. COMPONENTS (The Objects) */
@@ -12,18 +15,33 @@
 @use 'utils';
 
 /* ==========================================================================
-   🌌 VOID ENERGY UI: MASTER DEVELOPER CHEAT SHEET
+   📘 MASTER DEVELOPER CHEAT SHEET (vFinal)
    ==========================================================================
    
-   PHILOSOPHY: "Composition over Inheritance"
-   1. LAYOUT: Stack utility classes in HTML.
-   2. PHYSICS: Separation of Concerns. 
-      - Containers handle WIDTH & MARGINS.
-      - Surfaces handle TEXTURE & BORDERS.
-      - Buttons handle INTERACTION & ENERGY.
+   PHILOSOPHY: "We do not paint pixels; we define materials."
+   
+   1. LIGHT IS SIGNAL: We use Glows, not shadows. If it glows, it's interactive.
+   2. DEPTH IS LOGIC: 
+      - FLOAT (+Z): Content/Cards (Glass).
+      - SINK (-Z): Inputs/Wells (Void Depth).
+      - RULE: You cannot dig a hole in the void. Sunk elements must sit inside Glass.
+   3. ATMOSPHERE IS CONTEXT:
+      - The UI morphs physics based on `html[data-atmosphere="..."]`.
 
    --------------------------------------------------------------------------
-   1. RESPONSIVE SYNTAX (Tailwind-Style)
+   1. THE ATMOSPHERES (Logic Layer)
+   --------------------------------------------------------------------------
+   | ATTRIBUTE           | VIBE             | PHYSICS QUIRK                 |
+   | ------------------- | ---------------- | ----------------------------- |
+   | [default] "void"    | Cyberpunk / Navy | Standard Glow & Blur.         |
+   | "crimson"           | Horror / Red     | High Contrast, Aggressive.    |
+   | "overgrowth"        | Nature / Green   | Bioluminescent, Calming.      |
+   | "velvet"            | Romance / Pink   | Soft, Welcoming.              |
+   | "terminal"          | Hacker / Amber   | 0s Latency (Instant), No Blur.|
+   | "paper"             | Light / Ink      | INVERTED: Dark Ink, No Glow.  |
+
+   --------------------------------------------------------------------------
+   2. RESPONSIVE SYNTAX (Applies to all Utilities below)
    --------------------------------------------------------------------------
    Format: {breakpoint}:{class}
 
@@ -37,147 +55,108 @@
    quad-hd:         | 2560px+  | class="quad-hd:mar-48"
 
    --------------------------------------------------------------------------
-   2. SPACING (Padding & Margins)
-   --------------------------------------------------------------------------
-   Use Pixel-Literal (Figma) OR Semantic Aliases (T-Shirt).
-
-   ALIAS    | PIXEL CLASS | VALUE
-   -------- | ----------- | ------
-   gap-xs   | gap-8       | 0.5rem
-   gap-sm   | gap-16      | 1rem
-   gap-md   | gap-24      | 1.5rem (Standard)
-   gap-lg   | gap-32      | 2rem
-   gap-xl   | gap-64      | 4rem
-
-   PROPERTIES:
-   - Gap:      .gap-{size}
-   - Padding:  .pad-{size}, .pad-top-{size}, .pad-inline
-   - Margin:   .mar-{size}, .mar-top-{size}, .mar-y-{size}
-
-   --------------------------------------------------------------------------
-   3. LAYOUT TOOLS
-   --------------------------------------------------------------------------
-   - Flexbox:    .flex, .flex-col, .flex-row
-   - Center:     .flex-center (All), .flex-center-col
-   - Alignment:  .items-center, .items-start, .items-end
-   - Justify:    .justify-center, .justify-between, .justify-end
-   - Sizing:     .w-full, .h-full, .w-screen, .min-h-screen
-   - Display:    .hidden, .block, .inline (Supports responsive prefixes!)
-
-   --------------------------------------------------------------------------
-   4. STRUCTURE: CONTAINERS (Widths & Margins)
-   --------------------------------------------------------------------------
-   - .container        : Max-width constraint + Centered + Side Padding.
-                         (Use for main page content).
-   - .container-fluid  : 100% Width + Side Padding.
-                         (Use for full-bleed sections).
-
-   DASHBOARD LAYOUT (Settings Grid)
-      - .settings-grid    : Responsive Grid. Stacks on mobile, Label-Left on Desktop.
-      - .settings-label   : Auto-styled H4 label. Right-aligned on desktop.
-      - .settings-content : Flex wrapper for inputs. 
-                            (Add .flow-row for side-by-side tags).
-
-   --------------------------------------------------------------------------
-   5. TEXTURE: SURFACES (Backgrounds & Physics)
+   3. UTILITIES: SPACING & SIZING
    --------------------------------------------------------------------------
    
-   A. ATOMIC SURFACES (Texture Only - No Padding/Radius)
-      Combine with utils: <div class="surface-glass round-16 pad-24">
-      
-      - .surface-glass        : Floating Glass (Static).
-      - .surface-glass-action : Floating Glass + Hover Rise/Glow (Interactive).
-      - .surface-sunk         : Recessed/Darker (Sidebars, grouping).
-      - .surface-void         : Solid Canvas Color (Opaque masking).
-      - .surface-spotlight    : Lighter Solid (Active sections).
+   A. THE SCALE (Values for Gap, Padding, Margin)
+   | ALIAS | PIXELS | FIGMA TOKEN |
+   | ----- | ------ | ----------- |
+   | xs    | 8px    | 0.5rem      |
+   | sm    | 16px   | 1rem        |
+   | md    | 24px   | 1.5rem      |
+   | lg    | 32px   | 2rem        |
+   | xl    | 64px   | 4rem        |
+   | --    | 48px   | 3rem        |
 
-   B. PRESET CARDS (Texture + Layout + Vertical Spacing)
-      Use these for major sections (includes responsive margin-block).
-      *Opinionated: These include flex-col and gap defaults.*
-      
+   B. SPACING CLASSES
+   - Gap:      .gap-{size}
+   - Padding:  .pad-{size}, .pad-top-{size}, .pad-bot-{size}, .pad-inline
+   - Margin:   .mar-{size}, .mar-top-{size}, .mar-bot-{size}, .mar-y-{size}, .mar-auto
+
+   C. SIZING CLASSES
+   - Width:    .w-full (100%), .w-auto, .w-screen (100vw), .max-w-full
+   - Height:   .h-full (100%), .h-auto, .h-screen (100dvh), .min-h-screen
+
+   --------------------------------------------------------------------------
+   4. UTILITIES: LAYOUT & FLEXBOX
+   --------------------------------------------------------------------------
+   - Display:   .hidden, .block, .inline
+   - Direction: .flex, .flex-col, .flex-row
+   - Wrap:      .flex-wrap, .flex-nowrap, .flex-1
+   
+   - Alignment (Items):
+     .items-center, .items-start, .items-end, .items-stretch
+   
+   - Justification (Content):
+     .justify-center, .justify-between, .justify-start, .justify-end
+
+   - Shortcuts (The "Magic" Classes):
+     .flex-center      -> (flex + items-center + justify-center)
+     .flex-center-col  -> (flex-col + items-center + justify-center)
+
+   --------------------------------------------------------------------------
+   5. UTILITIES: TEXT & VISUALS
+   --------------------------------------------------------------------------
+   - Align:   .text-center, .text-right, .text-left
+   - Colors:  .text-highlight (Neon Glow), .text-success, .text-error, 
+              .text-premium, .text-system
+   - Access:  .sr-only (Screen reader only)
+
+   - Radius:  .round-8, .round-12, .round-16, .round-24, .round-full
+   - Effect:  .blur (Backdrop blur based on atmosphere)
+   
+   --------------------------------------------------------------------------
+   6. UTILITIES: ICONS & ANIMATION
+   --------------------------------------------------------------------------
+   - Icons:   .icon (1.25em), .icon-sm (1em), .icon-lg (1.5em), .icon-xl (2em)
+   - Spin:    .icon-spin (Continuous rotation)
+   
+   - Loading: .shimmer (Skeleton loader), .loading-logo (Holo-entry)
+   - Pulse:   .cyber-pulse (Breathing glow), .fade-in (Entry transition)
+   - Delays:  .delay-1 (50ms) to .delay-5 (250ms)
+
+   --------------------------------------------------------------------------
+   7. COMPONENTS: STRUCTURE
+   --------------------------------------------------------------------------
+   - .container        : Max-width constraint + Centered + Side Padding.
+   - .container-fluid  : 100% Width + Padding.
+
+   DASHBOARD LAYOUT (.settings-grid)
+      - .settings-grid    : Grid wrapper. Stacked on mobile, 2-col on desktop.
+      - .settings-label   : H4 label. Vertically Centered. Left align (desk), Center (mob).
+      - .settings-content : Flex wrapper for inputs. 
+
+   --------------------------------------------------------------------------
+   8. COMPONENTS: SURFACES
+   --------------------------------------------------------------------------
+   A. ATOMIC (Texture Only - No padding)
+      - .surface-glass        : Floating Glass (Static).
+      - .surface-glass-action : Floating Glass + Hover Rise (Interactive).
+      - .surface-sunk         : Recessed/Darker (Sidebars).
+      - .surface-void         : Solid Canvas Color (Masking).
+      - .surface-spotlight    : Lighter Solid (Active sections).
+   
+   B. CARDS (Texture + Padding + Responsive Vertical Spacing + Flex Column with Gap)
       - .card-glass           : Glass Surface + Radius + Vertical Margins.
       - .card-sunk            : Sunk Surface + Radius + Vertical Margins.
 
    --------------------------------------------------------------------------
-   6. INTERACTION: BUTTON SYSTEM
+   9. COMPONENTS: BUTTONS
    --------------------------------------------------------------------------
-   PHILOSOPHY: "Interaction is Energy"
-   - Resting state = Potential Energy (Subtle border/glass).
-   - Hover/Focus   = Kinetic Energy (Glow, Rise, Brightness).
+   - .btn             : Standard Glass Button.
+   - .btn-cta         : "Gemini Laser" (Primary).
+   - .btn-icon        : Circle (44px) for SVGs.
+   - .btn-void        : Naked reset.
 
-   A. THE BASE CLASS
-      - .btn or <button>  Standard Glass Button. Used for secondary actions.
-                          (Cancel, Back, Open Settings).
-
-   B. THE PRIMARY ACTION (The "Gemini Laser")
-      - .btn-cta          High-visibility button with a rotating gradient border.
-                          Usage: ONE per view (e.g., "Connect Wallet", "Submit").
-
-   C. SEMANTIC VARIANTS (Contextual Energy)
-      - .btn-orb          Premium / Web3 / Value (Gold/Cyan in Terminal).
-      - .btn-signal       Success / Safe Action (Green).
-      - .btn-alert        Destructive / Error (Red).
-      - .btn-system       Configuration / AI (Purple).
-
-   D. UTILITIES
-      - .btn-icon         Forces a perfect circle (44x44px) for SVGs.
-      - .btn-void         "Naked" reset. Strips all styles. Used for text links.
-
-   E. ATMOSPHERE BEHAVIOR
-      - Void (Default):   Glass surface. Hover emits a Neon Glow.
-      - Paper (Light):    Graphite outline. Hover resembles Ink density (Darker).
-      - Terminal:         Instant state changes (0s latency). High contrast.
+   VARIANTS: .btn-orb, .btn-signal, .btn-alert, .btn-system
 
    --------------------------------------------------------------------------
-   7. TYPOGRAPHY & LINKS
+   10. COMPONENTS: INPUTS & TILES
    --------------------------------------------------------------------------
-   - Colors:     .text-highlight (Neon), .text-success, .text-error
-   - Align:      .text-center, .text-right, .text-left
-   - Access:     .sr-only (Screen reader only)
-
-   LINK BEHAVIOR:
-   - <a> (Base):   Minimal reset. Inherits parent color. Subtle brightness on hover.
-                   (Use for wrapping Cards, Buttons, or generic nav items).
-   - .link:        Inline text link with "Laser Underline" animation.
-                   (Use for text inside paragraphs: <p>Read the <a class="link">Docs</a></p>).
-
-   --------------------------------------------------------------------------
-   8. INPUTS
-   --------------------------------------------------------------------------
-   <input>, <select>, <textarea> (Auto-styled to Sunk Surface)
-
-   --------------------------------------------------------------------------
-   9. CHIPS (Rich Data Display)
-   --------------------------------------------------------------------------
-   A. SMALL TILES (Tags/Chips)
-      Usage:
-      <div class="tile-small">
-         <p class="tile-label">Title</p><span class="tile-remove">X</span>
-      </div>
-      
-      - Base:       .tile-small
-      - Labeled:    .tile-labeled (Adds a "Tab" label on top via data-label="...")
-      
-   B. SEMANTIC VARIANTS (Colors)
-      - .tile-small-system    : Purple (AI/Config)
-      - .tile-small-premium   : Orange (Web3/Gold)
-      - .tile-small-success   : Green (Safe/Active)
-      - .tile-small-error     : Red (Danger/Horror)
-
-   --------------------------------------------------------------------------
-   10. DIALOGS
-   --------------------------------------------------------------------------
-      - (Default)     Standard width (Good for forms, settings).
-      - .dialog-sm    Mini width (Alerts, Confirmations, Delete actions).
-      - .dialog-lg    Wide width (Data tables, File uploads, Command decks).
-      - .dialog-full  Full screen takeover.
-      
-   --------------------------------------------------------------------------
-   11. ICONS & MEDIA
-   --------------------------------------------------------------------------
-   - .icon          : Scales with text (1.25em). Centers with line-height.
-   - .icon-sm       : Smaller (1em).
-   - .icon-lg       : Larger (1.5em).
-   - .icon-xl       : Extra Large (2em).
-   - .icon-spin     : Continuous rotation animation.
+   - Inputs/Textarea : Auto-styled as Sunk Surfaces.
+   - .dropzone       : Dashed Sunk Surface + Clickable.
+   
+   - .tile-small          : Data Chip (Blue).
+   - .tile-small-{color}  : Variants (premium, system, success, error).
+   - .tile-labeled        : Adds top tab (via data-label="...").
    ========================================================================== */
