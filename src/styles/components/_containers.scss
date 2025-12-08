@@ -63,7 +63,7 @@
 
     // Only generate media query if values exist
     @if $target-width and $target-padding {
-      @media (min-width: $breakpoint-width) {
+      @include respond-up($breakpoint-name) {
         max-width: $target-width;
         padding-inline: $target-padding;
       }
@@ -85,7 +85,7 @@
     $target-padding: map.get($container-paddings, $breakpoint-name);
 
     @if $target-padding {
-      @media (min-width: $breakpoint-width) {
+      @include respond-up($breakpoint-name) {
         padding-inline: $target-padding;
       }
     }
@@ -104,19 +104,19 @@
   padding-block: 2rem;
 
   // Tablet: Start opening up
-  @media (min-width: 768px) {
+  @include respond-up('tablet') {
     margin-block: 3rem;
     padding-block: 2.5rem;
   }
 
   // Large Desktop: Luxurious space
-  @media (min-width: 1440px) {
+  @include respond-up('large-desktop') {
     margin-block: 4rem; // 64px separation
     padding-block: 3rem; // 48px internal padding
   }
 
   // 4K / Ultra Wide: Massive void
-  @media (min-width: 1920px) {
+  @include respond-up('full-hd') {
     margin-block: 6rem; // 96px separation
     padding-block: 4rem;
   }

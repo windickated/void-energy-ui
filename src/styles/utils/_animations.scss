@@ -33,7 +33,7 @@
   transition:
     opacity $duration var(--ease-stabilize) $delay,
     transform $duration var(--ease-stabilize) $delay,
-    filter $duration ease $delay;
+    filter $duration var(--ease-stabilize) $delay;
 
   opacity: 1;
   transform: translateY(0) scale(1);

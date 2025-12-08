@@ -53,7 +53,7 @@ button:not(.btn-void),
 
   // --- PAPER MODE RESTING STATE ---
   @at-root [data-atmosphere='paper'] & {
-    background: #f5f5f7;
+    background: var(--bg-canvas);
     border: var(--physics-border-width) solid var(--energy-secondary); // Graphite Grey
     color: var(--energy-primary);
   }

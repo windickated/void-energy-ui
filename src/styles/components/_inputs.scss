@@ -247,7 +247,7 @@ input[type='radio'] {
     }
 
     @at-root [data-atmosphere='paper'] & {
-      background-color: #f0f9ff;
+      background-color: var(--bg-canvas);
       border-color: var(--energy-primary);
       .dropzone-content svg {
         filter: none;

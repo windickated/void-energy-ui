@@ -76,6 +76,16 @@ a {
     }
   }
 
+  &:focus-visible {
+    outline: none;
+    box-shadow: none;
+
+    &::after {
+      transform: scaleX(1);
+      transform-origin: left; // ENTRANCE: Expands from LEFT
+    }
+  }
+
   // --- C. Paper Mode Override ---
   @at-root [data-atmosphere='paper'] & {
     color: var(--energy-primary); // Ink Blue

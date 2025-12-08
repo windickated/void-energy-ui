@@ -218,12 +218,12 @@ $spacing-aliases: (
 
 // B. RESPONSIVE LOOP
 // Iterates through your global $breakpoints map
-@each $bp-name, $bp-value in $breakpoints {
+@each $breakpoint-name, $breakpoint-value in $breakpoints {
   // Skip the 'mobile' 0 value, as that is the base above
-  @if $bp-value != 0 {
-    @media (min-width: $bp-value) {
+  @if $breakpoint-value != 0 {
+    @include respond-up($breakpoint-name) {
       // The slash \ is needed to escape the colon in CSS class names
-      @include generate-utilities('#{$bp-name}\\:');
+      @include generate-utilities('#{$breakpoint-name}\\:');
     }
   }
 }

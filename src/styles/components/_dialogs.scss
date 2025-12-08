@@ -174,8 +174,8 @@ dialog {
 
   // --- 9. PAPER MODE OVERRIDE ---
   @at-root [data-atmosphere='paper'] & {
-    background: #ffffff;
-    border: var(--physics-border-width) solid #e0e0e0;
+    background: var(--bg-surface);
+    border: var(--physics-border-width) solid var(--border-highlight);
     box-shadow: 0 10px 25px rgba(0, 0, 0, 0.15); // Clean shadow
     border-radius: 8px;
 

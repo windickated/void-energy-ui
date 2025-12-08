@@ -144,8 +144,6 @@
     text-shadow: 0 2px 4px rgba(0, 0, 0, 0.9);
 
     @at-root [data-atmosphere='paper'] & {
-      // color: #FFFFFF; // Always white text over image, even in Paper mode
-      // text-shadow: 0 2px 8px rgba(0,0,0,0.8);
       text-shadow: none;
     }
   }
@@ -183,7 +181,7 @@
       .tile-data p {
         color: var(--text-main);
         @at-root [data-atmosphere='paper'] & {
-          color: #ffffff;
+          color: var(--bg-surface);
         }
       }
 
