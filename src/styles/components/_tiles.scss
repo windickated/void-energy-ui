@@ -89,6 +89,12 @@
     border-color var(--speed-base) var(--ease-snap),
     box-shadow var(--speed-base) var(--ease-snap);
 
+  &.tile-fluid {
+    width: 100%; // Takes the size of the grid column
+    min-width: 0; // Prevents flex blowout
+    aspect-ratio: 2 / 3; // Maintains the shape
+  }
+
   // --- THE IMAGE ---
   img {
     position: absolute;
@@ -194,13 +200,13 @@
 
   // --- RESPONSIVE WIDTHS ---
   // Using standard breakpoints logic
-  @media (min-width: 768px) {
+  @include respond-up('tablet') {
     width: 14rem;
   }
-  @media (min-width: 1440px) {
+  @include respond-up('large-desktop') {
     width: 16rem;
   }
-  @media (min-width: 1920px) {
+  @include respond-up('full-hd') {
     width: 18rem;
   }
 }

@@ -149,6 +149,7 @@
 
     transition: background-color var(--speed-base) var(--ease-flow);
 
+    will-change: transform;
     transform: translate(-50%, -50%);
     animation: rotate-laser 4s linear infinite;
     z-index: -2;
