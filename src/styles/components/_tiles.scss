@@ -156,7 +156,7 @@
     span {
       font-size: 0.75rem;
       color: var(--text-mute);
-      transition: color 0.3s ease;
+      transition: color var(--speed-base) var(--ease-snap);
 
       @at-root [data-atmosphere='paper'] & {
         color: rgba(255, 255, 255, 0.7); // Light grey on image
@@ -182,6 +182,9 @@
       }
 
       @at-root [data-atmosphere='terminal'] & {
+        border-color: var(--energy-primary);
+        box-shadow: 4px 4px 0px fade(var(--energy-primary), 75%); // Hard shadow, no blur
+
         img {
           transform: scale(1.01);
         }
@@ -297,8 +300,8 @@
     border-top-right-radius: 8px;
     border-bottom-right-radius: 8px;
     transition:
-      background-color 0.2s ease,
-      color 0.2s ease;
+      background-color var(--speed-fast) var(--ease-snap),
+      color var(--speed-fast) var(--ease-snap);
 
     &:hover {
       background: fade(black, 30%);
@@ -317,14 +320,10 @@
     transform: none;
 
     .tile-remove {
-      cursor: not-allowed;
+      pointer-events: none;
       border-left-color: shade(var(--text-mute), 50%);
       color: shade(var(--text-mute), 20%);
       background: transparent;
-      &:hover {
-        background: transparent;
-        color: inherit;
-      }
     }
   }
 
@@ -354,6 +353,7 @@
     background: shade($color, 30%);
     color: var(--text-dim);
     border-left-color: tint($color, 20%);
+
     &:hover {
       background: shade($color, 50%);
       color: white;

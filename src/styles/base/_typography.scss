@@ -23,7 +23,7 @@ $font-scale: (
   // 20px -> 24px
   'h4': clamp(1.25rem, 2.5vw, 1.5rem),
   // 18px -> 20px
-  'h5': clamp(1.125rem, 1.5vw, 1.25rem),
+  'h5': clamp(1.125rem, 1.5vw, 1.25rem)
 );
 
 // Weight Logic (Graduated hierarchy)
@@ -40,7 +40,7 @@ $font-weights: (
   'h5': 500,
   'body': 400,
   // Input data should be legible (Regular)
-  'input': 400,
+  'input': 400
 );
 
 /* =========================================

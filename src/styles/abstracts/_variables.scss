@@ -137,7 +137,7 @@ $z-layers: (
   // Holographic Overlays
   'modal': 100,
   // System Alerts
-  'toast': 200,
+  'toast': 200
 );
 
 // The Accessor Function
@@ -159,8 +159,7 @@ $breakpoints: (
   'small-desktop': 1024px,
   'large-desktop': 1440px,
   'full-hd': 1920px,
-  'quad-hd': 2560px,
-  // 'ultra-hd': 3840px,
+  'quad-hd': 2560px, // 'ultra-hd': 3840px,
 );
 
 $container-widths: (
@@ -181,5 +180,5 @@ $container-paddings: (
   'small-desktop': 32px,
   'large-desktop': 40px,
   'full-hd': 48px,
-  'quad-hd': 64px,
+  'quad-hd': 64px
 );

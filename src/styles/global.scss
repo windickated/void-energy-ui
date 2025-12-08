@@ -152,15 +152,17 @@
    9. CHIPS (Rich Data Display)
    --------------------------------------------------------------------------
    A. SMALL TILES (Tags/Chips)
-      Usage: <div class="tile-small"><h5>Title</h5><p>Subtitle</p></div>
+      Usage:
+      <div class="tile-small">
+         <p class="tile-label">Title</p><span class="tile-remove">X</span>
+      </div>
       
       - Base:       .tile-small
       - Labeled:    .tile-labeled (Adds a "Tab" label on top via data-label="...")
       
    B. SEMANTIC VARIANTS (Colors)
-      - .tile-system    : Purple (AI/Config)
-      - .tile-premium   : Orange (Web3/Gold)
-      - .tile-success   : Green (Safe/Active)
-      - .tile-error     : Red (Danger/Horror)
-      - .tile-secondary : Secondary Accent
+      - .tile-small-system    : Purple (AI/Config)
+      - .tile-small-premium   : Orange (Web3/Gold)
+      - .tile-small-success   : Green (Safe/Active)
+      - .tile-small-error     : Red (Danger/Horror)
    ========================================================================== */
