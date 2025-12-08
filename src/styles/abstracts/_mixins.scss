@@ -151,7 +151,7 @@
 
     transform: translate(-50%, -50%);
     animation: rotate-laser 4s linear infinite;
-    z-index: z('sink');
+    z-index: -2;
     opacity: 1;
 
     // TERMINAL OVERRIDE: The "Segmented" Radar
@@ -187,7 +187,7 @@
     // Use Solid Color, NOT Glass.
     background: var(--bg-canvas);
 
-    z-index: z('sink');
+    z-index: -1;
     border-radius: 999px; // Pill Shape
   }
 
