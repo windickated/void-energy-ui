@@ -143,12 +143,11 @@
                    (Use for text inside paragraphs: <p>Read the <a class="link">Docs</a></p>).
 
    --------------------------------------------------------------------------
-   8. COMPONENT SNIPPETS
+   8. INPUTS
    --------------------------------------------------------------------------
-   - Inputs:     <input>, <select>, <textarea> (Auto-styled to Sunk Surface)
-   - Modals:     <dialog> (Auto-styled Glass + Blur)
+   <input>, <select>, <textarea> (Auto-styled to Sunk Surface)
 
-  --------------------------------------------------------------------------
+   --------------------------------------------------------------------------
    9. CHIPS (Rich Data Display)
    --------------------------------------------------------------------------
    A. SMALL TILES (Tags/Chips)
@@ -165,4 +164,13 @@
       - .tile-small-premium   : Orange (Web3/Gold)
       - .tile-small-success   : Green (Safe/Active)
       - .tile-small-error     : Red (Danger/Horror)
+
+   --------------------------------------------------------------------------
+   10. DIALOGS
+   --------------------------------------------------------------------------
+      - (Default)     Standard width (Good for forms, settings).
+      - .dialog-sm    Mini width (Alerts, Confirmations, Delete actions).
+      - .dialog-lg    Wide width (Data tables, File uploads, Command decks).
+      - .dialog-full  Full screen takeover.
+      
    ========================================================================== */
