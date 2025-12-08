@@ -51,10 +51,8 @@
 
     <div class="flex-row justify-end gap-16 margin-top-16">
       <button onclick={() => ($showModal = false)}>Abort</button>
-      <button
-        class="btn-signal"
-        use:tooltip={'Confirm deployment'}
-        onclick={() => ($showModal = false)}>Confirm</button
+      <button class="btn-signal" onclick={() => ($showModal = false)}
+        >Confirm</button
       >
     </div>
   </div>

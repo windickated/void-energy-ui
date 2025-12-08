@@ -20,7 +20,8 @@ export function tooltip(node: HTMLElement, params: string | TooltipParams) {
     offset: [0, 8], // Distance from target
     maxWidth: 250,
     interactive: false, // Performance optimization
-    appendTo: () => document.body,
+    // Check if the trigger element is inside a <dialog>.
+    appendTo: () => node.closest('dialog') || document.body,
   });
 
   return {

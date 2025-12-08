@@ -12,7 +12,7 @@
 
   // High-Legibility Glass
   // We manually apply glass properties to override Tippy defaults
-  background-color: var(--bg-canvas);
+  background-color: fade(var(--bg-canvas), 90%);
   backdrop-filter: blur(12px);
   -webkit-backdrop-filter: blur(12px);
 
@@ -28,6 +28,7 @@
 
   // TERMINAL OVERRIDE (Robotic)
   @at-root [data-atmosphere='terminal'] & {
+    background-color: var(--bg-canvas);
     backdrop-filter: none;
     border-radius: 0;
     box-shadow: none;
