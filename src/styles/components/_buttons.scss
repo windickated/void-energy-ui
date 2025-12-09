@@ -49,14 +49,7 @@ button:not(.btn-void),
 
   // Borders rely on the physics engine variables
   border: var(--physics-border-width) solid var(--border-highlight);
-  border-radius: 4px;
-
-  // --- PAPER MODE RESTING STATE ---
-  @at-root [data-atmosphere='paper'] & {
-    background: var(--bg-canvas);
-    border: var(--physics-border-width) solid var(--energy-secondary); // Graphite Grey
-    color: var(--energy-primary);
-  }
+  border-radius: var(--radius-base);
 
   // Transitions
   transition:
@@ -69,6 +62,10 @@ button:not(.btn-void),
   cursor: pointer;
   position: relative;
   overflow: hidden;
+
+  @at-root [data-mode='light'] & {
+    background: blend(var(--bg-surface), var(--energy-primary), 5%);
+  }
 
   // --- D. Interaction States ---
 
@@ -92,13 +89,12 @@ button:not(.btn-void),
         inset 0 0 5px fade(var(--energy-primary), 80%);
       text-shadow: 0 0 8px fade(var(--energy-primary), 40%);
 
-      // Paper Mode Override
-      @at-root [data-atmosphere='paper'] & {
+      // Light Mode Override
+      @at-root [data-mode='light'] & {
         color: var(--energy-primary);
-        background: rgba(0, 0, 0, 0.05);
         border-color: var(--energy-primary);
-        box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
         text-shadow: none;
+        box-shadow: none;
       }
     }
   }
@@ -147,15 +143,15 @@ button:not(.btn-void),
         box-shadow: 0 0 30px fade(var(--energy-primary), 50%);
         text-shadow: 0 0 10px var(--energy-primary);
 
-        // CTA Paper Mode
-        @at-root [data-atmosphere='paper'] & {
+        // CTA Light Mode
+        @at-root [data-mode='light'] & {
           color: var(--energy-primary);
           text-shadow: none;
-          box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+          box-shadow: none;
         }
 
         // TERMINAL OVERRIDE: The "Hard Glitch"
-        @at-root [data-atmosphere='terminal'] & {
+        @at-root [data-physics='retro'] & {
           text-shadow: none;
         }
       }
@@ -184,7 +180,7 @@ button:not(.btn-void),
           inset 0 0 5px fade($color-var, 80%);
         text-shadow: 0 0 8px fade($color-var, 40%);
 
-        @at-root [data-atmosphere='paper'] & {
+        @at-root [data-mode='light'] & {
           color: $color-var;
           background: fade($color-var, 90%);
           box-shadow: none;

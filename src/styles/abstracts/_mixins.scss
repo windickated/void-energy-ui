@@ -13,6 +13,7 @@
 // $interactive: boolean - Set to true ONLY if the element is clickable (Link/Button)
 @mixin glass-float($interactive: false) {
   background: var(--bg-surface);
+  border-radius: var(--radius-base);
 
   // Physics: Blur
   backdrop-filter: blur(var(--physics-blur));
@@ -21,13 +22,29 @@
   // The Lighting Model
   border-width: var(--physics-border-width);
   border-style: solid;
-  border-top-color: var(--border-highlight);
-  border-bottom-color: var(--border-shadow);
-  border-left-color: var(--border-shadow);
-  border-right-color: var(--border-shadow);
+  border-top-color: color-mix(
+    in srgb,
+    var(--border-highlight) calc(var(--border-opacity, 1) * 100%),
+    transparent
+  );
+  border-bottom-color: color-mix(
+    in srgb,
+    var(--border-shadow) calc(var(--border-opacity, 1) * 100%),
+    transparent
+  );
+  border-left-color: color-mix(
+    in srgb,
+    var(--border-shadow) calc(var(--border-opacity, 1) * 100%),
+    transparent
+  );
+  border-right-color: color-mix(
+    in srgb,
+    var(--border-shadow) calc(var(--border-opacity, 1) * 100%),
+    transparent
+  );
 
   // "Void Shadow"
-  box-shadow: var(--void-shadow);
+  box-shadow: var(--void-shadow, 0 10px 30px rgba(0, 0, 0, 0.5));
 
   transition:
     transform var(--speed-base) var(--ease-stabilize),
@@ -47,12 +64,13 @@
 
         // Glow calculation
         box-shadow:
-          0 12px 40px rgba(0, 0, 0, 0.6),
-          0 0 15px fade(var(--energy-primary), 80%);
-
-        @at-root [data-atmosphere='paper'] & {
-          box-shadow: 0 4px 10px rgba(0, 0, 0, 0.2);
-        }
+          0 12px 40px rgba(0, 0, 0, calc(0.6 * var(--shadow-strength))),
+          0 0 15px color-mix(
+            in srgb,
+            var(--energy-primary)
+              calc(var(--glow-opacity) * var(--glow-strength, 1) * 100%),
+            transparent
+          );
       }
     }
   }
@@ -62,6 +80,7 @@
 // Context: Negative Z-Index. Carved into the void.
 @mixin glass-sunk {
   background: var(--bg-sink);
+  border-radius: var(--radius-base);
 
   // Keep blur consistent
   backdrop-filter: blur(var(--physics-blur));
@@ -71,7 +90,7 @@
   border: var(--physics-border-width) solid var(--border-shadow);
 
   // "Inner Sink" shadow
-  box-shadow: inset 0 2px 8px rgba(0, 0, 0, 0.5);
+  box-shadow: inset 0 2px 8px rgba(0, 0, 0, calc(0.5 * var(--shadow-strength)));
 
   color: var(--text-main);
   transition:
@@ -83,20 +102,13 @@
     border-color: var(--energy-primary);
     outline: none;
     box-shadow:
-      inset 0 2px 8px rgba(0, 0, 0, 0.5),
-      0 0 10px fade(var(--energy-primary), 70%);
-  }
-
-  // Paper Mode Override
-  @at-root [data-atmosphere='paper'] & {
-    box-shadow: inset var(--void-shadow);
-
-    &:focus-visible,
-    &:focus-within {
-      box-shadow:
-        inset var(--void-shadow),
-        0 0 5px fade(var(--energy-primary), 70%);
-    }
+      inset 0 2px 8px rgba(0, 0, 0, calc(0.5 * var(--shadow-strength))),
+      0 0 10px color-mix(
+        in srgb,
+        var(--energy-primary)
+          calc(var(--glow-opacity) * var(--glow-strength, 1) * 100%),
+        transparent
+      );
   }
 }
 
@@ -108,8 +120,8 @@
   color: $color;
   text-shadow: 0 0 15px fade($color, 40%);
 
-  @at-root [data-atmosphere='paper'] & {
-    text-shadow: 0 0 5px fade($color, 40%);
+  @at-root [data-mode='light'] & {
+    text-shadow: 0 0 1px fade($color, 60%);
   }
 }
 
@@ -156,7 +168,7 @@
     opacity: 1;
 
     // TERMINAL OVERRIDE: The "Segmented" Radar
-    @at-root [data-atmosphere='terminal'] & {
+    @at-root [data-physics='retro'] & {
       background: conic-gradient(
         from 0deg,
         transparent 0deg,
@@ -223,8 +235,8 @@
     transparent 100%
   );
 
-  // 4. PAPER OVERRIDE (White Reflection)
-  @at-root [data-atmosphere='paper'] & {
+  // 4. LIGHT MODE OVERRIDE (White Reflection)
+  @at-root [data-mode='light'] & {
     background-image: linear-gradient(
       90deg,
       transparent 0%,
@@ -236,7 +248,7 @@
   }
 
   // 5. TERMINAL OVERRIDE (The Scanline)
-  @at-root [data-atmosphere='terminal'] & {
+  @at-root [data-physics='retro'] & {
     opacity: 0.5;
     background-image: linear-gradient(
       90deg,

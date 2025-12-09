@@ -86,8 +86,8 @@ a {
     }
   }
 
-  // --- C. Paper Mode Override ---
-  @at-root [data-atmosphere='paper'] & {
+  // --- C. Light Mode Override ---
+  @at-root [data-mode='light'] & {
     color: var(--energy-primary); // Ink Blue
     font-weight: 600;
 

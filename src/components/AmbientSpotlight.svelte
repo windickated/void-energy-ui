@@ -210,8 +210,10 @@
         <option value="crimson">Crimson Atmosphere</option>
         <option value="overgrowth">Overgrowth Atmosphere</option>
         <option value="velvet">Velvet Atmosphere</option>
+        <option value="onyx">Onyx Atmosphere</option>
         <option value="terminal">Terminal Atmosphere</option>
         <option value="paper">Paper Atmosphere</option>
+        <option value="solar">Solar Atmosphere</option>
       </select>
     </div>
   </header>

@@ -58,7 +58,7 @@ dialog {
 
   // --- 2. VOID STYLING ---
   border: none;
-  border-radius: 1rem;
+  border-radius: calc(var(--radius-base) * 2);
   color: var(--text-main);
 
   // Apply Glass Physics (Static: No hover movement)
@@ -87,7 +87,7 @@ dialog {
   @starting-style {
     opacity: 0;
     transform: scale(0.95) translateY(10px); // Slightly small, slightly low
-    filter: blur(10px); // Out of focus
+    filter: blur(var(--physics-blur)); // Out of focus
   }
 
   // --- 5. EXIT STATE ---
@@ -95,14 +95,13 @@ dialog {
   &:not([open]) {
     opacity: 0;
     transform: scale(0.95) translateY(-10px); // Drifts away upwards
-    filter: blur(10px);
+    filter: blur(var(--physics-blur));
   }
 
   // --- 6. BACKDROP (The Overlay) ---
   &::backdrop {
     // Dynamic: Deep Blue in Void, Dark Grey in Paper
     background: fade(var(--bg-canvas), 20%);
-    backdrop-filter: blur(4px);
     opacity: 1;
 
     transition:
@@ -110,10 +109,9 @@ dialog {
       display var(--speed-base) allow-discrete,
       overlay var(--speed-base) allow-discrete;
 
-    // Paper Mode Exception: Standard dark overlay
-    @at-root [data-atmosphere='paper'] & {
+    // Light Mode Exception: Standard dark overlay
+    @at-root [data-mode='light'] & {
       background: rgba(0, 0, 0, 0.5);
-      backdrop-filter: blur(2px);
     }
   }
 
@@ -172,12 +170,12 @@ dialog {
     }
   }
 
-  // --- 9. PAPER MODE OVERRIDE ---
-  @at-root [data-atmosphere='paper'] & {
+  // --- 9. LIGHT MODE OVERRIDE ---
+  @at-root [data-mode='light'] & {
     background: var(--bg-surface);
     border: var(--physics-border-width) solid var(--border-highlight);
     box-shadow: 0 10px 25px rgba(0, 0, 0, 0.15); // Clean shadow
-    border-radius: 8px;
+    border-radius: var(--radius-base);
 
     // Crisp entry, no blur
     @starting-style {

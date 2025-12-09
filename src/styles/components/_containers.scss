@@ -124,7 +124,7 @@
 
 .card-glass {
   @include glass-float();
-  border-radius: 16px;
+  border-radius: calc(var(--radius-base) * 2);
   @include responsive-vertical-spacing;
 
   // OPINIONATED DEFAULTS:
@@ -135,7 +135,7 @@
 
 .card-sunk {
   @include glass-sunk;
-  border-radius: 16px;
+  border-radius: calc(var(--radius-base) * 2);
   @include responsive-vertical-spacing;
 
   // OPINIONATED DEFAULTS:

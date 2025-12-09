@@ -13,8 +13,8 @@
   // adapts to the dark background automatically.
   color-scheme: dark;
 
-  // Paper Mode Exception
-  @at-root [data-atmosphere='paper'] & {
+  // Light Mode Exception
+  @at-root [data-mode='light'] & {
     color-scheme: light;
   }
 }
@@ -31,7 +31,7 @@ select {
   width: 100%;
   min-height: 2.75rem;
   padding: 0.75rem 1rem;
-  border-radius: 8px;
+  border-radius: var(--radius-base);
 
   font-family: var(--font-body);
   font-size: 1rem;
@@ -143,8 +143,8 @@ input[type='radio'] {
   }
 
   // Remove glow in Paper/Terminal
-  @at-root [data-atmosphere='paper'] &,
-    [data-atmosphere='terminal'] & {
+  @at-root [data-physics='flat'] &,
+    [data-physics='retro'] & {
     filter: none;
   }
 
@@ -169,7 +169,7 @@ input[type='radio'] {
   padding: 1.5rem;
   width: 100%;
   min-height: 10rem; // Give it some vertical breathing room
-  border-radius: 1rem;
+  border-radius: calc(var(--radius-base) * 2);
 
   // Style
   border: 2px dashed fade(var(--energy-secondary), 70%);
@@ -246,7 +246,7 @@ input[type='radio'] {
       }
     }
 
-    @at-root [data-atmosphere='paper'] & {
+    @at-root [data-mode='light'] & {
       background-color: var(--bg-canvas);
       border-color: var(--energy-primary);
       .dropzone-content svg {
@@ -269,7 +269,7 @@ textarea:-webkit-autofill {
   -webkit-text-fill-color: var(--text-main) !important;
 
   // Preserve border radius
-  border-radius: 8px;
+  border-radius: var(--radius-base);
 
   transition: background-color 5000s ease-in-out 0s; // Prevent flash
 }

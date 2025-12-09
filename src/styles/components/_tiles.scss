@@ -36,10 +36,10 @@
 
   &::-webkit-scrollbar-track {
     background: rgba(255, 255, 255, 0.02);
-    border-radius: 4px;
+    border-radius: calc(var(--radius-base) * 0.5);
 
     // Paper Override
-    @at-root [data-atmosphere='paper'] & {
+    @at-root [data-mode='light'] & {
       background: rgba(0, 0, 0, 0.05);
     }
   }
@@ -50,7 +50,7 @@
       var(--energy-secondary),
       var(--energy-primary)
     );
-    border-radius: 4px;
+    border-radius: calc(var(--radius-base) * 0.5);
 
     &:hover {
       background: var(--energy-primary);
@@ -80,8 +80,8 @@
 
   text-decoration: none !important;
   overflow: hidden;
-  border-radius: 12px; // Fixed visually pleasing radius
-  border-width: 2px;
+    border-radius: calc(var(--radius-base) * 1.5);
+    border-width: var(--physics-border-width);
 
   // Explicit transition for hover effects
   transition:
@@ -143,7 +143,7 @@
     // Text shadow for legibility over image
     text-shadow: 0 2px 4px rgba(0, 0, 0, 0.9);
 
-    @at-root [data-atmosphere='paper'] & {
+    @at-root [data-mode='light'] & {
       text-shadow: none;
     }
   }
@@ -162,7 +162,7 @@
       color: var(--text-mute);
       transition: color var(--speed-base) var(--ease-snap);
 
-      @at-root [data-atmosphere='paper'] & {
+      @at-root [data-mode='light'] & {
         color: rgba(255, 255, 255, 0.7); // Light grey on image
       }
     }
@@ -180,12 +180,12 @@
       // Light up metadata
       .tile-data p {
         color: var(--text-main);
-        @at-root [data-atmosphere='paper'] & {
+        @at-root [data-mode='light'] & {
           color: var(--bg-surface);
         }
       }
 
-      @at-root [data-atmosphere='terminal'] & {
+      @at-root [data-physics='retro'] & {
         border-color: var(--energy-primary);
         box-shadow: 4px 4px 0px fade(var(--energy-primary), 75%); // Hard shadow, no blur
 
@@ -264,7 +264,7 @@
     background-color var(--speed-base) var(--ease-snap);
 
   // Physics Base
-  border-radius: 8px;
+  border-radius: var(--radius-base);
   @include glass-float($interactive: true);
 
   // 1. LABEL
@@ -280,12 +280,12 @@
   // 2. SUNKEN VARIANT
   .tile-label-sunken {
     background: var(--bg-sink);
-    border: 1px solid var(--border-shadow);
+    border: var(--physics-border-width) solid var(--border-shadow);
     color: var(--text-dim);
     padding: 0.1rem 0.5rem;
     margin-block: auto;
     margin-right: 0.5rem;
-    border-radius: 4px;
+    border-radius: calc(var(--radius-base) * 0.5);
     @include typography('caption');
   }
 
@@ -301,8 +301,8 @@
     border-left: var(--physics-border-width) solid fade(white, 10%);
     color: var(--text-mute);
 
-    border-top-right-radius: 8px;
-    border-bottom-right-radius: 8px;
+    border-top-right-radius: var(--radius-base);
+    border-bottom-right-radius: var(--radius-base);
     transition:
       background-color var(--speed-fast) var(--ease-snap),
       color var(--speed-fast) var(--ease-snap);
@@ -372,17 +372,17 @@
   }
 
   // --- 2. TERMINAL OVERRIDE (Retro / Contrast) ---
-  @at-root [data-atmosphere='terminal'] & {
+  @at-root [data-physics='retro'] & {
     background: black; // Opaque
-    border: 2px solid $color; // Hard border
+    border: var(--physics-border-width) solid $color; // Hard border
     box-shadow: none; // No soft glow
     color: $color;
 
     .tile-remove {
       background: transparent;
-      border-left: 2px solid $color;
-      border-top-right-radius: 5px;
-      border-bottom-right-radius: 5px;
+      border-left: var(--physics-border-width) solid $color;
+      border-top-right-radius: var(--radius-base);
+      border-bottom-right-radius: var(--radius-base);
       color: $color;
 
       &:hover {
@@ -397,10 +397,10 @@
   }
 
   // --- 3. PAPER OVERRIDE (Ink / Pastel) ---
-  @at-root [data-atmosphere='paper'] & {
+  @at-root [data-mode='light'] & {
     // Pastel background
     background: tint($color, 85%);
-    border: 1px solid $color;
+    border: var(--physics-border-width) solid $color;
     box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
     // Darker text for readability on light bg
     color: shade($color, 60%);
@@ -408,7 +408,7 @@
     .tile-remove {
       // Slightly darker pastel for the button
       background: tint($color, 70%);
-      border-left: 1px solid $color;
+      border-left: var(--physics-border-width) solid $color;
       color: shade($color, 50%);
 
       &:hover {
@@ -474,8 +474,8 @@
     background: inherit;
     border: inherit;
     border-bottom: none;
-    border-top-left-radius: 8px;
-    border-top-right-radius: 8px;
+    border-top-left-radius: var(--radius-base);
+    border-top-right-radius: var(--radius-base);
 
     text-transform: uppercase;
     display: flex;
@@ -491,16 +491,16 @@
     color: var(--text-dim);
 
     // TERMINAL LABEL
-    @at-root [data-atmosphere='terminal'] & {
+    @at-root [data-physics='retro'] & {
       left: -2px;
       background: black;
-      border: 2px solid currentColor;
+      border: var(--physics-border-width) solid currentColor;
       border-bottom: none;
       color: inherit; // Amber/Green
     }
 
     // PAPER LABEL
-    @at-root [data-atmosphere='paper'] & {
+    @at-root [data-mode='light'] & {
       color: inherit; // Dark Ink
       font-weight: 700;
     }

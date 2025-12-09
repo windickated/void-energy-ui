@@ -13,12 +13,12 @@
   // High-Legibility Glass
   // We manually apply glass properties to override Tippy defaults
   background-color: fade(var(--bg-canvas), 90%);
-  backdrop-filter: blur(12px);
-  -webkit-backdrop-filter: blur(12px);
+  backdrop-filter: blur(var(--physics-blur));
+  -webkit-backdrop-filter: blur(var(--physics-blur));
 
   border: var(--physics-border-width) solid var(--border-highlight);
-  border-radius: 8px;
-  box-shadow: 0 10px 40px -10px rgba(0, 0, 0, 0.5);
+  border-radius: var(--radius-base);
+  box-shadow: var(--void-shadow, 0 10px 40px -10px rgba(0, 0, 0, 0.5));
 
   // Typography
   @include typography('caption');
@@ -26,16 +26,16 @@
   text-align: center;
   padding: 0.25rem 0.5rem;
 
-  // TERMINAL OVERRIDE (Robotic)
-  @at-root [data-atmosphere='terminal'] & {
+  // RETRO PHYSICS OVERRIDE (Robotic)
+  @at-root [data-physics='retro'] & {
     background-color: var(--bg-canvas);
     backdrop-filter: none;
     border-radius: 0;
     box-shadow: none;
   }
 
-  // PAPER OVERRIDE (Ink)
-  @at-root [data-atmosphere='paper'] & {
+  // LIGHT MODE OVERRIDE (Ink)
+  @at-root [data-mode='light'] & {
     background-color: var(--bg-surface);
     box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
   }
@@ -55,7 +55,7 @@
   &[data-state='hidden'] {
     opacity: 0;
     transform: scale(0.95) translateY(4px); // Slight drop
-    filter: blur(8px); // Void Blur
+    filter: blur(calc(var(--physics-blur) / 4)); // Void Blur
   }
 
   // --- STATE: VISIBLE (Stabilized) ---
@@ -70,18 +70,18 @@
     transition-timing-function: var(--ease-stabilize);
   }
 
-  // --- ATMOSPHERE EXCEPTIONS ---
+  // --- MODE / PHYSICS EXCEPTIONS ---
 
-  // Terminal: Instant Snap (0s)
-  @at-root [data-atmosphere='terminal'] & {
+  // Retro physics: Instant Snap (0s)
+  @at-root [data-physics='retro'] & {
     transition-duration: 0s !important; // Instant
     &[data-state='hidden'] {
       filter: none; // No blur in terminal
     }
   }
 
-  // Paper: Clean Fade (No Blur)
-  @at-root [data-atmosphere='paper'] & {
+  // Light mode: Clean Fade (No Blur)
+  @at-root [data-mode='light'] & {
     &[data-state='hidden'] {
       filter: none; // No blur in paper
     }

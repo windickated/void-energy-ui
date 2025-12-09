@@ -239,17 +239,20 @@ $spacing-aliases: (
 }
 
 // Border Radius
-.round-8 {
-  border-radius: 0.5rem;
+.round-none {
+  border-radius: 0;
 }
-.round-12 {
-  border-radius: 0.75rem;
+.round-sm {
+  border-radius: calc(var(--radius-base) * 0.5);
 }
-.round-16 {
-  border-radius: 1rem;
+.round-md {
+  border-radius: var(--radius-base);
 }
-.round-24 {
-  border-radius: 1.5rem;
+.round-lg {
+  border-radius: calc(var(--radius-base) * 1.5);
+}
+.round-xl {
+  border-radius: calc(var(--radius-base) * 2);
 }
 .round-full {
   border-radius: 9999px;

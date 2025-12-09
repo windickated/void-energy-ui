@@ -1,0 +1,39 @@
+// Physics presets isolate motion, depth, and texture from color palettes.
+$physics-presets: (
+  'glass': (
+    'physics-blur': 20px,
+    'physics-border-width': 1px,
+    'radius-base': 8px,
+    'glow-opacity': 0.6,
+    'glow-strength': 1,
+    'shadow-strength': 1,
+    'speed-base': 0.3s,
+    'ease-base': cubic-bezier(0.16, 1, 0.3, 1),
+    'border-opacity': 1,
+    'void-shadow': 0 10px 30px rgba(0, 0, 0, 0.5)
+  ),
+  'flat': (
+    'physics-blur': 0px,
+    'physics-border-width': 1px,
+    'radius-base': 4px,
+    'glow-opacity': 0,
+    'glow-strength': 0,
+    'shadow-strength': 0,
+    'speed-base': 0.2s,
+    'ease-base': ease-out,
+    'border-opacity': 1,
+    'void-shadow': none
+  ),
+  'retro': (
+    'physics-blur': 0px,
+    'physics-border-width': 2px,
+    'radius-base': 0px,
+    'glow-opacity': 0,
+    'glow-strength': 0,
+    'shadow-strength': 1,
+    'speed-base': 0s,
+    'ease-base': steps(2),
+    'border-opacity': 1,
+    'void-shadow': none
+  )
+);
