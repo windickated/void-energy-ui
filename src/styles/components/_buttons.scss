@@ -31,8 +31,9 @@ button:not(.btn-void),
   display: inline-flex;
   justify-content: center;
   align-items: center;
-  gap: 0.75rem;
-  padding: 0 1.25rem;
+  gap: calc(var(--space-sm) - var(--space-xs) / 2);
+  padding-block: 0;
+  padding-inline: calc(var(--space-sm) + var(--space-xs) / 2);
 
   // --- B. Typography ---
   font-family: var(--font-body);
@@ -126,10 +127,10 @@ button:not(.btn-void),
 
     color: var(--energy-primary);
     font-weight: 800;
-    min-height: 3rem;
-    padding-inline: 1.5rem;
+    min-height: var(--space-xl);
+    padding-inline: var(--space-md);
 
-    border-radius: 999px; // Pill Shape
+    border-radius: var(--radius-full); // Pill Shape
 
     @media (hover: hover) {
       &:hover:not(:disabled) {

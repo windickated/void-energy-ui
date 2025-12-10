@@ -198,12 +198,11 @@
   });
 </script>
 
-<!-- svelte-ignore a11y_invalid_attribute -->
 <main class="w-full min-h-screen">
-  <header class="container flex-col items-center gap-24 mar-top-24">
+  <header class="container flex-col items-center gap-md mar-top-md">
     <h1 class="text-highlight">VOID ENERGY</h1>
 
-    <div class="flex-col pad-24 gap-16 round-16 surface-glass">
+    <div class="flex-col pad-md gap-sm round-lg surface-glass">
       <p>System Architecture // Component Library</p>
       <select bind:value={theme.atmosphere}>
         <option value="void">Void Atmosphere</option>
@@ -222,16 +221,16 @@
     </div>
   </header>
 
-  <div class="container flex-col gap-48">
-    <section class="flex-col gap-24 mar-top-24">
+  <div class="container flex-col gap-xl">
+    <section class="flex-col gap-md mar-top-md">
       <div class="flex-row justify-between items-end">
         <h2>01 // CONFIGURATION</h2>
         <p>SECURE CONNECTION</p>
       </div>
 
-      <div class="surface-glass round-16 pad-32 flex-col gap-32">
-        <div class="flex-row flex-wrap gap-24">
-          <div class="flex-col gap-8 flex-1">
+      <div class="surface-glass round-lg pad-lg flex-col gap-lg">
+        <div class="flex-row flex-wrap gap-md">
+          <div class="flex-col gap-xs flex-1">
             <label class="pad-inline" for="system-identifier">
               System Identifier
             </label>
@@ -242,7 +241,7 @@
             />
           </div>
 
-          <div class="flex-col gap-8 flex-1">
+          <div class="flex-col gap-xs flex-1">
             <label class="pad-inline" for="security-clearance">
               Security Clearance
             </label>
@@ -258,7 +257,7 @@
           Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.
         </p>
 
-        <div class="flex-col gap-8 flex-1">
+        <div class="flex-col gap-xs flex-1">
           <div class="flex-row justify-between">
             <label class="pad-inline" for="energy-output">Energy Output</label>
             <span class="text-highlight">{rangeValue}%</span>
@@ -272,8 +271,8 @@
           />
         </div>
 
-        <div class="flex-row flex-wrap gap-32 border-top">
-          <div class="flex-col gap-16">
+        <div class="flex-row flex-wrap gap-lg border-top">
+          <div class="flex-col gap-sm">
             <label>
               <input type="radio" name="mode" checked />
               <span>Manual Override</span>
@@ -284,7 +283,7 @@
             </label>
           </div>
 
-          <div class="flex-col gap-16">
+          <div class="flex-col gap-sm">
             <label>
               <input type="checkbox" checked />
               <span>Enable Telemetry</span>
@@ -298,11 +297,11 @@
       </div>
     </section>
 
-    <section class="flex-col gap-24 mar-top-24">
+    <section class="flex-col gap-md mar-top-md">
       <h2>02 // COMMAND DECK</h2>
 
-      <div class="surface-glass round-16 pad-32 flex-col gap-32">
-        <div class="flex-col items-center gap-24">
+      <div class="surface-glass round-lg pad-lg flex-col gap-lg">
+        <div class="flex-col items-center gap-md">
           <a class="link" href="https://dgrslabs.ink/"
             >Visit DGRS LABS website</a
           >
@@ -316,7 +315,7 @@
           </button>
         </div>
 
-        <div class="flex-row flex-wrap justify-center gap-16">
+        <div class="flex-row flex-wrap justify-center gap-sm">
           <button class="btn-orb">Upgrade Core</button>
           <button class="btn-system">Diagnostics</button>
           <button class="btn-signal" use:tooltip={'Success Button Styling'}
@@ -333,10 +332,10 @@
       </div>
     </section>
 
-    <section class="flex-col gap-24 mar-top-24">
+    <section class="flex-col gap-md mar-top-md">
       <h2>03 // DATA UPLOAD</h2>
 
-      <div class="pad-24 round-16 surface-glass">
+      <div class="pad-md round-lg surface-glass">
         <div class="dropzone">
           <input type="file" />
           <div class="dropzone-content">
@@ -348,11 +347,11 @@
     </section>
   </div>
 
-  <section class="flex-col gap-24 mar-y-24">
+  <section class="flex-col gap-md mar-y-md">
     <h2 class="container">04 // RECENT ANOMALIES</h2>
 
     <div class="tiles-collection">
-      <a href="#" class="tile">
+      <a href="/" class="tile">
         <img
           src="https://media.dgrslabs.ink/conexus-sections/dischordiansaga.avif"
           alt="Cyber"
@@ -365,7 +364,7 @@
         </div>
       </a>
 
-      <a href="#" class="tile">
+      <a href="/" class="tile">
         <img
           src="https://images.unsplash.com/photo-1618005182384-a83a8bd57fbe?q=80&w=800&auto=format&fit=crop"
           alt="Abstract"
@@ -376,7 +375,7 @@
         </div>
       </a>
 
-      <a href="#" class="tile">
+      <a href="/" class="tile">
         <img
           src="https://media.dgrslabs.ink/conexus-sections/communitypicks.avif"
           alt="Fluid"
@@ -391,7 +390,7 @@
     </div>
   </section>
 
-  <section class="flex-col gap-24 mar-top-24">
+  <section class="flex-col gap-md mar-top-md">
     <h2 class="container">05 // PARAMETERS</h2>
 
     <div class="container">
@@ -399,7 +398,7 @@
         <div class="settings-grid">
           <div class="settings-label">Rendering</div>
           <div class="settings-content flow-row">
-            <div class="flex-col flex-1 gap-8">
+            <div class="flex-col flex-1 gap-xs">
               <label for="visual-fidelity" class="text-small text-center"
                 >Visual Fidelity</label
               >
@@ -410,7 +409,7 @@
               </select>
             </div>
 
-            <div class="flex-col flex-1 gap-8">
+            <div class="flex-col flex-1 gap-xs">
               <label for="frame-rate" class="text-small text-center"
                 >Frame Rate</label
               >
@@ -429,7 +428,7 @@
           <div class="settings-label">Active Modules</div>
           <div class="settings-content">
             <div
-              class="surface-sunk round-8 pad-16 flex-row gap-8 flex-wrap justify-center"
+              class="surface-sunk round-md pad-sm flex-row gap-xs flex-wrap justify-center"
             >
               <button class="tile-small">
                 <p class="tile-label">Neural Net</p>
@@ -445,7 +444,7 @@
               </button>
             </div>
 
-            <div class="flex-row gap-16">
+            <div class="flex-row gap-sm">
               <select class="flex-1">
                 <option>Select Module...</option>
                 <option>Physics Engine</option>
@@ -473,13 +472,13 @@
     </div>
   </section>
 
-  <section class="container flex-col gap-24 mar-y-24">
+  <section class="container flex-col gap-md mar-y-md">
     <h2>06 // ENTITY TAGS</h2>
 
     <div class="container card-glass mar-top-0">
-      <div class="flex-col gap-16">
+      <div class="flex-col gap-sm">
         <h5 class="text-dim">Standard Entities</h5>
-        <div class="flex-row flex-wrap gap-16">
+        <div class="flex-row flex-wrap gap-sm">
           <button class="tile-small-system">
             <p class="tile-label">System</p>
             <span class="tile-remove">✕</span>
@@ -507,9 +506,9 @@
         </div>
       </div>
 
-      <div class="flex-col gap-16">
+      <div class="flex-col gap-sm">
         <h5 class="text-dim">Labeled Entities (Data-Attribute)</h5>
-        <div class="flex-row flex-wrap gap-16 pad-top-16">
+        <div class="flex-row flex-wrap gap-sm pad-top-sm">
           <div class="tile-small-system tile-labeled" data-label="Config">
             <p class="tile-label">AI Model</p>
             <p class="tile-label-sunken">GPT-4</p>
@@ -527,9 +526,9 @@
         </div>
       </div>
 
-      <div class="flex-col gap-16">
+      <div class="flex-col gap-sm">
         <h5 class="text-dim">Interactive States</h5>
-        <div class="flex-row flex-wrap gap-16">
+        <div class="flex-row flex-wrap gap-sm">
           <button class="tile-small">
             <p class="tile-label">Hover Me</p>
             <p class="tile-label-sunken">Interactive</p>

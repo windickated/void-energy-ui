@@ -1,4 +1,3 @@
-@use 'sass:map';
 @use '../abstracts' as *;
 @use 'animations' as *;
 
@@ -13,29 +12,6 @@
    --------------------------------------------------------------------------
    See global.scss for full API documentation.
    -------------------------------------------------------------------------- */
-
-// ==========================================================================
-// 0. CONFIGURATION (Local Maps)
-// ==========================================================================
-
-// Map pixels to semantic sizes
-$spacing-scale: (
-  '0': 0,
-  '8': 0.5rem,
-  '16': 1rem,
-  '24': 1.5rem,
-  '32': 2rem,
-  '48': 3rem,
-  '64': 4rem,
-);
-
-$spacing-aliases: (
-  'xs': '8',
-  'sm': '16',
-  'md': '24',
-  'lg': '32',
-  'xl': '64',
-);
 
 // ==========================================================================
 // 1. UTILITY GENERATOR MIXIN
@@ -144,50 +120,34 @@ $spacing-aliases: (
 
   // --- SPACING LOOP (Gaps, Padding, Margins) ---
   @each $key, $val in $spacing-scale {
-    // 1. Pixel Literals (e.g., .gap-16)
+    $space-var: var(--space-#{$key}, #{$val});
+
+    // Semantic spacing utilities (e.g., .gap-md)
     .#{$prefix}gap-#{$key} {
-      gap: $val;
+      gap: $space-var;
     }
     .#{$prefix}pad-#{$key} {
-      padding: $val;
+      padding: $space-var;
     }
     .#{$prefix}mar-#{$key} {
-      margin: $val;
+      margin: $space-var;
     }
 
     .#{$prefix}pad-top-#{$key} {
-      padding-top: $val;
+      padding-top: $space-var;
     }
     .#{$prefix}pad-bot-#{$key} {
-      padding-bottom: $val;
+      padding-bottom: $space-var;
     }
 
     .#{$prefix}mar-top-#{$key} {
-      margin-top: $val;
+      margin-top: $space-var;
     }
     .#{$prefix}mar-bot-#{$key} {
-      margin-bottom: $val;
+      margin-bottom: $space-var;
     }
     .#{$prefix}mar-y-#{$key} {
-      margin-block: $val;
-    }
-  }
-
-  // --- SEMANTIC ALIASES (e.g., .gap-md) ---
-  @each $alias, $key in $spacing-aliases {
-    $val: map.get($spacing-scale, $key);
-
-    .#{$prefix}gap-#{$alias} {
-      gap: $val;
-    }
-    .#{$prefix}pad-#{$alias} {
-      padding: $val;
-    }
-    .#{$prefix}mar-#{$alias} {
-      margin: $val;
-    }
-    .#{$prefix}mar-y-#{$alias} {
-      margin-block: $val;
+      margin-block: $space-var;
     }
   }
 }
@@ -219,7 +179,7 @@ $spacing-aliases: (
   margin-inline: auto;
 }
 .pad-inline {
-  padding-inline: 1.5rem;
+  padding-inline: var(--space-md);
 }
 
 // B. RESPONSIVE LOOP

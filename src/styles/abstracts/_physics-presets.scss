@@ -3,7 +3,7 @@ $physics-presets: (
   'glass': (
     'physics-blur': 20px,
     'physics-border-width': 1px,
-    'radius-base': 8px,
+    'radius-base': var(--radius-md),
     'glow-opacity': 0.6,
     'glow-strength': 1,
     'shadow-strength': 1,
@@ -15,7 +15,7 @@ $physics-presets: (
   'flat': (
     'physics-blur': 0px,
     'physics-border-width': 1px,
-    'radius-base': 4px,
+    'radius-base': var(--radius-sm),
     'glow-opacity': 0,
     'glow-strength': 0,
     'shadow-strength': 0,

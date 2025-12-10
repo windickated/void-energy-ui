@@ -100,48 +100,66 @@
 // Shared Logic for responsive verticality
 @mixin responsive-vertical-spacing {
   // Mobile Base: Compact but comfortable
-  margin-block: 2rem;
-  padding-block: 2rem;
+  margin-block: var(--space-lg);
+  padding-block: var(--space-lg);
 
   // Tablet: Start opening up
   @include respond-up('tablet') {
-    margin-block: 3rem;
-    padding-block: 2.5rem;
+    margin-block: var(--space-xl);
+    padding-block: calc(var(--space-xl) - var(--space-xs));
   }
 
   // Large Desktop: Luxurious space
   @include respond-up('large-desktop') {
-    margin-block: 4rem; // 64px separation
-    padding-block: 3rem; // 48px internal padding
+    margin-block: var(--space-2xl); // 64px separation
+    padding-block: var(--space-xl); // 48px internal padding
   }
 
   // 4K / Ultra Wide: Massive void
   @include respond-up('full-hd') {
-    margin-block: 6rem; // 96px separation
-    padding-block: 4rem;
+    margin-block: calc(var(--space-2xl) + var(--space-lg)); // 96px separation
+    padding-block: var(--space-2xl);
   }
 }
 
 .card-glass {
   @include glass-float();
-  border-radius: calc(var(--radius-base) * 2);
+  border-radius: var(--radius-lg);
+
+  @at-root [data-physics='flat'] & {
+    border-radius: var(--radius-md);
+  }
+
+  @at-root [data-physics='retro'] & {
+    border-radius: var(--radius-base);
+  }
+
   @include responsive-vertical-spacing;
 
   // OPINIONATED DEFAULTS:
   display: flex;
   flex-direction: column;
-  gap: 1.5rem; // Default gap
+  gap: var(--space-md); // Default gap
 }
 
 .card-sunk {
   @include glass-sunk;
-  border-radius: calc(var(--radius-base) * 2);
+  border-radius: var(--radius-lg);
+
+  @at-root [data-physics='flat'] & {
+    border-radius: var(--radius-md);
+  }
+
+  @at-root [data-physics='retro'] & {
+    border-radius: var(--radius-base);
+  }
+
   @include responsive-vertical-spacing;
 
   // OPINIONATED DEFAULTS:
   display: flex;
   flex-direction: column;
-  gap: 1.5rem; // Default gap
+  gap: var(--space-md); // Default gap
 }
 
 // ==========================================================================
@@ -202,7 +220,7 @@
 .settings-grid {
   display: grid;
   width: 100%;
-  gap: 1rem;
+  gap: var(--space-sm);
 
   // 1. MOBILE (Stacked)
   grid-template-columns: 1fr;
@@ -212,7 +230,7 @@
   @include respond-up(small-desktop) {
     // 10rem is tighter than 14rem, matches your screenshot better
     grid-template-columns: 10rem 1fr;
-    gap: 2rem;
+    gap: var(--space-lg);
   }
 
   // 3. INTERNAL PARTS
@@ -224,7 +242,7 @@
 
     @include mobile-only {
       text-align: center; // Labels stay left-aligned on mobile
-      padding-bottom: 0.75rem;
+      padding-bottom: calc(var(--space-sm) - var(--space-xs) / 2);
     }
 
     // OPTICAL ALIGNMENT
@@ -233,11 +251,11 @@
     // padding-top: 0.75rem;
   }
 
-  .settings-content {
-    display: flex;
-    flex-direction: column;
-    gap: 1.25rem; // Increased gap between rows slightly
-    width: 100%;
+    .settings-content {
+      display: flex;
+      flex-direction: column;
+      gap: calc(var(--space-sm) + var(--space-xs) / 2); // Increased gap between rows slightly
+      width: 100%;
     margin-block: auto;
 
     &.flow-row {

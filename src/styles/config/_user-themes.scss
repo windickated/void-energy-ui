@@ -2,64 +2,39 @@
 @use '../abstracts/variables' as *;
 
 /* ==========================================================================
-   VOID ENERGY THEME CONFIG
+   VOID ENERGY THEME CONFIGURATION
+   ==========================================================================
+   
+   MANUAL: HOW TO ADD OR MODIFY THEMES
    --------------------------------------------------------------------------
-   This file is the ONLY place collaborators should touch to add/modify themes.
-   The engine reads these maps, merges physics presets, and emits CSS variables.
+   This file defines the "Soul" (Colors) of the themes.
+   However, the "Brain" (Physics logic) lives in Svelte.
 
-   RUNTIME ATTRIBUTES (set on <html>):
-   - data-atmosphere : theme name (e.g., "void", "paper", "terminal", etc.)
-   - data-physics    : physics preset ("glass" | "flat" | "retro")
-   - data-mode       : "light" | "dark" (must mirror the theme config type)
-   These MUST stay in sync with the active theme config; SCSS overrides depend on them.
-
-   QUICK START (copy/paste template):
+   👉 TO ADD A NEW THEME, YOU MUST EDIT TWO FILES:
+   
+   STEP 1: DEFINE COLORS (In this file)
+      - Copy an existing block below (e.g., 'void') into `$themes`.
+      - Rename the key (e.g., 'my-new-theme').
+      - Adjust the palette colors.
+      
+   STEP 2: REGISTER LOGIC (In `src/stores/theme.svelte.ts`)
+      - Add your new key to the `THEME_CONFIG` object.
+      - Map it to its physics and mode:
+        my-new-theme: { physics: 'glass', mode: 'dark' }
+   
    --------------------------------------------------------------------------
-   $themes: (
-     'my-theme': (
-       'type': 'dark', // or 'light' (auto-sets color-scheme)
-       'physics': 'glass', // pick: glass | flat | retro
-       'palette': map.merge(
-         $shared-values,
-         map.merge(
-           $semantic-dark,
-           (
-             // REQUIRED KEYS (UI breaks if missing):
-             'bg-canvas': <color>,
-             'bg-spotlight': <color>,
-             'bg-surface': <color>,
-             'bg-sink': <color>,
-             'energy-primary': <color>,
-             'energy-secondary': <color>,
-             'border-highlight': <color>,
-             'border-shadow': <color>,
-             'text-main': <color>,
-             'text-dim': <color>,
-             'text-mute': <color>
-           )
-         )
-       )
-     )
-   );
-
-   RUNTIME HOOK:
+   TECHNICAL DETAILS
    --------------------------------------------------------------------------
-   const config = themes[name];
-   document.documentElement.setAttribute('data-atmosphere', name);
-   document.documentElement.setAttribute('data-physics', config.physics);
-   document.documentElement.setAttribute('data-mode', config.type === 'light' ? 'light' : 'dark');
+   The JS engine (`theme.svelte.ts`) will apply these 3 attributes automatically:
+   <html data-atmosphere="name" data-physics="glass" data-mode="dark">
 
-   RULES / CONSTRAINTS:
-   - Required palette keys: bg-canvas, bg-surface, bg-sink, bg-spotlight,
-     energy-primary, energy-secondary, border-highlight, border-shadow,
-     text-main, text-dim, text-mute. Missing any of these will break UI.
-   - Always use the inheritance pattern: map.merge($shared-values, map.merge($semantic-*, (...))).
-     Skipping this likely breaks variables; we do NOT support manual full listings.
-   - Physics presets are fixed (glass | flat | retro). Do not document or add new presets here.
-   - color-scheme is auto-set by the theme engine; scrollbars are auto-styled in _reset.scss.
-   - Surfaces: never hardcode radius or blur; use var(--radius-base) and mixins.
-     Only geometric shapes (50%, 999px) are exempt.
-   - backdrop-filter: never set manually; rely on mixins/physics vars.
+   - data-atmosphere : Triggers the color variables from this file.
+   - data-physics    : Triggers the motion/texture variables from `_physics-presets.scss`.
+   - data-mode       : Triggers the light/dark inversion logic.
+
+   CRITICAL: If you do not register the theme in JS, the store will reject
+   the switch and fallback to 'void'.
+
    ========================================================================== */
 
 $shared-values: (
@@ -89,10 +64,11 @@ $semantic-light: (
 // Configuration-driven atmospheres. Add or override entries in this map.
 $themes: (
   // ==========================================================================
-  // The Tech Spectrum (Sci-Fi & Modern)
-  // These are "Void" derivatives, focused on digital narratives.
-  // =========================================================================
-  // 1. VOID (CoNexus Branding)
+  // I. THE TECH SPECTRUM (Sci-Fi & Modern)
+  // Focused on digital narratives.
+  // ==========================================================================
+  
+  // 1. VOID (Default / CoNexus Branding)
   'void': (
       'type': 'dark',
       'physics': 'glass',
@@ -176,9 +152,10 @@ $themes: (
     ),
 
   // ==========================================================================
-  // The Organic Spectrum (Nature & Survival)
-  // These ground the user in the physical elements.
+  // II. THE ORGANIC SPECTRUM (Nature & Survival)
+  // Grounding elements: Flora, Fire, Ice.
   // ==========================================================================
+  
   // 4. OVERGROWTH (Nature)
   'overgrowth': (
       'type': 'dark',
@@ -261,9 +238,10 @@ $themes: (
     ),
 
   // ==========================================================================
-  // The Arcane Spectrum (Fantasy & Emotion)
-  // These focus on magic, mystery, and feeling.
+  // III. THE ARCANE SPECTRUM (Fantasy & Emotion)
+  // Magic, Mystery, and Feeling.
   // ==========================================================================
+  
   // 7. NEBULA (Magic / Synthwave)
   'nebula': (
       'type': 'dark',
@@ -363,10 +341,8 @@ $themes: (
               'energy-primary': $solar-gold,
               'energy-secondary': $solar-bronze,
               'border-highlight': rgba($solar-gold, 0.4),
-              // Gold leaf edges
               'border-shadow': rgba($solar-bronze, 0.1),
               'text-main': #fffae6,
-              // Ivory (Luxury White)
               'text-dim': rgba(255, 250, 230, 0.8),
               'text-mute': rgba(255, 250, 230, 0.5),
             )
@@ -375,10 +351,11 @@ $themes: (
     ),
 
   // ==========================================================================
-  // The Light Spectrum (Reading & Utility)
-  // These use type: 'light' configuration
+  // IV. THE LIGHT SPECTRUM (Reading & Utility)
+  // Optimized for high-contrast reading.
   // ==========================================================================
-  // 11. PAPER (Reading)
+  
+  // 11. PAPER (Reading / Classic)
   'paper': (
       'type': 'light',
       'physics': 'flat',
@@ -420,14 +397,11 @@ $themes: (
               'bg-spotlight': #ffffff,
               'bg-surface': $lab-surface,
               'bg-sink': rgba(0, 0, 0, 0.05),
-              // Faint grey well
               'energy-primary': $lab-blue,
               'energy-secondary': $lab-steel,
               'border-highlight': rgba($lab-blue, 0.5),
-              // Blueprint lines
               'border-shadow': rgba($lab-steel, 0.2),
               'text-main': #0f172a,
-              // Deep Slate (Cold Black)
               'text-dim': #334155,
               'text-mute': #94a3b8,
             )

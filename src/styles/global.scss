@@ -15,11 +15,7 @@
 @use 'utils';
 
 /* 5. VENDOR STYLES */
-// Tippy.js tooltips - https://atomiks.github.io/tippyjs/
 @import 'tippy.js/dist/tippy.css';
-// Use like this:
-// import { tippy } from 'svelte-tippy';
-// use:tippy={{ content: 'Start your story', animation: 'scale' }}
 
 /* ==========================================================================
    📘 MASTER DEVELOPER CHEAT SHEET (vFinal)
@@ -34,18 +30,28 @@
       - RULE: You cannot dig a hole in the void. Sunk elements must sit inside Glass.
    3. ATMOSPHERE IS CONTEXT:
       - The UI morphs physics based on `html[data-atmosphere="..."]`.
+   4. TOKENS ARE TRUTH:
+      - Never hardcode pixels. Use the semantic scales (sm, md, lg) below.
 
    --------------------------------------------------------------------------
    1. THE ATMOSPHERES (Logic Layer)
    --------------------------------------------------------------------------
-   | ATTRIBUTE           | VIBE             | PHYSICS QUIRK                 |
-   | ------------------- | ---------------- | ----------------------------- |
-   | [default] "void"    | Cyberpunk / Navy | Standard Glow & Blur.         |
-   | "crimson"           | Horror / Red     | High Contrast, Aggressive.    |
-   | "overgrowth"        | Nature / Green   | Bioluminescent, Calming.      |
-   | "velvet"            | Romance / Pink   | Soft, Welcoming.              |
-   | "terminal"          | Hacker / Amber   | 0s Latency (Instant), No Blur.|
-   | "paper"             | Light / Ink      | INVERTED: Dark Ink, No Glow.  |
+   👉 TO MODIFY: Go to `/config/_user-themes.scss`. That file is the Source of Truth.
+
+   | ATTRIBUTE           | SPECTRUM | VIBE             | PHYSICS QUIRK       |
+   | ------------------- | -------- | ---------------- | ------------------- |
+   | [default] "void"    | Tech     | Cyberpunk / Navy | Standard Glow/Blur  |
+   | "onyx"              | Tech     | Stealth / Black  | Minimalist, Cinema  |
+   | "terminal"          | Tech     | Retro / Amber    | 0s Latency, No Blur |
+   | "overgrowth"        | Organic  | Nature / Toxic   | Bioluminescent      |
+   | "ember"             | Organic  | Mars / Rust      | Industrial, Dirty   |
+   | "glacier"           | Organic  | Ice / Cyan       | Clinical, Cold      |
+   | "nebula"            | Arcane   | Magic / Purple   | Synthwave, Mystery  |
+   | "crimson"           | Arcane   | Horror / Red     | Aggressive High-Con |
+   | "velvet"            | Arcane   | Romance / Pink   | Soft, Welcoming     |
+   | "solar"             | Arcane   | Divine / Gold    | Luxury, Ancient     |
+   | "paper"             | Light    | Ink / Cream      | INVERTED (No Glow)  |
+   | "laboratory"        | Light    | Science / White  | Sterile, Blueprint  |
 
    --------------------------------------------------------------------------
    2. RESPONSIVE SYNTAX (Applies to all Utilities below)
@@ -56,27 +62,27 @@
    ---------------- | -------- | --------------------------------------
    (None)           | 0px+     | class="flex-col"
    tablet:          | 768px+   | class="tablet:flex-row"
-   small-desktop:   | 1024px+  | class="small-desktop:pad-32"
+   small-desktop:   | 1024px+  | class="small-desktop:pad-lg"
    large-desktop:   | 1440px+  | class="large-desktop:w-full"
-   full-hd:         | 1920px+  | class="full-hd:gap-64"
-   quad-hd:         | 2560px+  | class="quad-hd:mar-48"
+   full-hd:         | 1920px+  | class="full-hd:gap-xl"
+   quad-hd:         | 2560px+  | class="quad-hd:mar-2xl"
 
    --------------------------------------------------------------------------
-   3. UTILITIES: SPACING & SIZING
+   3. UTILITIES: SPACING & SIZING (Single Source of Truth)
    --------------------------------------------------------------------------
    
-   A. THE SCALE (Values for Gap, Padding, Margin)
-   | ALIAS | PIXELS | FIGMA TOKEN |
-   | ----- | ------ | ----------- |
-   | xs    | 8px    | 0.5rem      |
-   | sm    | 16px   | 1rem        |
-   | md    | 24px   | 1.5rem      |
-   | lg    | 32px   | 2rem        |
-   | xl    | 64px   | 4rem        |
-   | --    | 48px   | 3rem        |
+   A. THE SCALE (Use these suffixes for Gap, Padding, Margin)
+   | SUFFIX | PIXELS | FIGMA TOKEN | USAGE                    |
+   | ------ | ------ | ----------- | ------------------------ |
+   | xs     | 8px    | 0.5rem      | Tight grouping           |
+   | sm     | 16px   | 1rem        | Standard internal pad    |
+   | md     | 24px   | 1.5rem      | Standard component gap   |
+   | lg     | 32px   | 2rem        | Section spacing          |
+   | xl     | 48px   | 3rem        | Large separation         |
+   | 2xl    | 64px   | 4rem        | Hero / Page spacing      |
 
    B. SPACING CLASSES
-   - Gap:      .gap-{size}
+   - Gap:      .gap-{size}           (e.g., .gap-md)
    - Padding:  .pad-{size}, .pad-top-{size}, .pad-bot-{size}, .pad-inline
    - Margin:   .mar-{size}, .mar-top-{size}, .mar-bot-{size}, .mar-y-{size}, .mar-auto
 
@@ -114,7 +120,8 @@
               .text-premium, .text-system
    - Access:  .sr-only (Screen reader only)
 
-   - Radius:  .round-8, .round-12, .round-16, .round-24, .round-full
+   - Radius:  .round-sm (4px), .round-md (8px), .round-lg (16px), 
+              .round-xl (24px), .round-full (Pill)
    - Effect:  .blur (Backdrop blur based on atmosphere)
    
    --------------------------------------------------------------------------
