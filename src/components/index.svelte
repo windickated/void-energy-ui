@@ -3,7 +3,23 @@
   import { showModal } from '../stores/modal.svelte';
   import { tooltip } from '../actions/tooltip';
 
+  const engine = theme.raw;
+  let atmosphere = $state(engine.atmosphere);
   let rangeValue = $state(50);
+
+  // Keep local state in sync with the shared engine
+  $effect.root(() => {
+    return engine.subscribe((value) => {
+      atmosphere = value;
+    });
+  });
+
+  // Push local changes back to the engine (and its side effects)
+  $effect(() => {
+    if (atmosphere !== engine.atmosphere) {
+      theme.atmosphere = atmosphere;
+    }
+  });
 </script>
 
 <main class="w-full min-h-screen">
@@ -12,7 +28,7 @@
 
     <div class="flex-col pad-md gap-sm round-lg surface-glass">
       <p>System Architecture // Component Library</p>
-      <select bind:value={theme.atmosphere}>
+      <select bind:value={atmosphere}>
         <option value="void">Void Atmosphere</option>
         <option value="onyx">Onyx Atmosphere</option>
         <option value="terminal">Terminal Atmosphere</option>
