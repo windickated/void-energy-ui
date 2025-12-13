@@ -297,8 +297,16 @@ small {
     --glow-strength: 0 !important;
 
     // Sharper borders/shadows for outlines.
-    --border-highlight: color-mix(in srgb, var(--border-highlight) 70%, var(--text-main) 30%) !important;
-    --border-shadow: color-mix(in srgb, var(--border-shadow) 70%, var(--text-main) 30%) !important;
+    --border-highlight: color-mix(
+      in srgb,
+      var(--border-highlight) 70%,
+      var(--text-main) 30%
+    ) !important;
+    --border-shadow: color-mix(
+      in srgb,
+      var(--border-shadow) 70%,
+      var(--text-main) 30%
+    ) !important;
     --void-shadow: 0 0 0 1px var(--text-main) !important;
   }
 }

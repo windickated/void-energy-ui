@@ -23,10 +23,10 @@
 </script>
 
 <main class="w-full min-h-screen">
-  <header class="container flex-col items-center gap-md mar-top-md">
+  <header class="container flex flex-col items-center gap-md mt-md">
     <h1 class="text-highlight">VOID ENERGY</h1>
 
-    <div class="flex-col pad-md gap-sm round-lg surface-glass">
+    <div class="flex flex-col p-md gap-sm surface-glass">
       <p>System Architecture // Component Library</p>
       <select bind:value={atmosphere}>
         <option value="void">Void Atmosphere</option>
@@ -46,17 +46,17 @@
     </div>
   </header>
 
-  <div class="container flex-col gap-xl">
-    <section class="flex-col gap-md mar-top-md">
-      <div class="flex-row justify-between items-end">
+  <div class="container flex flex-col gap-xl">
+    <section class="flex flex-col gap-md mt-md">
+      <div class="flex flex-row justify-between items-end">
         <h2>01 // CONFIGURATION</h2>
         <p>SECURE CONNECTION</p>
       </div>
 
-      <div class="surface-glass round-lg pad-lg flex-col gap-lg">
-        <div class="flex-row flex-wrap gap-md">
-          <div class="flex-col gap-xs flex-1">
-            <label class="pad-inline" for="system-identifier">
+      <div class="surface-glass p-lg flex flex-col gap-lg">
+        <div class="flex flex-row flex-wrap gap-md">
+          <div class="flex flex-col gap-xs flex-1">
+            <label class="px-md" for="system-identifier">
               System Identifier
             </label>
             <input
@@ -66,8 +66,8 @@
             />
           </div>
 
-          <div class="flex-col gap-xs flex-1">
-            <label class="pad-inline" for="security-clearance">
+          <div class="flex flex-col gap-xs flex-1">
+            <label class="px-md" for="security-clearance">
               Security Clearance
             </label>
             <select id="security-clearance">
@@ -88,9 +88,9 @@
           culpa qui officia deserunt mollit anim id est laborum.
         </p>
 
-        <div class="flex-col gap-xs flex-1">
-          <div class="flex-row justify-between">
-            <label class="pad-inline" for="energy-output">Energy Output</label>
+        <div class="flex flex-col gap-xs flex-1">
+          <div class="flex flex-row justify-between">
+            <label class="px-md" for="energy-output">Energy Output</label>
             <span class="text-highlight">{rangeValue}%</span>
           </div>
           <input
@@ -102,8 +102,8 @@
           />
         </div>
 
-        <div class="flex-row flex-wrap gap-lg border-top">
-          <div class="flex-col gap-sm">
+        <div class="flex flex-row flex-wrap gap-lg pt-lg border-top">
+          <div class="flex flex-col gap-sm">
             <label>
               <input type="radio" name="mode" checked />
               <span>Manual Override</span>
@@ -114,7 +114,7 @@
             </label>
           </div>
 
-          <div class="flex-col gap-sm">
+          <div class="flex flex-col gap-sm">
             <label>
               <input type="checkbox" checked />
               <span>Enable Telemetry</span>
@@ -128,11 +128,11 @@
       </div>
     </section>
 
-    <section class="flex-col gap-md mar-top-md">
+    <section class="flex flex-col gap-md mt-md">
       <h2>02 // COMMAND DECK</h2>
 
-      <div class="surface-glass round-lg pad-lg flex-col gap-lg">
-        <div class="flex-col items-center gap-md">
+      <div class="surface-glass p-lg flex flex-col gap-lg">
+        <div class="flex flex-col items-center gap-md">
           <a class="link" href="https://dgrslabs.ink/"
             >Visit DGRS LABS website</a
           >
@@ -146,7 +146,7 @@
           </button>
         </div>
 
-        <div class="flex-row flex-wrap justify-center gap-sm">
+        <div class="flex flex-row flex-wrap justify-center gap-sm">
           <button class="btn-orb">Upgrade Core</button>
           <button class="btn-system">Diagnostics</button>
           <button class="btn-signal" use:tooltip={'Success Button Styling'}
@@ -163,10 +163,10 @@
       </div>
     </section>
 
-    <section class="flex-col gap-md mar-top-md">
+    <section class="flex flex-col gap-md mt-md">
       <h2>03 // DATA UPLOAD</h2>
 
-      <div class="pad-md round-lg surface-glass">
+      <div class="p-md surface-glass">
         <div class="dropzone">
           <input type="file" />
           <div class="dropzone-content">
@@ -178,7 +178,7 @@
     </section>
   </div>
 
-  <section class="flex-col gap-md mar-y-md">
+  <section class="flex flex-col gap-md my-md">
     <h2 class="container">04 // RECENT ANOMALIES</h2>
 
     <div class="tiles-collection">
@@ -221,15 +221,15 @@
     </div>
   </section>
 
-  <section class="flex-col gap-md mar-top-md">
+  <section class="flex flex-col gap-md mt-md">
     <h2 class="container">05 // PARAMETERS</h2>
 
     <div class="container">
-      <div class="card-glass mar-y-0 pad-inline">
+      <div class="card-glass my-0 px-md">
         <div class="settings-grid">
           <div class="settings-label">Rendering</div>
           <div class="settings-content flow-row">
-            <div class="flex-col flex-1 gap-xs">
+            <div class="flex flex-col flex-1 gap-xs">
               <label for="visual-fidelity" class="text-small text-center"
                 >Visual Fidelity</label
               >
@@ -240,7 +240,7 @@
               </select>
             </div>
 
-            <div class="flex-col flex-1 gap-xs">
+            <div class="flex flex-col flex-1 gap-xs">
               <label for="frame-rate" class="text-small text-center"
                 >Frame Rate</label
               >
@@ -259,7 +259,7 @@
           <div class="settings-label">Active Modules</div>
           <div class="settings-content">
             <div
-              class="surface-sunk round-md pad-sm flex-row gap-xs flex-wrap justify-center"
+              class="surface-sunk p-sm flex flex-row gap-xs flex-wrap justify-center"
             >
               <button class="tile-small">
                 <p class="tile-label">Neural Net</p>
@@ -275,7 +275,7 @@
               </button>
             </div>
 
-            <div class="flex-row gap-sm">
+            <div class="flex flex-row gap-sm">
               <select class="flex-1">
                 <option>Select Module...</option>
                 <option>Physics Engine</option>
@@ -291,7 +291,9 @@
         <div class="settings-grid">
           <div class="settings-label">Sync Threshold</div>
           <div class="settings-content">
-            <div class="flex-row justify-between text-highlight text-small">
+            <div
+              class="flex flex-row justify-between text-highlight text-small"
+            >
               <span>LATENCY</span>
               <span>SYNCED</span>
               <span>INSTANT</span>
@@ -303,13 +305,13 @@
     </div>
   </section>
 
-  <section class="container flex-col gap-md mar-y-md">
+  <section class="container flex flex-col gap-md my-md">
     <h2>06 // ENTITY TAGS</h2>
 
-    <div class="container card-glass mar-top-0">
-      <div class="flex-col gap-sm">
+    <div class="container card-glass mt-0">
+      <div class="flex flex-col gap-sm">
         <h5 class="text-dim">Standard Entities</h5>
-        <div class="flex-row flex-wrap gap-sm">
+        <div class="flex flex-row flex-wrap gap-sm">
           <button class="tile-small-system">
             <p class="tile-label">System</p>
             <span class="tile-remove">✕</span>
@@ -337,9 +339,9 @@
         </div>
       </div>
 
-      <div class="flex-col gap-sm">
+      <div class="flex flex-col gap-sm">
         <h5 class="text-dim">Labeled Entities (Data-Attribute)</h5>
-        <div class="flex-row flex-wrap gap-sm pad-top-sm">
+        <div class="flex flex-row flex-wrap gap-sm pt-sm">
           <div class="tile-small-system tile-labeled" data-label="Config">
             <p class="tile-label">AI Model</p>
             <p class="tile-label-sunken">GPT-4</p>
@@ -357,9 +359,9 @@
         </div>
       </div>
 
-      <div class="flex-col gap-sm">
+      <div class="flex flex-col gap-sm">
         <h5 class="text-dim">Interactive States</h5>
-        <div class="flex-row flex-wrap gap-sm">
+        <div class="flex flex-row flex-wrap gap-sm">
           <button class="tile-small">
             <p class="tile-label">Hover Me</p>
             <p class="tile-label-sunken">Interactive</p>

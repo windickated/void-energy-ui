@@ -43,12 +43,12 @@
       by standard protocols.
     </p>
 
-    <div class="surface-sunk round-md pad-md flex-row gap-md items-center">
+    <div class="surface-sunk rounded-md p-md flex flex-row gap-md items-center">
       <span class="text-highlight">⚠</span>
       <span>This action will consume 500 Credits.</span>
     </div>
 
-    <div class="flex-row justify-end gap-md">
+    <div class="flex flex-row justify-end gap-md">
       <button onclick={() => ($showModal = false)}>Abort</button>
       <button class="btn-signal" onclick={() => ($showModal = false)}
         >Confirm</button
