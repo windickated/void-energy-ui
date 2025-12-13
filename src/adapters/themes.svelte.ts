@@ -5,8 +5,9 @@
 
 import { VoidEngine } from './void-engine';
 
-// 1. Initialize the Engine (Singleton)
-const engine = new VoidEngine();
+// 1. Initialize the Engine (Singleton) reusing global when available
+const engine =
+  typeof window !== 'undefined' && window.Void ? window.Void : new VoidEngine();
 
 // 2. Create the Reactive Signal ONCE
 // This holds the "Source of Truth" for Svelte components.

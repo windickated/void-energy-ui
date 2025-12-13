@@ -7,7 +7,8 @@ import { useEffect, useState } from 'react';
 import { VoidEngine } from './void-engine';
 
 // Singleton engine keeps Physics/Mode attributes consistent across React trees.
-const voidEngine = new VoidEngine();
+const voidEngine =
+  typeof window !== 'undefined' && window.Void ? window.Void : new VoidEngine();
 
 /**
  * React hook exposing atmosphere controls and derived config.

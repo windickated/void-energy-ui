@@ -171,6 +171,6 @@ declare global {
 }
 
 // Create global instance for plain HTML usage
-if (typeof window !== 'undefined') {
+if (typeof window !== 'undefined' && !window.Void) {
   window.Void = new VoidEngine();
 }
