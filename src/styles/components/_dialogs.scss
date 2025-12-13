@@ -61,41 +61,44 @@ dialog {
   border-radius: calc(var(--radius-base) * 2);
   color: var(--text-main);
 
-  // Apply Glass Physics (Static: No hover movement)
-  @include glass-float($interactive: false);
-
   // Extra Depth: Modals float higher than cards
   box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.8);
 
   // --- 3. ANIMATION PHYSICS (The Materialize Effect) ---
-  // Default State (OPEN)
+  // DEFAULT STATE (Open)
   opacity: 1;
   transform: scale(1) translateY(0);
   filter: blur(0);
 
-  // We transition properties including display/overlay for exit animations
-  transition:
-    opacity var(--speed-base) var(--ease-flow),
-    transform var(--speed-base) var(--ease-snap),
-    // The "Pop"
-    filter var(--speed-base) var(--ease-flow),
-    display var(--speed-base) allow-discrete,
-    overlay var(--speed-base) allow-discrete;
+  // Apply Glass Physics (Static: No hover movement)
+  @include glass-float($interactive: false);
 
-  // --- 4. ENTRY STATE (@starting-style) ---
-  // How it looks the millisecond before it opens
-  @starting-style {
-    opacity: 0;
-    transform: scale(0.95) translateY(10px); // Slightly small, slightly low
-    filter: blur(var(--physics-blur)); // Out of focus
-  }
+  // --- 4. PROGRESSIVE ENHANCEMENT ---
+  // We check if the browser supports animating 'display'.
+  // If not, we skip ALL transition logic to prevent "Jumpy" or "Stuck" states.
+  @supports (transition-behavior: allow-discrete) {
+    // The "Materialize" Transitions
+    transition:
+      opacity var(--speed-base) var(--ease-flow),
+      transform var(--speed-base) var(--ease-snap),
+      filter var(--speed-base) var(--ease-flow),
+      display var(--speed-base) allow-discrete,
+      overlay var(--speed-base) allow-discrete;
 
-  // --- 5. EXIT STATE ---
-  // When 'open' is removed
-  &:not([open]) {
-    opacity: 0;
-    transform: scale(0.95) translateY(-10px); // Drifts away upwards
-    filter: blur(var(--physics-blur));
+    // ENTRY STATE (@starting-style)
+    @starting-style {
+      opacity: 0;
+      transform: scale(0.95) translateY(10px);
+      filter: blur(var(--physics-blur));
+    }
+
+    // EXIT STATE
+    // When 'open' is removed (this only works with allow-discrete)
+    &:not([open]) {
+      opacity: 0;
+      transform: scale(0.95) translateY(-10px);
+      filter: blur(var(--physics-blur));
+    }
   }
 
   // --- 6. BACKDROP (The Overlay) ---
@@ -104,20 +107,26 @@ dialog {
     background: fade(var(--bg-canvas), 20%);
     opacity: 1;
 
-    transition:
-      opacity var(--speed-base) var(--ease-flow),
-      display var(--speed-base) allow-discrete,
-      overlay var(--speed-base) allow-discrete;
-
     // Light Mode Exception: Standard dark overlay
     @at-root [data-mode='light'] & {
       background: rgba(0, 0, 0, 0.5);
     }
-  }
 
-  &:not([open])::backdrop {
-    opacity: 0;
-    backdrop-filter: blur(0);
+    // Only animate backdrop if supported
+    @supports (transition-behavior: allow-discrete) {
+      transition:
+        opacity var(--speed-base) var(--ease-flow),
+        display var(--speed-base) allow-discrete,
+        overlay var(--speed-base) allow-discrete;
+
+      @starting-style {
+        opacity: 0;
+      }
+
+      &:not([open]) {
+        opacity: 0;
+      }
+    }
   }
 
   // --- 7. INNER CONTENT LAYOUT ---
