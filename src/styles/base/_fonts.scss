@@ -1,4 +1,9 @@
-/* --- Hanken Grotesk font --- */
+/*
+ * ROLE: Font-face registry.
+ * RESPONSIBILITY: Loads atmosphere font assets and keeps fallbacks aligned with the Triad Engine's semantic typography tokens.
+ */
+
+/* FAMILY: Hanken Grotesk */
 
 @font-face {
   font-family: 'Hanken Grotesk';
@@ -40,7 +45,7 @@
   font-display: swap;
 }
 
-/* --- Inter font --- */
+/* FAMILY: Inter */
 
 @font-face {
   font-family: 'Inter';
@@ -58,7 +63,7 @@
   font-display: swap;
 }
 
-/* --- Courier Prime font --- */
+/* FAMILY: Courier Prime */
 
 @font-face {
   font-family: 'Courier Prime';
@@ -76,7 +81,7 @@
   font-display: swap;
 }
 
-/* --- Lora font --- */
+/* FAMILY: Lora */
 
 @font-face {
   font-family: 'Lora';
@@ -94,7 +99,7 @@
   font-display: swap;
 }
 
-/* --- Oswald font --- */
+/* FAMILY: Oswald */
 
 @font-face {
   font-family: 'Oswald';
@@ -112,7 +117,7 @@
   font-display: swap;
 }
 
-/* --- Exo 2 font --- */
+/* FAMILY: Exo 2 */
 
 @font-face {
   font-family: 'Exo 2';
@@ -130,7 +135,7 @@
   font-display: swap;
 }
 
-/* --- Cinzel font --- */
+/* FAMILY: Cinzel */
 
 @font-face {
   font-family: 'Cinzel';
@@ -148,7 +153,7 @@
   font-display: swap;
 }
 
-/* --- Merriweather font --- */
+/* FAMILY: Merriweather */
 
 @font-face {
   font-family: 'Merriweather';
@@ -166,7 +171,7 @@
   font-display: swap;
 }
 
-/* --- Caveat font --- */
+/* FAMILY: Caveat */
 
 @font-face {
   font-family: 'Caveat';
@@ -184,7 +189,7 @@
   font-display: swap;
 }
 
-/* --- Bodoni Moda font --- */
+/* FAMILY: Bodoni Moda */
 
 @font-face {
   font-family: 'Bodoni Moda';
@@ -202,7 +207,7 @@
   font-display: swap;
 }
 
-/* --- PT Serif Caption font --- */
+/* FAMILY: PT Serif Caption */
 
 @font-face {
   font-family: 'PT Serif Caption';
@@ -214,13 +219,13 @@
 
 @font-face {
   font-family: 'PT Serif Caption';
-  src: url('/fonts/PTSerif-Bold.woff2') format('woff2'); /* <--- Note the file change */
+  src: url('/fonts/PTSerif-Bold.woff2') format('woff2'); /* Bold variant uses PTSerif-Bold asset */
   font-weight: 700;
   font-style: normal;
   font-display: swap;
 }
 
-/* --- Open Sans font --- */
+/* FAMILY: Open Sans */
 
 @font-face {
   font-family: 'Open Sans';
@@ -242,7 +247,7 @@
    FOR USER CUSTOMIZATION
    ========================================= */
 
-/* --- Roboto font --- */
+/* FAMILY: Roboto */
 
 @font-face {
   font-family: 'Roboto';
@@ -260,7 +265,7 @@
   font-display: swap;
 }
 
-/* --- Comic Neue font --- */
+/* FAMILY: Comic Neue */
 
 @font-face {
   font-family: 'Comic Neue';

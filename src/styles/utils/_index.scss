@@ -1,2 +1,7 @@
+/*
+ * ROLE: Utility layer index.
+ * RESPONSIBILITY: Forwards helper utilities and animation keyframes to the global entrypoint.
+ */
+
 @forward 'helpers';
 @forward 'animations';

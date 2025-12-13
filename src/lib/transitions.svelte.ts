@@ -1,3 +1,8 @@
+/*
+ * ROLE: Svelte transition adapters for the Triad Engine.
+ * RESPONSIBILITY: Translate Semantic Tokens (speed, blur, mode) into motion primitives that honor the selected Physics preset and accessibility preferences.
+ */
+
 import { cubicOut, cubicIn, quartOut } from 'svelte/easing';
 
 /**
@@ -48,143 +53,138 @@ import { cubicOut, cubicIn, quartOut } from 'svelte/easing';
 
 /* --- HELPER: Read the Physics Engine --- */
 function getSystemConfig(node: Element) {
-	const style = getComputedStyle(node);
-	const reducedMotion = matchMedia('(prefers-reduced-motion: reduce)').matches;
+  const style = getComputedStyle(node);
+  const reducedMotion = matchMedia('(prefers-reduced-motion: reduce)').matches;
 
-	// Parse CSS variables (Fallbacks included)
-	const speedBase = parseFloat(style.getPropertyValue('--speed-base')) * 1000 || 300;
-	const speedFast = parseFloat(style.getPropertyValue('--speed-fast')) * 1000 || 200;
-	const blurVal = style.getPropertyValue('--physics-blur') || '0px';
-	// Remove "px" for math, but keep string for generic usage
-	const blurInt = parseInt(blurVal) || 0;
+  // Read semantic motion tokens directly from the node to honor live atmosphere updates.
+  const speedBase =
+    parseFloat(style.getPropertyValue('--speed-base')) * 1000 || 300;
+  const speedFast =
+    parseFloat(style.getPropertyValue('--speed-fast')) * 1000 || 200;
+  const blurVal = style.getPropertyValue('--physics-blur') || '0px';
+  // Preserve numeric blur for dynamic filters while retaining string form for fallbacks.
+  const blurInt = parseInt(blurVal) || 0;
 
-	return { speedBase, speedFast, blurInt, reducedMotion };
+  return { speedBase, speedFast, blurInt, reducedMotion };
 }
 
 /* ==========================================================================
-   1. MATERIALIZE (Standard Entry)
-   Use for: Modals, Cards, Route Transitions
-   Logic: Lifts up, scales in, and focuses from blur.
+   MATERIALIZE | Entry tuned for Glass Physics.
+   Rationale: Lifts content out of the void and tightens focus to signal activation.
    ========================================================================== */
 export function materialize(
-	node: HTMLElement,
-	{ delay = 0, duration = null, y = 20 } = {}
+  node: HTMLElement,
+  { delay = 0, duration = null, y = 20 } = {},
 ) {
-	const { speedBase, blurInt, reducedMotion } = getSystemConfig(node);
+  const { speedBase, blurInt, reducedMotion } = getSystemConfig(node);
 
-	if (reducedMotion) return { duration: 0, css: () => '' };
+  if (reducedMotion) return { duration: 0, css: () => '' };
 
-	return {
-		delay,
-		duration: duration ?? speedBase, // Defaults to System Speed
-		easing: cubicOut,
-		css: (t: number, u: number) => {
-			// u goes from 1 -> 0
-			const currentBlur = blurInt * u;
-			return `
+  return {
+    delay,
+    duration: duration ?? speedBase, // Aligns with physics preset timing
+    easing: cubicOut,
+    css: (t: number, u: number) => {
+      // u runs inverse to t to let blur collapse as lift completes.
+      const currentBlur = blurInt * u;
+      return `
                 transform: translateY(${u * y}px) scale(${0.96 + 0.04 * t});
                 opacity: ${t};
                 filter: blur(${currentBlur}px);
             `;
-		}
-	};
+    },
+  };
 }
 
 /* ==========================================================================
-   2. DEMATERIALIZE (Standard Exit)
-   Use for: Closing Modals, Dismissing Cards
-   Logic: Floats UP (like smoke), fades out, and blurs heavily.
+   DEMATERIALIZE | Exit for floating surfaces.
+   Rationale: Converts latent energy into blur and lift as the material disperses.
    ========================================================================== */
 export function dematerialize(
-	node: HTMLElement,
-	{ delay = 0, duration = null, y = -30 } = {}
+  node: HTMLElement,
+  { delay = 0, duration = null, y = -30 } = {},
 ) {
-	const { speedBase, blurInt, reducedMotion } = getSystemConfig(node);
+  const { speedBase, blurInt, reducedMotion } = getSystemConfig(node);
 
-	if (reducedMotion) return { duration: 0, css: () => '' };
+  if (reducedMotion) return { duration: 0, css: () => '' };
 
-	return {
-		delay,
-		duration: duration ?? speedBase, // Matches entry speed usually
-		easing: cubicIn, // Accelerate out
-		css: (t: number, u: number) => {
-			// u goes from 0 -> 1 (Exit progress)
-			// We double the blur for exit to make it look like it's dissolving
-			const currentBlur = blurInt * 2 * u;
-			return `
+  return {
+    delay,
+    duration: duration ?? speedBase, // Mirrors entry pacing
+    easing: cubicIn, // Accelerates the release
+    css: (t: number, u: number) => {
+      // u progresses the dispersal; blur doubles to emphasize dematerialization.
+      const currentBlur = blurInt * 2 * u;
+      return `
                 transform: translateY(${u * y}px) scale(${1 - u * 0.05});
                 opacity: ${t};
                 filter: blur(${currentBlur}px);
             `;
-		}
-	};
+    },
+  };
 }
 
 /* ==========================================================================
-   3. VOID GLITCH (Cyberpunk Entry)
-   Use for: Hero Headings, "System" Status Tags, decorative elements.
-   Logic: Scans the element in with a jittery skew effect.
+   VOID GLITCH | Entry for system text and status tags.
+   Rationale: Uses scanline reveal and jitter to simulate holographic acquisition.
    ========================================================================== */
 export function glitch(node: HTMLElement, { delay = 0, duration = null } = {}) {
-	const { speedFast, reducedMotion } = getSystemConfig(node);
+  const { speedFast, reducedMotion } = getSystemConfig(node);
 
-	if (reducedMotion) return { duration: 0, css: () => '' };
+  if (reducedMotion) return { duration: 0, css: () => '' };
 
-	return {
-		delay,
-		duration: duration ?? speedFast, // Glitches should be fast
-		css: (t: number) => {
-			// Jitter skew: oscillates between 5deg and -5deg
-			const skewed = (t * 100) % 2 === 0 ? 5 : -5;
-			// Scanline clip: reveals from top to bottom
-			const clipped = `polygon(0 0, 100% 0, 100% ${t * 100}%, 0 ${t * 100}%)`;
+  return {
+    delay,
+    duration: duration ?? speedFast, // Keeps glitch in the high-frequency band
+    css: (t: number) => {
+      // Alternating skew produces the transient hologram wobble.
+      const skewed = (t * 100) % 2 === 0 ? 5 : -5;
+      // Clip mask renders a scanline reveal from top to bottom.
+      const clipped = `polygon(0 0, 100% 0, 100% ${t * 100}%, 0 ${t * 100}%)`;
 
-			// Only skew during the first 90% of animation to snap flat at the end
-			const activeSkew = 1 - t > 0.1 ? skewed : 0;
+      // Skew dampens near completion to finish with a stable plane.
+      const activeSkew = 1 - t > 0.1 ? skewed : 0;
 
-			return `
+      return `
                 clip-path: ${clipped};
                 transform: skewX(${activeSkew}deg);
                 opacity: ${t};
             `;
-		}
-	};
+    },
+  };
 }
 
 /* ==========================================================================
-   4. VOID COLLAPSE (Destructive Exit)
-   Use for: Toast notifications, removing tags/chips, sidebar items.
-   Logic: Smashes horizontally into a thin line of light (CRT TV off effect).
+   VOID COLLAPSE | Exit for destructive or dismissive actions.
+   Rationale: Compresses matter into a horizontal beam before shutdown.
    ========================================================================== */
 export function voidCollapse(
-	node: HTMLElement,
-	{ delay = 0, duration = null } = {}
+  node: HTMLElement,
+  { delay = 0, duration = null } = {},
 ) {
-	const { speedFast, reducedMotion } = getSystemConfig(node);
+  const { speedFast, reducedMotion } = getSystemConfig(node);
 
-	if (reducedMotion) return { duration: 0, css: () => '' };
+  if (reducedMotion) return { duration: 0, css: () => '' };
 
-	return {
-		delay,
-		duration: duration ?? speedFast, // Collapsing needs to be snappy
-		easing: quartOut,
-		css: (t: number, u: number) => {
-			// t = 1 -> 0 (Opacity/ScaleX)
-			// u = 0 -> 1 (Brightness/ScaleY)
+  return {
+    delay,
+    duration: duration ?? speedFast, // Collapse should register as a snap
+    easing: quartOut,
+    css: (t: number, u: number) => {
+      // t tracks opacity/scale decay; u tracks the closing flash.
 
-			// 1. Scale X goes 1 -> 0
-			// 2. Scale Y spikes (stretches) momentarily as it vanishes
-			const scaleY = t < 0.2 ? t * 5 : 1;
-            
-            // 3. Flash bright white right before disappearing
-			const brightness = 1 + u * 5; 
+      // ScaleX collapses to zero while ScaleY spikes briefly to signal release.
+      const scaleY = t < 0.2 ? t * 5 : 1;
 
-			return `
+      // Brightness flash communicates energy discharge before disappearance.
+      const brightness = 1 + u * 5;
+
+      return `
                 opacity: ${t};
                 transform: scaleX(${t}) scaleY(${scaleY});
                 filter: brightness(${brightness});
                 transform-origin: center;
             `;
-		}
-	};
+    },
+  };
 }

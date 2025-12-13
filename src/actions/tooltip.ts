@@ -1,3 +1,8 @@
+/*
+ * ROLE: Tooltip action for Svelte.
+ * RESPONSIBILITY: Normalizes tooltip configuration and binds Tippy.js to the Void Energy skin so overlays inherit active Physics and dialog stacking.
+ */
+
 import tippy, { type Props, type Instance } from 'tippy.js';
 
 interface TooltipParams {
@@ -6,21 +11,20 @@ interface TooltipParams {
 }
 
 export function tooltip(node: HTMLElement, params: string | TooltipParams) {
-  // 1. Normalize params
+  // Normalize input to a consistent shape so updates remain stable.
   let config: TooltipParams =
     typeof params === 'string' ? { content: params } : params;
 
-  // 2. Initialize Tippy
   const tip: Instance = tippy(node, {
     content: config.content,
-    theme: 'void', // Maps to components/_tooltips.scss
-    animation: 'materialize', // The custom Void physics animation
+    theme: 'void', // Uses the Void tooltip skin in components/_tooltips.scss
+    animation: 'materialize', // Aligns with Glass Physics entry timing
     placement: config.placement || 'top',
-    arrow: false, // Floating glass look
-    offset: [0, 8], // Distance from target
+    arrow: false, // Preserves the seamless glass edge
+    offset: [0, 8], // Keeps glow separated from the trigger
     maxWidth: 250,
-    interactive: false, // Performance optimization
-    // Check if the trigger element is inside a <dialog>.
+    interactive: false, // Avoids extra event listeners on dense UIs
+    // Anchor to the nearest dialog to respect native stacking contexts.
     appendTo: () => node.closest('dialog') || document.body,
   });
 

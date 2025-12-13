@@ -1,3 +1,8 @@
+/*
+ * ROLE: Container and surface scaffolding.
+ * RESPONSIBILITY: Governs layout widths and applies surface physics for cards, grids, and atomic surfaces.
+ */
+
 @use 'sass:map';
 @use '../abstracts' as *;
 @use '../base/typography';

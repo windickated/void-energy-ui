@@ -1,3 +1,8 @@
+/*
+ * ROLE: Theme emitter.
+ * RESPONSIBILITY: Merge palette maps with Physics presets to produce CSS variables for each atmosphere selector.
+ */
+
 @use 'sass:map';
 @use './variables' as *;
 @use './physics-presets';

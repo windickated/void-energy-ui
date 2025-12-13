@@ -1,17 +1,16 @@
+/*
+ * ROLE: Utility class generator.
+ * RESPONSIBILITY: Produces atomic layout, spacing, and visual helpers plus responsive variants aligned with the Triad Engine.
+ */
+
 @use '../abstracts' as *;
 @use 'animations' as *;
 
 /* ==========================================================================
-   VOID ENERGY UTILITY SYSTEM
-   ==========================================================================
-   
-   PURPOSE:
-   Atomic, immutable utility classes for rapid UI composition.
-   Now features RESPONSIVE prefixes and SEMANTIC aliases.
-
-   --------------------------------------------------------------------------
-   See global.scss for full API documentation.
-   -------------------------------------------------------------------------- */
+   UTILITY NOTES
+   - Atomic helpers for layout, spacing, and visuals with responsive prefixes and semantic aliases.
+   - See global.scss SYSTEM NOTES for the summary of available classes.
+   ========================================================================== */
 
 // ==========================================================================
 // 1. UTILITY GENERATOR MIXIN

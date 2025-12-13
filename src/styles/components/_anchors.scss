@@ -1,24 +1,26 @@
+/*
+ * ROLE: Anchor and link styling.
+ * RESPONSIBILITY: Provides the base anchor reset and the laser underline treatment aligned with Glass Physics.
+ */
+
 @use '../abstracts' as *;
 
 // ==========================================================================
 // LINKS & ANCHORS
-// Mantra: "Connections are Energy."
 // ==========================================================================
 
 // 1. GLOBAL RESET (The Safe Base)
 // --------------------------------------------------------------------------
-// Applies to ALL anchors (Cards, Buttons, Nav Items).
-// We keep this extremely minimal to avoid breaking layout components.
+// Applies to anchors embedded in any surface while avoiding layout side effects.
 a {
   text-decoration: none;
-  color: inherit; // Don't force blue; inherit from parent (Button/Card)
+  color: inherit; // Inherit from parent to respect surface tone
   cursor: pointer;
 
   // Subtle interaction for generic links (like in a navbar)
   transition: color var(--speed-fast) var(--ease-flow);
 
-  // Generic Hover: Just a slight brightness bump
-  // This is safe because it doesn't add borders or layout shifts.
+  // Generic hover keeps the interaction subtle without layout shift.
   @media (hover: hover) {
     &:hover {
       color: var(--energy-primary);
@@ -91,8 +93,7 @@ a {
     color: var(--energy-primary); // Ink Blue
     font-weight: 600;
 
-    // In Paper mode, links are traditionally underlined by default.
-    // We can keep a faint underline that darkens on hover.
+    // Paper prefers a faint baseline underline that darkens on hover.
     border-bottom: var(--physics-border-width) solid
       fade(var(--energy-primary), 80%);
 

@@ -1,3 +1,8 @@
+/*
+ * ROLE: Physics mixin library.
+ * RESPONSIBILITY: Encapsulates Glass Physics surfaces, photonic text effects, and motion utilities for reuse across the Triad Engine.
+ */
+
 @use 'variables' as *;
 @use 'functions' as *;
 
@@ -12,7 +17,7 @@
 // Context: Positive Z-Index. Floats above the void.
 // $interactive: boolean - Set to true ONLY if the element is clickable (Link/Button)
 @mixin glass-float($interactive: false) {
-  // We use a slightly more opaque background if blur isn't supported
+  // Fallback opacity keeps the surface legible when blur is unsupported.
   background: blend(var(--bg-surface), var(--bg-canvas), 80%);
 
   @supports (backdrop-filter: blur(1px)) {
@@ -26,7 +31,7 @@
   border-style: solid;
   border-radius: var(--radius-base);
 
-  // Default Mode: "Uniform" (Used by Flat & Retro)
+  // Uniform borders for Flat/Retro physics.
   border-color: var(--border-highlight);
 
   // 2. Directional Logic (Glass Effect Borders)
@@ -57,13 +62,13 @@
   @media (hover: hover) {
     &:hover {
       @if $interactive {
-        // CASE A: Interactive (It moves and energizes)
+        // Interactive surfaces lift and energize on hover.
         transform: translateY(-2px);
 
-        // Don't use raw variable. Mix it to keep transparency.
+        // Blend the energy color to preserve transparency.
         border-color: fade(var(--energy-primary), 50%);
 
-        // Glow calculation
+        // Glow reinforced by structural shadow.
         box-shadow:
           0 12px 40px rgba(0, 0, 0, calc(0.6 * var(--shadow-strength))),
           0
@@ -147,7 +152,7 @@
   z-index: z('base');
   color: var(--text-main);
 
-  // Important: Border radius must be set on parent to clip the laser
+  // Parent radius clips the beam and keeps the gradient contained.
   border-radius: 999px; // Pill Shape
 
   // 1. THE ROTATING BEAM (The Gradient)
@@ -179,7 +184,7 @@
     z-index: -2;
     opacity: 1;
 
-    // TERMINAL OVERRIDE: The "Segmented" Radar
+    // Retro physics override: segmented radar sweep.
     @at-root [data-physics='retro'] & {
       background: conic-gradient(
         from 0deg,
@@ -198,7 +203,7 @@
         transparent 240deg,
         transparent 360deg
       );
-      // Optional: Make it semi-transparent like a CRT ghost
+      // Slight transparency echoes CRT phosphor.
       opacity: 0.8;
     }
   }
@@ -231,13 +236,13 @@
 // MIXIN: Atmospheric Shimmer
 // Usage: Include in any element that acts as a loading skeleton.
 @mixin shimmer {
-  // 1. THE DELAY LOGIC (400% Width Trick)
+  // Wide gradient prevents visible banding during translation.
   background-size: 400% 100%;
 
-  // 2. THE ANIMATION
+  // Time the sweep using the physics easing.
   animation: shimmer 3s infinite linear;
 
-  // 3. VOID GRADIENT (Default)
+  // Default Void gradient
   background-image: linear-gradient(
     90deg,
     transparent 0%,
@@ -247,7 +252,7 @@
     transparent 100%
   );
 
-  // 4. LIGHT MODE OVERRIDE (White Reflection)
+  // Light mode override to mimic reflective ink.
   @at-root [data-mode='light'] & {
     background-image: linear-gradient(
       90deg,
@@ -259,7 +264,7 @@
     );
   }
 
-  // 5. TERMINAL OVERRIDE (The Scanline)
+  // Terminal override creates a scanline pulse.
   @at-root [data-physics='retro'] & {
     opacity: 0.5;
     background-image: linear-gradient(
@@ -267,9 +272,7 @@
       transparent 0%,
       transparent 43%,
       var(--energy-primary) 43%,
-      // Hard Start
       var(--energy-primary) 47%,
-      // Hard End (Block width)
       transparent 47%,
       transparent 100%
     );

@@ -1,17 +1,13 @@
+/*
+ * ROLE: Dialog and modal styling.
+ * RESPONSIBILITY: Applies holographic materialization physics to native <dialog> elements and their backdrops.
+ */
+
 @use '../abstracts' as *;
 
 // ==========================================================================
 // DIALOGS & MODALS
-// Mantra: "Holographic Stabilization."
-
-// PURPOSE:
-// Handles all modal interactions. In Void Energy, popups do not just "appear";
-// they materialize holographically from the void.
-
-// PHILOSOPHY: "Holographic Stabilization"
-// - Entry: Starts blurred and slightly scaled down, then snaps into focus.
-// - Exit:  Drifts upward and blurs out (Dematerialization).
-// - Depth: Floats at Z-Index 100, above everything else.
+// Materialize from blur, dematerialize upward, and anchor at modal depth.
 // ==========================================================================
 
 dialog {

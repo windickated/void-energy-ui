@@ -1,3 +1,8 @@
+/*
+ * ROLE: Global reset and canvas conditioning.
+ * RESPONSIBILITY: Primes the Void canvas, typography, and interaction defaults so Triad attributes render consistently across browsers.
+ */
+
 @use '../abstracts' as *;
 @use 'typography' as *;
 
@@ -10,7 +15,7 @@
   margin: 0;
   padding: 0;
   box-sizing: border-box;
-  // Font inherit ensures inputs/buttons match the atmosphere's font stack
+  // Inherit atmosphere typography so native controls stay aligned with Semantic Tokens.
   font-family: inherit;
 }
 
@@ -20,65 +25,66 @@
 html {
   // --- LAYOUT & SCROLL ---
   scroll-behavior: smooth;
-  overscroll-behavior-y: none; // Prevents pull-to-refresh on mobile
+  overscroll-behavior-y: none; // Interaction guard to block mobile pull-to-refresh
   padding-block: 0;
-  overflow-x: hidden; // Prevents horizontal scroll from glowing borders
+  overflow-x: hidden; // Glow halos should not introduce lateral scroll
 
   // --- APPEARANCE ---
-  // The absolute floor (Switches to White in Paper mode)
-  background-color: var(--bg-canvas); // Fallback for old browsers
+  // Canvas fallback for browsers without gradient support.
+  background-color: var(--bg-canvas);
 
-  // Radial gradient: Light at top center (over content), fading to bottom
+  // Radial gradient simulates overhead light to anchor the Atmosphere context.
   background-image: radial-gradient(
     circle at 50% 0%,
     var(--bg-spotlight) 0%,
     var(--bg-canvas) 85%
   );
 
-  // Fixed background for parallax effect
+  // Fix the background to support parallax-style motion without jitter.
   background-attachment: fixed;
   background-size: cover;
   background-repeat: no-repeat;
 
   // --- TYPOGRAPHY INITIALIZATION ---
-  // Sets Font Family + Base Size (calculated by scale)
+  // Initialize semantic typography before component-level overrides.
   @include typography('body');
 
-  // Text Luminance: Layer 2 (Dimmed) is default for reading
+  // Text luminance defaults to Layer 2 for comfortable reading.
   color: var(--text-dim);
   transition:
     background-color var(--speed-base) var(--ease-flow),
     color var(--speed-base) var(--ease-flow);
 
   // Rendering & Spacing
-  -webkit-font-smoothing: antialiased; // Critical for "Neon" legibility
+  -webkit-font-smoothing: antialiased; // Keeps neon edges crisp
   text-align: left;
   letter-spacing: 0.015rem;
   word-spacing: 0.05em;
 
   // --- ELECTRIC SCROLLBAR ---
   &::-webkit-scrollbar {
-    width: 6px; // Thin, precise rail
+    width: 6px; // Intentional, minimal rail
     height: 6px;
   }
 
   &::-webkit-scrollbar-track {
-    background: var(--bg-sink); // Sunk track
+    background: var(--bg-sink); // Sunk track matches recessed surfaces
   }
 
   &::-webkit-scrollbar-thumb {
-    background: var(--energy-secondary); // Structural color
+    background: var(
+      --energy-secondary
+    ); // Structural color to show motion lanes
     border-radius: 3px;
     opacity: 0.5;
   }
 
   &::-webkit-scrollbar-thumb:hover {
-    background: var(--energy-primary); // Glows active color
+    background: var(--energy-primary); // Energized interaction cue
   }
 }
 
-// Ensure body fills the specific height if needed,
-// otherwise it inherits naturally.
+// Maintain full-height layout when no other containers enforce it.
 body {
   min-height: 100vh;
 }
@@ -87,8 +93,8 @@ body {
    3. GLOBAL SELECTION STATE
    ========================================= */
 ::selection {
-  background: var(--energy-primary); // Neon Cyan / Red
-  color: var(--bg-canvas); // Contrast text (Black/Dark Blue)
+  background: var(--energy-primary); // Selection reflects active energy channel
+  color: var(--bg-canvas); // Preserve contrast against energized background
   text-shadow: none;
 }
 
@@ -107,7 +113,7 @@ textarea {
   color: inherit;
   font-family: inherit;
 
-  // Performance: Only animate composite properties
+  // Restrict transitions to composite-friendly properties to avoid layout thrash.
   transition:
     color var(--speed-fast) var(--ease-flow),
     opacity var(--speed-fast) var(--ease-flow),
@@ -116,7 +122,7 @@ textarea {
     transform var(--speed-fast) var(--ease-stabilize);
 
   &:focus-visible {
-    // Focus states snap to Primary Energy
+    // Focus states snap to Primary Energy to reveal interaction focus.
     outline: var(--physics-border-width) solid var(--energy-primary);
     box-shadow: 0 0 8px var(--energy-primary);
     z-index: z('base');
@@ -139,7 +145,7 @@ textarea:disabled {
   cursor: not-allowed;
   opacity: 0.5;
 
-  // Sunk Surfaces for inactive/disabled
+  // Disabled surfaces sink into the canvas to telegraph inactive depth.
   background-color: var(--bg-sink);
   border: var(--physics-border-width) solid var(--border-shadow);
   color: var(--text-mute);
@@ -161,7 +167,7 @@ svg {
   display: block;
   max-width: 100%;
   height: auto;
-  // Visual for broken images in void
+  // Provide a stable backdrop if media fails to load.
   background-color: var(--bg-sink);
 }
 
@@ -232,25 +238,24 @@ small {
 
 @include mobile-only {
   @at-root [data-physics='glass'] {
-    // Force a lower blur
+    // Reduce blur on mobile hardware to avoid overdraw.
     --physics-blur: 8px !important;
   }
 }
 
-// REDUCED MOTION (Vestibular Safety)
-// This overrides ALL animations and transitions if the user requests it.
+// Reduced motion compliance: collapse physics and timers when requested.
 @media (prefers-reduced-motion: reduce) {
   :root {
-    // 1. Kill Timers
+    // Disable timing variables so transitions resolve instantly.
     --speed-base: 0s !important;
     --speed-fast: 0s !important;
 
-    // 2. Kill Physics (Swap to Flat/Solid)
+    // Flatten physics to avoid blur-induced discomfort.
     --physics-blur: 0px !important;
     --glow-strength: 0 !important; // Stop pulsing glows
   }
 
-  // 3. Global Reset
+  // Force system-wide animation halt.
   *,
   *::before,
   *::after {
@@ -264,15 +269,15 @@ small {
     animation-play-state: paused !important;
   }
 
-  // 4. Force Static Fallbacks for specific complex animations
+  // Provide static fallbacks for complex animations.
   .btn-cta::before {
-    // Stop the rotating laser, default to a solid border look
+    // Freeze the rotating laser and default to a solid border.
     background: var(--energy-primary) !important;
     opacity: 0.2;
   }
 
   .shimmer {
-    // Replace moving gradient with static pulses or solid color
+    // Replace moving gradient with static fill.
     background-image: none !important;
     background-color: var(--bg-sink);
   }

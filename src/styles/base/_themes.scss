@@ -1,11 +1,16 @@
+/*
+ * ROLE: Theme variable emitter.
+ * RESPONSIBILITY: Applies Semantic Tokens from the Triad Engine to :root and atmosphere-scoped selectors.
+ */
+
 @use 'sass:map';
 @use '../abstracts/theme-engine' as engine;
 @use '../config/user-themes' as config;
 
-// Register the default atmosphere on :root using the Void config.
+// Seed :root with the Void configuration for non-attributed contexts.
 @include engine.generate-theme('default', map.get(config.$themes, 'void'));
 
-// Register all atmospheres for attribute-driven switching.
+// Emit attribute-scoped tokens for every registered atmosphere.
 @each $name, $theme-config in config.$themes {
   @include engine.generate-theme($name, $theme-config);
 }

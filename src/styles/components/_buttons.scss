@@ -1,20 +1,16 @@
+/*
+ * ROLE: Button system skin.
+ * RESPONSIBILITY: Defines base, CTA, and semantic variants that express Void Energy interaction physics.
+ */
+
 @use '../abstracts' as *;
 
 /* ==========================================================================
-   VOID ENERGY BUTTON SYSTEM
-   ==========================================================================
-   
-   PURPOSE:
-   Defines the interactive elements of the system. In Void Energy, buttons are 
-   not just colored rectangles; they are physical surfaces that react to touch.
-
-   PHILOSOPHY: "Interaction is Energy"
-   - Resting state = Potential Energy (Subtle border/glass).
-   - Hover/Focus = Kinetic Energy (Glow, Rise, Brightness).
-   
-   --------------------------------------------------------------------------
-   See global.scss for full API documentation.
-   -------------------------------------------------------------------------- */
+   BUTTON NOTES
+   - Resting state carries potential energy through glass/border treatments.
+   - Hover/Focus converts to kinetic energy via glow, lift, and brightness.
+   - See global.scss SYSTEM NOTES for a compact API summary.
+   ========================================================================== */
 
 // ==========================================================================
 // BUTTONS

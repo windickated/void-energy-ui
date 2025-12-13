@@ -1,3 +1,8 @@
+/*
+ * ROLE: Base layer aggregator.
+ * RESPONSIBILITY: Forwards reset, font, typography, and theme primitives to the global stylesheet entry.
+ */
+
 @forward 'reset';
 @forward 'fonts';
 @forward 'typography';

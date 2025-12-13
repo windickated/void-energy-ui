@@ -1,3 +1,8 @@
+/*
+ * ROLE: Typography scale and semantic mixins.
+ * RESPONSIBILITY: Defines clamps, weights, and semantic helpers that adapt to Atmosphere fonts and Triad scaling.
+ */
+
 @use 'sass:map';
 @use '../abstracts/breakpoints' as *;
 @use '../components/anchors';
@@ -6,7 +11,7 @@
    1. THE LOGIC (Scales & Weights)
    ========================================= */
 
-// Size Logic (Your original clamps, verified safe)
+// Size logic validated for responsive readability.
 $font-scale: (
   // 16px -> 16.8px
   'body': clamp(1rem, 1.5vw, 1.05rem),
@@ -78,17 +83,14 @@ $font-weights: (
     // -----------------------------
     $base-clamp: map.get($font-scale, $level);
 
-    // We apply the clamp.
-    // On 4K screens, this naturally stops growing at the max value defined in $font-scale.
-    // e.g., for H1 it stops at 2.5rem (or 3.5rem with the override below).
+    // Clamp scales with --text-scale while capping growth on ultra-wide viewports.
     font-size: calc(#{$base-clamp} * var(--text-scale));
     line-height: 1.5;
 
     // 3. RESPONSIVE OVERRIDES
     // -----------------------------
 
-    // Tablet Override for H1
-    // We bump the max size for H1 specifically on larger screens so it feels "Heroic"
+    // Tablet Override for H1 to preserve hero hierarchy on larger canvases.
     @if $level == 'h1' {
       @include respond-up(tablet) {
         font-size: calc(clamp(2rem, 5vw, 3.5rem) * var(--text-scale));
@@ -104,8 +106,7 @@ $font-weights: (
    ========================================= */
 
 body {
-  // This variable automatically switches between Atmosphere Default
-  // and User Override based on the logic above.
+  // Use the active atmosphere family while honoring user overrides.
   font-family: var(--font-body);
 
   // Applies the scale factor
@@ -115,7 +116,7 @@ body {
 h1,
 h2,
 h3 {
-  // Usually we keep headings locked to the atmosphere for flavor
+  // Headings stay tied to the atmosphere family for identity.
   font-family: var(--font-heading);
 }
 
@@ -167,7 +168,7 @@ input,
 select,
 textarea {
   @include typography('h5', $is-input: true); // Pass flag to force weight: 400
-  // Input data is "Active", so it uses Main color (White)
+  // Input data is treated as active signal, so it uses main text color.
   color: var(--text-main);
 }
 
@@ -223,7 +224,7 @@ textarea {
     list-style-type: decimal;
   }
 
-  // Nested Logic
+  // Nested list support
   ul ul {
     list-style-type: circle;
     margin-bottom: 0;
@@ -241,11 +242,11 @@ textarea {
   }
 
   // 3. LEGAL SUB-ORDERED (1.1, 1.2)
-  // Your logic was good, just cleaned up spacing
+  // Provides contract-style numbering without browser bullet defaults.
   ol.subordered {
     list-style-type: none;
     counter-reset: item;
-    padding-left: 0; // These usually align left
+    padding-left: 0; // Legal numbering typically aligns flush-left
 
     & > li {
       display: table;
@@ -256,7 +257,7 @@ textarea {
         content: counters(item, '.') '. ';
         display: table-cell;
         padding-right: 0.75rem;
-        color: var(--text-main); // Make numbers brighter than text
+        color: var(--text-main); // Bright numbering distinguishes hierarchy
         font-weight: 600;
         white-space: nowrap;
       }
@@ -269,7 +270,7 @@ textarea {
   }
 
   // 4. TYPOGRAPHY FIXES
-  // Legal docs need clear distinction between bold/headings
+  // Legal docs need clear distinction between emphasis and headings.
   strong,
   b {
     color: var(--text-main); // Highlight key terms (e.g., "SECTION 1")
@@ -277,6 +278,6 @@ textarea {
   }
 
   a {
-    @extend .link; // Force your Laser Link style on all anchors
+    @extend .link; // Apply system link styling for consistent emphasis
   }
 }

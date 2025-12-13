@@ -1,9 +1,14 @@
+/*
+ * ROLE: Input and form styling.
+ * RESPONSIBILITY: Applies sunk physics to native controls and overlays specialized patterns like dropzones.
+ */
+
 @use '../abstracts' as *;
 @use 'buttons';
 
 // ==========================================================================
 // INPUTS & FORMS (Native-First)
-// Mantra: "Reliability over Flash."
+// Favor native reliability while applying Void physics sparingly.
 // ==========================================================================
 
 // 1. GLOBAL FORM DEFAULTS
@@ -104,9 +109,8 @@ input[type='range'] {
   background: transparent;
   box-shadow: none; // No box shadow on the container
 
-  // MAGIC PROPERTY:
-  // Paints the thumb and track in our Primary Energy color.
-  // Works for Void (Cyan), Terminal (Amber), Paper (Ink).
+  // Accent color paints thumb/track in the active energy channel.
+  // Works across Void (Cyan), Terminal (Amber), Paper (Ink).
   accent-color: var(--energy-primary);
 
   cursor: pointer;
@@ -129,7 +133,7 @@ input[type='radio'] {
   width: 1.25rem;
   height: 1.25rem;
 
-  // MAGIC PROPERTY:
+  // Accent color keeps native controls aligned with the active energy channel.
   accent-color: var(--energy-primary);
 
   cursor: pointer;
@@ -155,7 +159,7 @@ input[type='radio'] {
   }
 }
 
-// 6. FILE DROPZONE (The "Invisible Click" Trick)
+// 6. FILE DROPZONE (Native Overlay Strategy)
 // --------------------------------------------------------------------------
 .dropzone {
   position: relative; // Crucial for overlaying
@@ -180,7 +184,7 @@ input[type='radio'] {
   transition: all var(--speed-fast) var(--ease-flow);
 
   // --- A. THE REAL INPUT (Invisible Layer) ---
-  // We stretch this over the entire parent. It captures all clicks and drops.
+  // Stretch the native input over the container to capture clicks and drops.
   input[type='file'] {
     position: absolute;
     inset: 0; // Stretch to corners
@@ -192,7 +196,7 @@ input[type='radio'] {
   }
 
   // --- B. THE FAKE CONTENT (Visible Layer) ---
-  // This sits underneath the invisible input.
+  // Visual affordance sits beneath the invisible input overlay.
   .dropzone-content {
     display: flex;
     flex-direction: column;
@@ -218,7 +222,7 @@ input[type='radio'] {
     }
 
     .btn-fake {
-      // Looks like a button, but isn't one
+      // Styled affordance; pointer events remain on the input overlay.
       @extend .btn; // Inherit your button styles
       @extend .btn-void; // Or use a void button look
       color: var(--energy-primary);

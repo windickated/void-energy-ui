@@ -1,21 +1,22 @@
+/*
+ * ROLE: React adapter hook for the Triad Engine.
+ * RESPONSIBILITY: Exposes atmosphere state and setters backed by the shared VoidEngine so React trees honor Triad attributes without duplicating logic.
+ */
+
 import { useEffect, useState } from 'react';
 import { VoidEngine } from './void-engine';
 
-// Create a singleton instance outside the hook to share state across components
-// This ensures that if Component A changes the theme, Component B updates too.
+// Singleton engine keeps Physics/Mode attributes consistent across React trees.
 const voidEngine = new VoidEngine();
 
 /**
- * React Hook for Void Energy UI
- * Usage:
- * const { atmosphere, setAtmosphere, config } = useVoidTheme();
+ * React hook exposing atmosphere controls and derived config.
  */
 export function useVoidTheme() {
   const [atmosphere, setAtmosState] = useState<string>(voidEngine.atmosphere);
 
   useEffect(() => {
-    // Subscribe to the engine.
-    // The engine's subscribe method returns a cleanup function automatically.
+    // Subscribe to Triad changes; unsubscribe is returned by the engine.
     const unsubscribe = voidEngine.subscribe((newAtmos) => {
       setAtmosState(newAtmos);
     });
@@ -32,12 +33,12 @@ export function useVoidTheme() {
   return {
     atmosphere,
     setAtmosphere,
-    // Helper to get physics/mode without importing the engine manually
+    // Convenience accessor for Physics/Mode derived from the current atmosphere.
     config: voidEngine.getConfig(atmosphere),
   };
 }
 
-// --- EXAMPLE USAGE COMPONENT ---
+// Reference usage component
 /*
 export const ThemeSwitcher = () => {
   const { atmosphere, setAtmosphere, config } = useVoidTheme();

@@ -1,14 +1,13 @@
+/*
+ * ROLE: Semantic token definitions.
+ * RESPONSIBILITY: Defines palette primitives, typography stacks, depth constants, and responsive scales for the Triad Engine.
+ */
+
 @use 'sass:map';
 
 /* =========================================
-   1. THE VOID ENERGY PALETTE SYSTEM
-    // This file defines the raw primitive color tokens for all Atmospheres.
-    // Do not use these variables directly in components.
-    // Map them to CSS Custom Properties in `_themes.scss`.
-   ========================================= */
-
-/* =========================================
-   1. THE VOID ENERGY PALETTE SYSTEM
+   1. VOID ENERGY PALETTE SYSTEM
+   Defines raw palette primitives per Atmosphere. Components consume the emitted CSS variables, not these raw constants.
    ========================================= */
 
 // --------------------------------------------------------------------------

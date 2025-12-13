@@ -1,16 +1,19 @@
+/*
+ * ROLE: Svelte adapter for the Triad Engine.
+ * RESPONSIBILITY: Synchronizes the Atmosphere state between the VoidEngine and Svelte runes while keeping direct engine access available for orchestration.
+ */
+
 import { VoidEngine } from './void-engine';
 
-// 1. Create the single shared instance
-// We rely on the exported class, not window.Void, for better type safety in modules
+// Shared engine instance keeps DOM attributes and framework state aligned.
 const engine = new VoidEngine();
 
-// 2. Create the Svelte Store
 export const theme = {
-  // Read-only reactive getter using Svelte 5 Runes
+  // Reactive getter binds Svelte runes to the engine without duplicating state.
   get atmosphere() {
     let state = $state(engine.atmosphere);
 
-    // Link Svelte reactivity to the Vanilla Engine
+    // Bridge engine notifications into Svelte reactivity.
     $effect.root(() => {
       return engine.subscribe((val) => {
         state = val;
@@ -20,11 +23,11 @@ export const theme = {
     return state;
   },
 
-  // Setter forwards to engine
+  // Setter delegates to the engine so Triad attributes remain consistent.
   set atmosphere(value: string) {
     engine.setAtmosphere(value);
   },
 
-  // Expose raw engine for advanced usage (getConfig, etc)
+  // Expose low-level engine for advanced scenarios (getConfig, manual wiring).
   raw: engine,
 };

@@ -1,3 +1,8 @@
+/*
+ * ROLE: Abstract layer index.
+ * RESPONSIBILITY: Consolidates shared functions, breakpoints, variables, and mixins for the Triad Engine tokens.
+ */
+
 @forward 'functions';
 @forward 'breakpoints';
 @forward 'variables';

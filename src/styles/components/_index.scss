@@ -1,3 +1,8 @@
+/*
+ * ROLE: Component layer index.
+ * RESPONSIBILITY: Exposes component skins (tooltips, dialogs, anchors, buttons, inputs, containers, tiles) to the design system entrypoint.
+ */
+
 @forward 'tooltips';
 @forward 'dialogs';
 @forward 'anchors';

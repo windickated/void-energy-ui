@@ -1,10 +1,15 @@
+/*
+ * ROLE: Tile and collection styling.
+ * RESPONSIBILITY: Provides holographic tile treatments and semantic chip variants aligned with Void physics.
+ */
+
 @use '../abstracts' as *;
 @use '../base/typography' as *;
 @use 'buttons';
 
 // ==========================================================================
 // TILES & COLLECTIONS
-// Mantra: "Windows into Data."
+// Holographic data slates for collections and chips.
 // ==========================================================================
 
 // 1. THE COLLECTION (Horizontal Scroll Container)
@@ -106,9 +111,7 @@
     transition: transform var(--speed-base) var(--ease-stabilize); // Smooth pan effect
   }
 
-  // --- THE ATMOSPHERIC GRADIENT (The "Scuba Dive") ---
-  // This gradient ensures text is legible at the bottom.
-  // It uses var(--bg-canvas) so it fades perfectly into Void, Crimson, or White.
+  // Atmospheric gradient anchors legibility against imagery using the canvas tone.
   &::after {
     content: '';
     position: absolute;

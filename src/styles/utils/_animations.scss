@@ -1,23 +1,14 @@
+/*
+ * ROLE: Animation primitives.
+ * RESPONSIBILITY: Houses shared keyframes and entry mixins tuned to the Triad Engine timings.
+ */
+
 @use '../abstracts' as *;
 
 /* ==========================================================================
-   VOID ENERGY ANIMATION LOGIC
-   ==========================================================================
-   
-   PURPOSE:
-   Defines the "Time" aspect of the design system.
-   Contains reusable Keyframes and Transition Mixins.
-
-   CONTENTS:
-   1. Mixins:
-      - entry-transition: Standard "Slide Up + Fade In" for elements.
-   
-   2. Keyframes:
-      - shimmer:        Loading skeleton movement.
-      - cyber-pulse:    Breathing glow for active states.
-      - rotate-laser:   The Gemini Button gradient rotation.
-      - progress-fill:  Simple width animation for bars.
-      - logo-enter:     Holographic materialization effect for logos.
+   MOTION NOTES
+   - entry-transition mixin: standard slide-and-focus entry tuned to physics easing.
+   - Keyframes: shimmer, cyber-pulse, rotate-laser, progress-fill, logo-enter.
    ========================================================================== */
 
 // ==========================================================================

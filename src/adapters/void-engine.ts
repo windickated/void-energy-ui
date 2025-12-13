@@ -39,9 +39,9 @@ interface ThemeConfig {
   mode: VoidMode;
 }
 
-// The Source of Truth for behavior logic
+// Triad lookup mapping atmospheres to Physics and Mode semantics.
 const THEME_CONFIG: Record<string, ThemeConfig> = {
-  // --- CORE THEMES (Glass / Dark) ---
+  // Glass Physics defaults
   void: { physics: 'glass', mode: 'dark' },
   onyx: { physics: 'glass', mode: 'dark' },
   overgrowth: { physics: 'glass', mode: 'dark' },
@@ -52,7 +52,7 @@ const THEME_CONFIG: Record<string, ThemeConfig> = {
   velvet: { physics: 'glass', mode: 'dark' },
   solar: { physics: 'glass', mode: 'dark' },
 
-  // --- EXCEPTIONS ---
+  // Alternate physics/mode pairings
   terminal: { physics: 'retro', mode: 'dark' },
   paper: { physics: 'flat', mode: 'light' },
   laboratory: { physics: 'flat', mode: 'light' },
@@ -70,7 +70,7 @@ export class VoidEngine {
   constructor(options?: EngineOptions) {
     this.atmosphere = 'void';
     this.observers = [];
-    this.onError = options?.onError; // Capture the callback
+    this.onError = options?.onError;
 
     // Auto-init only in browser environments
     if (typeof window !== 'undefined') {
@@ -83,43 +83,43 @@ export class VoidEngine {
     if (stored && THEME_CONFIG[stored]) {
       this.setAtmosphere(stored);
     } else {
-      // Ensure attributes are set even if default
+      // Set attributes even when falling back to the default atmosphere.
       this.setAtmosphere('void');
     }
   }
 
-  // Validation Helper
+  // Validation helper used by adapters before attempting a switch.
   public hasTheme(name: string): boolean {
     return !!THEME_CONFIG[name];
   }
 
   /**
-   * Switches the active atmosphere and updates the DOM attributes.
-   * This is the "Triad Engine" logic: Atmosphere -> Physics + Mode.
+   * Routes an atmosphere selection through the Triad Engine to derive Physics and Mode,
+   * update DOM attributes, and propagate notifications.
    */
   public setAtmosphere(name: string): void {
-    // 1. Validation
+    // Guard against unknown atmospheres before mutating state.
     if (!THEME_CONFIG[name]) {
       const errorMsg = `Void Engine: Atmosphere "${name}" is not registered in THEME_CONFIG.`;
 
-      // If a custom handler exists, let the app handle it (e.g., Toast notification)
+      // Surface to host application if it provided telemetry hooks.
       if (this.onError) {
         this.onError(new Error(errorMsg));
         return; // Stop execution, do not fallback silently
       }
 
-      // Default behavior: Descriptive Error + Fallback
+      // Default behavior: Descriptive error + controlled fallback.
       console.error(
         `${errorMsg} Falling back to 'void'. Available themes: ${Object.keys(THEME_CONFIG).join(', ')}`,
       );
       name = 'void';
     }
 
-    // 2. State Update
+    // State update
     this.atmosphere = name;
     const config = THEME_CONFIG[name];
 
-    // 3. DOM Updates (The Triad)
+    // DOM Updates (The Triad)
     if (typeof document !== 'undefined') {
       const root = document.documentElement;
       root.setAttribute('data-atmosphere', name);
@@ -127,18 +127,18 @@ export class VoidEngine {
       root.setAttribute('data-mode', config.mode);
     }
 
-    // 4. Persistence
+    // Persistence for subsequent reloads.
     if (typeof localStorage !== 'undefined') {
       localStorage.setItem(KEYS.ATMOSPHERE, name);
     }
 
-    // 5. Notify Frameworks
+    // Notify adapters
     this.notify();
   }
 
   /**
    * Subscribe to changes. Returns an unsubscribe function.
-   * Useful for React/Svelte/Vue adapters.
+   * Used by adapters to synchronize UI shells on mount.
    */
   public subscribe(callback: Listener): () => void {
     this.observers.push(callback);
@@ -163,7 +163,7 @@ export class VoidEngine {
   }
 }
 
-// Global Declaration for window.Void usage
+// Global declaration for window.Void usage
 declare global {
   interface Window {
     Void: VoidEngine;
