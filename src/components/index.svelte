@@ -4,22 +4,57 @@
   import { tooltip } from '../actions/tooltip';
 
   const engine = theme.raw;
-  let atmosphere = $state(engine.atmosphere);
-  let rangeValue = $state(50);
 
-  // Keep local state in sync with the shared engine
+  // 1. Initialize State
+  let atmosphere = $state(engine.atmosphere);
+  let currentScale = $state(engine.userConfig.scale);
+
+  // 2. Handle the Engine Instance
   $effect.root(() => {
-    return engine.subscribe((value) => {
-      atmosphere = value;
+    return engine.subscribe((eng) => {
+      atmosphere = eng.atmosphere;
+      currentScale = eng.userConfig.scale;
     });
   });
 
-  // Push local changes back to the engine (and its side effects)
+  // 3. Push Atmosphere changes back
   $effect(() => {
     if (atmosphere !== engine.atmosphere) {
       theme.atmosphere = atmosphere;
     }
   });
+
+  // Available fonts
+  const fontOptions = [
+    { label: 'System Default (Atmosphere)', value: null },
+    { label: 'Hanken Grotesk (Tech)', value: "'Hanken Grotesk', sans-serif" },
+    { label: 'Inter (Clean)', value: "'Inter', sans-serif" },
+    { label: 'Courier Prime (Code)', value: "'Courier Prime', monospace" },
+    { label: 'Lora (Serif)', value: "'Lora', serif" },
+    { label: 'Open Sans (Standard)', value: "'Open Sans', sans-serif" },
+    { label: 'Comic Neue (Casual)', value: "'Comic Neue', sans-serif" },
+  ];
+
+  const scaleLevels = [
+    { label: 'XS', value: 0.85, name: 'Compact' },
+    { label: 'S', value: 1.0, name: 'Standard' },
+    { label: 'M', value: 1.15, name: 'Comfort' },
+    { label: 'L', value: 1.3, name: 'Large' },
+    { label: 'XL', value: 1.5, name: 'Extra' },
+  ];
+
+  let activeScaleStep = $derived(
+    scaleLevels.reduce((prev, curr) =>
+      Math.abs(curr.value - currentScale) < Math.abs(prev.value - currentScale)
+        ? curr
+        : prev,
+    ),
+  );
+
+  function setScale(value: number) {
+    theme.setScale(value);
+    currentScale = value;
+  }
 </script>
 
 <main class="w-full min-h-screen">
@@ -41,8 +76,56 @@
         <option value="solar">Solar Atmosphere</option>
         <option value="paper">Paper Atmosphere</option>
         <option value="laboratory">Laboratory Atmosphere</option>
-        <option value="new">New Atmosphere</option>
       </select>
+
+      <label for="font-heading" class="text-small">Headings</label>
+      <select
+        id="font-heading"
+        value={theme.config.fontHeading}
+        onchange={(e) =>
+          theme.setFonts(e.currentTarget.value || null, theme.config.fontBody!)}
+      >
+        {#each fontOptions as font}
+          <option value={font.value}>{font.label}</option>
+        {/each}
+      </select>
+
+      <label for="font-body" class="text-small">Body Text</label>
+      <select
+        id="font-body"
+        value={theme.config.fontBody}
+        onchange={(e) =>
+          theme.setFonts(
+            theme.config.fontHeading!,
+            e.currentTarget.value || null,
+          )}
+      >
+        {#each fontOptions as font}
+          <option value={font.value}>{font.label}</option>
+        {/each}
+      </select>
+
+      <div class="flex-col gap-xs pt-sm">
+        <div class="flex flex-row justify-between items-end">
+          <label for="">Interface Scale</label>
+          <span>
+            {activeScaleStep.name} ({Math.round(activeScaleStep.value * 100)}%)
+          </span>
+        </div>
+
+        <div
+          class="surface-sunk p-xs rounded-md flex flex-row gap-xs justify-between"
+        >
+          {#each scaleLevels as level}
+            <button
+              class:btn-signal={activeScaleStep.value === level.value}
+              onclick={() => setScale(level.value)}
+            >
+              {level.label}
+            </button>
+          {/each}
+        </div>
+      </div>
     </div>
   </header>
 
@@ -89,17 +172,8 @@
         </p>
 
         <div class="flex flex-col gap-xs flex-1">
-          <div class="flex flex-row justify-between">
-            <label class="px-md" for="energy-output">Energy Output</label>
-            <span class="text-highlight">{rangeValue}%</span>
-          </div>
-          <input
-            id="energy-output"
-            type="range"
-            bind:value={rangeValue}
-            min="0"
-            max="100"
-          />
+          <label class="px-md" for="energy-output">Energy Output</label>
+          <input id="energy-output" type="range" value="50" min="0" max="100" />
         </div>
 
         <div class="flex flex-row flex-wrap gap-lg pt-lg border-top">

@@ -58,19 +58,38 @@ const THEME_CONFIG: Record<string, ThemeConfig> = {
   laboratory: { physics: 'flat', mode: 'light' },
 };
 
-const KEYS = { ATMOSPHERE: 'void_atmosphere' };
+// CHANGE 1: Listener now receives the whole engine instance,
+// allowing access to both Atmosphere AND UserConfig.
+type Listener = (engine: VoidEngine) => void;
 
-type Listener = (atmosphere: string) => void;
+// Define the User Preference Shape
+interface UserConfig {
+  fontHeading?: string | null; // null = reset to atmosphere default
+  fontBody?: string | null;
+  scale: number; // 0.85 to 1.50
+}
+
+// Define Storage Keys
+const KEYS = {
+  ATMOSPHERE: 'void_atmosphere',
+  USER_CONFIG: 'void_user_config',
+};
 
 export class VoidEngine {
   public atmosphere: string;
   private observers: Listener[];
   private onError?: ErrorHandler;
+  public userConfig: UserConfig;
 
   constructor(options?: EngineOptions) {
     this.atmosphere = 'void';
     this.observers = [];
     this.onError = options?.onError;
+    this.userConfig = {
+      fontHeading: null,
+      fontBody: null,
+      scale: 1,
+    };
 
     // Auto-init only in browser environments
     if (typeof window !== 'undefined') {
@@ -85,6 +104,17 @@ export class VoidEngine {
     } else {
       // Set attributes even when falling back to the default atmosphere.
       this.setAtmosphere('void');
+    }
+
+    // Load User Config
+    const storedConfig = localStorage.getItem(KEYS.USER_CONFIG);
+    if (storedConfig) {
+      try {
+        this.userConfig = { ...this.userConfig, ...JSON.parse(storedConfig) };
+        this.applyUserConfig(); // Apply immediately
+      } catch (e) {
+        console.error('Void Engine: Corrupt user config', e);
+      }
     }
   }
 
@@ -142,8 +172,9 @@ export class VoidEngine {
    */
   public subscribe(callback: Listener): () => void {
     this.observers.push(callback);
-    // Fire immediately so components sync on mount
-    callback(this.atmosphere);
+    // Fire immediately so components sync on mount.
+    // CHANGE 2: Pass 'this' so the subscriber has full context immediately.
+    callback(this);
 
     return () => {
       this.observers = this.observers.filter((cb) => cb !== callback);
@@ -151,7 +182,8 @@ export class VoidEngine {
   }
 
   private notify(): void {
-    this.observers.forEach((cb) => cb(this.atmosphere));
+    // CHANGE 3: Pass 'this' on updates too.
+    this.observers.forEach((cb) => cb(this));
   }
 
   /**
@@ -160,6 +192,49 @@ export class VoidEngine {
   public getConfig(name?: string): ThemeConfig {
     const target = name || this.atmosphere;
     return THEME_CONFIG[target] || THEME_CONFIG['void'];
+  }
+
+  // Update User Preferences
+  public setPreferences(prefs: Partial<UserConfig>): void {
+    this.userConfig = { ...this.userConfig, ...prefs };
+    this.applyUserConfig();
+    this.persist();
+    this.notify(); // Tell Svelte/React to update UI
+  }
+
+  // Apply logic to the DOM (The "Render" step)
+  private applyUserConfig(): void {
+    if (typeof document === 'undefined') return;
+    const root = document.documentElement;
+
+    // A. Font Scaling
+    // CHANGE 4: Aligned constraints with UI (0.85 - 1.5)
+    // We allow a slightly wider buffer (0.75 - 2.0) for safety/future-proofing,
+    // but default behavior logic remains.
+    const safeScale = Math.min(Math.max(this.userConfig.scale, 0.75), 2);
+    root.style.setProperty('--text-scale', safeScale.toString());
+
+    // B. Font Overrides
+    if (this.userConfig.fontHeading) {
+      root.style.setProperty(
+        '--user-font-heading',
+        this.userConfig.fontHeading,
+      );
+    } else {
+      root.style.removeProperty('--user-font-heading');
+    }
+
+    if (this.userConfig.fontBody) {
+      root.style.setProperty('--user-font-body', this.userConfig.fontBody);
+    } else {
+      root.style.removeProperty('--user-font-body');
+    }
+  }
+
+  private persist(): void {
+    if (typeof localStorage === 'undefined') return;
+    localStorage.setItem(KEYS.ATMOSPHERE, this.atmosphere);
+    localStorage.setItem(KEYS.USER_CONFIG, JSON.stringify(this.userConfig));
   }
 }
 

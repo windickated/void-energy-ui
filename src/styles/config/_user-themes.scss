@@ -71,23 +71,33 @@ $semantic-light: (
 // HIGH DENSITY (Compact) - For dashboards and data-heavy views
 // Approx 30% reduction
 $density-high: (
-  'xs': 0.25rem, // 4px
-  'sm': 0.5rem,  // 8px  (Was 16px)
-  'md': 1rem,    // 16px (Was 24px)
-  'lg': 1.5rem,  // 24px (Was 32px)
-  'xl': 2rem,    // 32px (Was 48px)
-  '2xl': 3rem    // 48px (Was 64px)
+  'xs': 0.25rem,
+  // 4px
+  'sm': 0.5rem,
+  // 8px  (Was 16px)
+  'md': 1rem,
+  // 16px (Was 24px)
+  'lg': 1.5rem,
+  // 24px (Was 32px)
+  'xl': 2rem,
+  // 32px (Was 48px)
+  '2xl': 3rem, // 48px (Was 64px)
 );
 
 // LOW DENSITY (Spacious) - For editorial and luxury views
 // Approx 20% increase
 $density-low: (
-  'xs': 0.75rem, // 12px
-  'sm': 1.25rem, // 20px
-  'md': 2rem,    // 32px (Was 24px)
-  'lg': 2.5rem,  // 40px
-  'xl': 4rem,    // 64px
-  '2xl': 5rem    // 80px
+  'xs': 0.75rem,
+  // 12px
+  'sm': 1.25rem,
+  // 20px
+  'md': 2rem,
+  // 32px (Was 24px)
+  'lg': 2.5rem,
+  // 40px
+  'xl': 4rem,
+  // 64px
+  '2xl': 5rem, // 80px
 );
 
 $themes: (
@@ -330,7 +340,6 @@ $themes: (
   'velvet': (
       'type': 'dark',
       'physics': 'glass',
-      'density': $density-low,
       'palette': map.merge(
           $shared-values,
           map.merge(
@@ -389,7 +398,6 @@ $themes: (
   'paper': (
       'type': 'light',
       'physics': 'flat',
-      'density': $density-high,
       'palette': map.merge(
           $shared-values,
           map.merge(

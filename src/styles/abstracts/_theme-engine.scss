@@ -28,7 +28,7 @@
 
   // Check if the theme explicitly defines a custom density map.
   $theme-density: map.get($config, 'density');
-  
+
   // If no custom density is provided, use the global default from _variables.scss
   @if $theme-density == null {
     $theme-density: $spacing-scale;

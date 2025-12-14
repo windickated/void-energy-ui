@@ -5,33 +5,53 @@
 
 import { VoidEngine } from './void-engine';
 
-// 1. Initialize the Engine (Singleton) reusing global when available
+// 1. Initialize the Engine (Singleton)
 const engine =
   typeof window !== 'undefined' && window.Void ? window.Void : new VoidEngine();
 
-// 2. Create the Reactive Signal ONCE
-// This holds the "Source of Truth" for Svelte components.
-let currentAtmosphere = $state(engine.atmosphere);
+// 2. Create Global Reactive State
+// We use a single state object to hold both Atmosphere and User Config.
+// This prevents memory leaks from creating multiple subscriptions.
+const voidState = $state({
+  atmosphere: engine.atmosphere,
+  config: engine.userConfig,
+});
 
 // 3. One-Way Binding: Engine -> Svelte
-// When the vanilla engine emits a change, we update the Rune.
-// We do not need $effect.root here because this subscription lives for the app's lifetime.
-engine.subscribe((newValue) => {
-  currentAtmosphere = newValue;
+// We subscribe ONCE. When the engine notifies us, we update the local Runes.
+engine.subscribe((updatedEngine) => {
+  voidState.atmosphere = updatedEngine.atmosphere;
+  // We replace the whole object to trigger deep reactivity if needed,
+  // or spread it if you prefer granular updates.
+  voidState.config = { ...updatedEngine.userConfig };
 });
 
 export const theme = {
-  // GETTER: Returns the stable reactive value
+  // GETTER: Returns the reactive atmosphere
   get atmosphere() {
-    return currentAtmosphere;
+    return voidState.atmosphere;
   },
 
-  // SETTER: Pushes changes back to the Engine (which then notifies listeners)
+  // SETTER: Pushes changes back to the Engine
   set atmosphere(value: string) {
-    // This triggers the engine's setAtmosphere logic (localStorage, DOM attributes)
     engine.setAtmosphere(value);
   },
 
-  // EXPOSE RAW ENGINE: For advanced usage or direct access
+  // GETTER: Returns the reactive user config
+  // Now safe to use because it references the stable 'voidState'
+  get config() {
+    return voidState.config;
+  },
+
+  // Actions
+  setFonts(heading: string | null, body: string | null) {
+    engine.setPreferences({ fontHeading: heading, fontBody: body });
+  },
+
+  setScale(scale: number) {
+    engine.setPreferences({ scale });
+  },
+
+  // Expose raw engine for advanced use cases
   raw: engine,
 };
