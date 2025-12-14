@@ -105,7 +105,7 @@
         {/each}
       </select>
 
-      <div class="flex-col gap-xs pt-sm">
+      <div class="flex-col gap-xs pt-sm hidden tablet:flex">
         <div class="flex flex-row justify-between items-end">
           <label for="">Interface Scale</label>
           <span>

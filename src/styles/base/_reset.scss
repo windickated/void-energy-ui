@@ -338,3 +338,13 @@ small {
     --void-shadow: none !important;
   }
 }
+
+// =========================================
+// MOBILE SAFEGUARDS
+// =========================================
+@include mobile-only {
+  :root {
+    // FORCE reset scale on mobile to prevent layout breakage.
+    --text-scale: 1 !important;
+  }
+}
