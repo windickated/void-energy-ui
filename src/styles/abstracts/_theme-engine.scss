@@ -26,6 +26,14 @@
     $palette: ();
   }
 
+  // Check if the theme explicitly defines a custom density map.
+  $theme-density: map.get($config, 'density');
+  
+  // If no custom density is provided, use the global default from _variables.scss
+  @if $theme-density == null {
+    $theme-density: $spacing-scale;
+  }
+
   // CALCULATED VALUES (Automation)
   // We still calculate speed-fast automatically based on the preset's speed-base
   $speed-base: map.get($physics-map, 'speed-base');
@@ -49,6 +57,10 @@
 
     @each $key, $value in $theme-map {
       --#{$key}: #{$value};
+    }
+
+    @each $key, $value in $theme-density {
+      --space-#{$key}: #{$value};
     }
   }
 }

@@ -249,11 +249,6 @@ $container-paddings: (
 );
 
 :root {
-  // Export spacing tokens
-  @each $key, $value in $spacing-scale {
-    --space-#{$key}: #{$value};
-  }
-
   // Export radius tokens
   @each $key, $value in $radius-scale {
     --radius-#{$key}: #{$value};
