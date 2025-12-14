@@ -58,12 +58,12 @@
   }
 
   const densityOptions = [
-    { value: 'high', label: 'Compact', icon: '🥓' }, 
+    { value: 'high', label: 'Compact', icon: '🥓' },
     { value: 'standard', label: 'Standard', icon: '🍔' },
-    { value: 'low', label: 'Relaxed', icon: '🥗' }
+    { value: 'low', label: 'Relaxed', icon: '🥗' },
   ];
 
-  const setDensity = (d: 'high'|'standard'|'low') => theme.setDensity(d);
+  const setDensity = (d: 'high' | 'standard' | 'low') => theme.setDensity(d);
 </script>
 
 <main class="w-full min-h-screen">
@@ -143,12 +143,15 @@
             ({currentDensity})
           </span>
         </div>
-        
-        <div class="surface-sunk p-xs rounded-md flex flex-row gap-xs justify-between">
+
+        <div
+          class="surface-sunk p-xs rounded-md flex flex-row gap-xs justify-between"
+        >
           {#each densityOptions as opt}
-            <button 
+            <button
               class:active={currentDensity === opt.value}
-              onclick={() => setDensity(opt.value as 'high'|'standard'|'low')}
+              onclick={() =>
+                setDensity(opt.value as 'high' | 'standard' | 'low')}
             >
               {opt.label}
             </button>

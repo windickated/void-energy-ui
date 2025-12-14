@@ -62,21 +62,21 @@ const THEME_CONFIG: Record<string, ThemeConfig> = {
 // DENSITY MAPS (matches src/styles/config/_user-themes.scss)
 const DENSITY_MAPS = {
   high: {
-    'space-xs': '0.25rem',  // 4px
-    'space-sm': '0.5rem',   // 8px
-    'space-md': '1rem',     // 16px
-    'space-lg': '1.5rem',   // 24px
-    'space-xl': '2rem',     // 32px
-    'space-2xl': '3rem',    // 48px
+    'space-xs': '0.25rem', // 4px
+    'space-sm': '0.5rem', // 8px
+    'space-md': '1rem', // 16px
+    'space-lg': '1.5rem', // 24px
+    'space-xl': '2rem', // 32px
+    'space-2xl': '3rem', // 48px
   },
   low: {
-    'space-xs': '0.75rem',  // 12px
-    'space-sm': '1.25rem',  // 20px
-    'space-md': '2rem',     // 32px
-    'space-lg': '2.5rem',   // 40px
-    'space-xl': '4rem',     // 64px
-    'space-2xl': '5rem',    // 80px
-  }
+    'space-xs': '0.75rem', // 12px
+    'space-sm': '1.25rem', // 20px
+    'space-md': '2rem', // 32px
+    'space-lg': '2.5rem', // 40px
+    'space-xl': '4rem', // 64px
+    'space-2xl': '5rem', // 80px
+  },
   // Standard is handled by removing overrides (CSS fallback)
 };
 
@@ -112,7 +112,7 @@ export class VoidEngine {
       fontHeading: null,
       fontBody: null,
       scale: 1,
-      density: 'standard'
+      density: 'standard',
     };
 
     // Auto-init only in browser environments
@@ -255,7 +255,9 @@ export class VoidEngine {
     const density = this.userConfig.density;
     if (density === 'standard') {
       // CLEANUP: Remove inline styles so SCSS defaults apply
-      Object.keys(DENSITY_MAPS.high).forEach(key => root.style.removeProperty(`--${key}`));
+      Object.keys(DENSITY_MAPS.high).forEach((key) =>
+        root.style.removeProperty(`--${key}`),
+      );
     } else {
       // INJECT: Apply the specific map (High or Low)
       const map = DENSITY_MAPS[density];
