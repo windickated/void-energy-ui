@@ -74,7 +74,10 @@
     0 0 10px -4px alpha(var(--toast-accent), 40%); // Signal
 
   // Motion
-  transition: all var(--speed-fast) var(--ease-snap);
+  transition:
+    border-color var(--speed-fast) var(--ease-snap),
+    box-shadow var(--speed-fast) var(--ease-snap),
+    background-color var(--speed-fast) var(--ease-flow);
 
   // Hover Effect: Lift & Brighten
   &:hover {

@@ -181,7 +181,9 @@ input[type='radio'] {
   border-style: dashed; // Override sunk solid border
 
   cursor: pointer;
-  transition: all var(--speed-fast) var(--ease-flow);
+  transition:
+    background-color var(--speed-fast) var(--ease-flow),
+    border-color var(--speed-fast) var(--ease-snap);
 
   // --- A. THE REAL INPUT (Invisible Layer) ---
   // Stretch the native input over the container to capture clicks and drops.

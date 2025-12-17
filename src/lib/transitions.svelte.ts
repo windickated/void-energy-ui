@@ -1,10 +1,53 @@
 /*
- * ROLE: Svelte transition adapters for the Triad Engine.
- * RESPONSIBILITY: Physics-based motion primitives (Glass vs. Retro vs. Flat).
+ * ==========================================================================
+ * 🌌 VOID PHYSICS: MOTION PRIMITIVES SYSTEM
+ * ==========================================================================
+ * ROLE: Bridges Svelte's transition engine with the Triad Physics.
+ * * PHYSICS RULES:
+ * 1. GLASS: Viscous. Uses Blur, Scale, and Cubic Easing.
+ * 2. FLAT:  Aerodynamic. Uses Translate, Opacity, and Quart/Quint Easing.
+ * 3. RETRO: Robotic. Uses Steps, Glitch, and Instant Snaps.
+ *
+ * --------------------------------------------------------------------------
+ * THE LIFECYCLE OF AN ENTITY
+ * --------------------------------------------------------------------------
+ * In Svelte, an element has three distinct motion states. We map these to
+ * our Physics vocabulary:
+ *
+ * 1. CREATION (in: directive) -> "Materialize"
+ * - Trigger: Element is added to the DOM.
+ * - Physics: Starts transparent/blurred/offset and stabilizes into reality.
+ * - Usage: <div in:materialize={{ y: -20 }}>
+ *
+ * 2. DESTRUCTION (out: directive) -> "Singularity" / "Dematerialize" / "Implode"
+ * - Trigger: Element is removed from the DOM.
+ * - Physics: The element stays in the DOM while it dissolves/explodes.
+ * - Usage: <div out:singularity>
+ *
+ * 3. SHIFTING (animate: directive) -> "Live"
+ * - Trigger: The list order changes (e.g., an item is deleted).
+ * - Physics: Neighbors slide smoothly to fill the gap.
+ * - Critical Requirement: The {#each} block MUST be keyed by data, not index.
+ * - Usage: <div animate:live>
+ *
+ * --------------------------------------------------------------------------
+ * ⚠️ DEVELOPER WARNING: THE LIST COORDINATION PROTOCOL
+ * --------------------------------------------------------------------------
+ * When removing an item from a list, two things happen simultaneously:
+ * A. The Victim runs 'out:singularity' (It fades out in place).
+ * B. The Neighbors run 'animate:live' (They slide over the Victim).
+ *
+ * IF YOU FORGET THE KEY:
+ * Svelte will reuse the DOM nodes. The "Victim" will be the *last* element
+ * in the list visually, causing the data to "jump" before the animation plays.
+ *
+ * CORRECT: {#each items as item (item.id)} ... {/each}
+ * WRONG:   {#each items as item, i (i)} ... {/each}
+ * ==========================================================================
  */
 
 import { flip } from 'svelte/animate';
-import { cubicOut, cubicIn, cubicInOut } from 'svelte/easing';
+import { cubicOut, cubicIn } from 'svelte/easing';
 
 /* --- HELPER: Read the Physics Engine --- */
 function getSystemConfig(node: Element) {
@@ -12,34 +55,28 @@ function getSystemConfig(node: Element) {
   const reducedMotion = matchMedia('(prefers-reduced-motion: reduce)').matches;
 
   // 1. READ SEMANTIC TOKENS
-  // We fix the parsing to allow "0s" to be valid (Retro mode)
   const speedVal = style.getPropertyValue('--speed-base').trim();
-  const speedBase = speedVal ? parseFloat(speedVal) * 1000 : 300;
+  const speedBase = speedVal ? parseFloat(speedVal) * 1000 : 300; // [cite: 176]
 
   const speedFastVal = style.getPropertyValue('--speed-fast').trim();
-  const speedFast = speedFastVal ? parseFloat(speedFastVal) * 1000 : 200;
+  const speedFast = speedFastVal ? parseFloat(speedFastVal) * 1000 : 200; // [cite: 177]
 
   // 2. READ PHYSICS STATE
   const blurVal = style.getPropertyValue('--physics-blur') || '0px';
-  const blurInt = parseInt(blurVal) || 0;
+  const blurInt = parseInt(blurVal) || 0; // [cite: 178]
 
   // 3. DETERMINE REALITY
-  // CRITICAL FIX: We check the explicit Physics Mode, not just the blur value.
-  // This separates 'Flat' (No blur, smooth) from 'Retro' (No blur, instant).
-  const physicsMode = document.documentElement.getAttribute('data-physics');
+  const physicsMode = document.documentElement.getAttribute('data-physics'); // [cite: 179]
   const isRetro = physicsMode === 'retro';
+  const isFlat = physicsMode === 'flat'; // Distinct check for Flat
 
-  return { speedBase, speedFast, blurInt, isRetro, reducedMotion };
+  return { speedBase, speedFast, blurInt, isRetro, isFlat, reducedMotion };
 }
 
 /**
  * ==========================================================================
- * 0. VOID LIST (Animation)
- * Behavior:
- * - A smart wrapper for `animate:flip`.
- * - Glass: Uses smooth cubic easing.
- * - Retro: Uses "Stepped" easing (Cyber Slide) for robotic movement.
- * Usage: <div animate:voidList={{ duration: 300 }}>
+ * 0. VOID LIST (Sorting)
+ * Usage: <div animate:live>
  * ==========================================================================
  */
 export function live(
@@ -49,56 +86,59 @@ export function live(
 ) {
   const { isRetro } = getSystemConfig(node);
 
-  // ROBOTIC EASING: Quantizes movement into 4 discrete steps
-  const steppedEasing = (t: number) => Math.floor(t * 4) / 4;
+  // RETRO: Robotic Quantization
+  const steppedEasing = (t: number) => Math.floor(t * 4) / 4; // [cite: 184]
 
-  const options = {
-    duration: params.duration ?? 300,
-    easing: isRetro ? steppedEasing : cubicOut,
-    ...params,
-  };
-
-  return flip(node, { from, to }, options);
+  return flip(
+    node,
+    { from, to },
+    {
+      duration: params.duration ?? 300,
+      easing: isRetro ? steppedEasing : cubicOut, // Default to Smooth Cubic for both Glass & Flat
+      ...params,
+    },
+  );
 }
 
 /**
  * ==========================================================================
  * 1. MATERIALIZE (Entry)
- * Behavior:
- * - Glass: Blur fades out + Scale Up + Fade In.
- * - Flat (Light): Scale Up + Fade In (No blur).
- * - Retro: Instant appearance (No animation).
+ * Usage: <div in:materialize={{ y: 20 }}>
  * ==========================================================================
  */
 export function materialize(
   node: HTMLElement,
   { delay = 0, duration = null, y = 15 } = {},
 ) {
-  const { speedBase, blurInt, isRetro, reducedMotion } = getSystemConfig(node);
+  const { speedBase, blurInt, isRetro, isFlat, reducedMotion } =
+    getSystemConfig(node);
 
-  // ACCESSIBILITY / RETRO HARD STOP
+  // A. RETRO / REDUCED (Instant)
   if (reducedMotion || isRetro) {
     return {
       delay,
-      duration: 0, // Instant
-      css: (t: number) => `opacity: ${t >= 0.5 ? 1 : 0};`,
+      duration: isRetro ? 0 : 300,
+      css: (t: number) => `opacity: ${t};`, // [cite: 190]
     };
   }
 
-  // GLASS & FLAT PHYSICS
+  // B. SMOOTH PHYSICS (Glass & Flat)
+  // We use the same 'fluid' scale logic for both to ensure smoothness.
+  // The difference is strictly in the FILTER (Blur vs No Blur).
   return {
     delay,
-    duration: duration ?? speedBase,
-    easing: cubicOut,
+    duration: duration ?? speedBase, // [cite: 192]
+    easing: cubicOut, // The "Smooth" Standard
     css: (t: number, u: number) => {
-      // Logic: If blurInt is 0 (Flat mode), the filter string becomes "blur(0px)"
-      // which has no visual cost, preserving the smooth scale/fade.
-      const currentBlur = Math.max(0, blurInt * (u * 2 - 1));
+      // Logic: Glass gets blur. Flat gets 0px blur.
+      // We calculate blur dynamically. If isFlat, blurInt is usually 0 anyway from CSS,
+      // but we force it here to be safe.
+      const activeBlur = isFlat ? 0 : Math.max(0, blurInt * (u * 2 - 1)); // [cite: 193]
 
       return `
-        transform: translateY(${u * y}px) scale(${0.98 + 0.02 * t});
+        transform: translateY(${u * y}px) scale(${0.96 + 0.04 * t}); 
         opacity: ${t};
-        filter: blur(${currentBlur}px);
+        filter: blur(${activeBlur}px);
       `;
     },
   };
@@ -107,47 +147,49 @@ export function materialize(
 /**
  * ==========================================================================
  * 2. SINGULARITY (Exit)
- * Behavior:
- * - Glass: Implodes (Shrink + Bright Flash + Blur).
- * - Flat: Fades out + Shrinks slightly.
- * - Retro: Instant disappearance.
+ * Usage: <div out:singularity>
  * ==========================================================================
  */
 export function singularity(
   node: HTMLElement,
   { delay = 0, duration = null } = {},
 ) {
-  const { speedFast, blurInt, isRetro, reducedMotion } = getSystemConfig(node);
+  const { speedFast, blurInt, isRetro, isFlat, reducedMotion } =
+    getSystemConfig(node);
 
   if (reducedMotion || isRetro) {
-    return { duration: 0, css: () => 'opacity: 0;' };
+    return { duration: 0, css: () => 'opacity: 0;' }; // [cite: 198]
   }
 
+  // B. FLAT PHYSICS (Clean Wipe)
+  // Flat exits shouldn't "Implode" (flash white), they should just recede.
+  if (isFlat) {
+    return {
+      delay,
+      duration: duration ?? speedFast,
+      easing: cubicIn,
+      css: (t: number, u: number) => `
+        transform: scale(${0.98 + 0.02 * t}); // Subtle shrink for smoothness
+        opacity: ${t};
+      `,
+    };
+  }
+
+  // C. GLASS PHYSICS (Implosion)
+  // Keeps the "Flash" and heavy blur.
   return {
     delay,
     duration: duration ?? speedFast,
     easing: cubicIn,
     css: (t: number, u: number) => {
-      // t: 1 -> 0 (Fading out)
-      // u: 0 -> 1 (Time progressing)
+      const scale = 0.9 + 0.1 * t; // [cite: 200]
+      const brightness = 1 + u * 2; // Flash effect [cite: 201]
+      const blur = blurInt * u;
 
-      // GLASS: Implosion Effect
-      if (blurInt > 0) {
-        const scale = 0.9 + 0.1 * t;
-        const brightness = 1 + u * 2; // Flash white
-        const blur = blurInt * u;
-
-        return `
-          transform: scale(${scale});
-          opacity: ${t};
-          filter: blur(${blur}px) brightness(${brightness});
-        `;
-      }
-
-      // FLAT: Clean Fade (No flash/blur)
       return `
-        transform: scale(${0.95 + 0.05 * t});
+        transform: scale(${scale});
         opacity: ${t};
+        filter: blur(${blur}px) brightness(${brightness});
       `;
     },
   };
@@ -155,76 +197,57 @@ export function singularity(
 
 /**
  * ==========================================================================
- * 3. GLITCH (Entry)
- * Behavior:
- * - Retro: Hard digital steps (Blocky).
- * - Modern: Smooth holographic scan jitter.
+ * 3. GLITCH (Unchanged)
  * ==========================================================================
  */
 export function glitch(node: HTMLElement, { delay = 0, duration = null } = {}) {
   const { speedFast, isRetro, reducedMotion } = getSystemConfig(node);
-
   if (reducedMotion) return { duration: 0, css: () => '' };
 
   return {
     delay,
     duration: duration ?? speedFast,
     css: (t: number) => {
-      // RETRO: Use steps for digital artifact look
       if (isRetro) {
         const clipVal = t * 100;
         return `
            clip-path: polygon(0 0, 100% 0, 100% ${clipVal}%, 0 ${clipVal}%);
            opacity: ${Math.random() > 0.5 ? 1 : 0.5};
-         `;
+         `; // [cite: 209]
       }
-
-      // MODERN: Smooth skew
       const activeSkew = 1 - t > 0.2 ? (t * 20) % 5 : 0;
       const clipHeight = t * 100;
-
       return `
         clip-path: polygon(0 0, 100% 0, 100% ${clipHeight}%, 0 ${clipHeight}%);
         transform: skewX(${activeSkew}deg);
         opacity: ${t};
-      `;
+      `; // [cite: 212]
     },
   };
 }
 
 /**
  * ==========================================================================
- * 4. DEMATERIALIZE (Exit)
- * Behavior:
- * - Glass: Smooth vertical drift + Blur increase + Late opacity fade.
- * - Retro: "Data Dissolve" (Stepped opacity + Grayscale + Block shrink).
- * - Best for: Floating elements (Toasts, Notifications).
+ * 4. DEMATERIALIZE (Toasts / Floating Exits)
  * ==========================================================================
  */
 export function dematerialize(
   node: HTMLElement,
   { delay = 0, duration = null, y = -20 } = {},
 ) {
-  const { speedBase, blurInt, isRetro, reducedMotion } = getSystemConfig(node);
+  const { speedBase, blurInt, isRetro, isFlat, reducedMotion } =
+    getSystemConfig(node);
 
-  if (reducedMotion) {
-    return { duration: 0, css: () => 'opacity: 0;' };
-  }
+  if (reducedMotion) return { duration: 0, css: () => 'opacity: 0;' };
 
-  // RETRO PHYSICS: The "Data Dissolve"
+  // A. RETRO: Data Dissolve (Unchanged)
   if (isRetro) {
     return {
       delay,
-      // Force a minimum duration (150ms) even if global speed is 0s,
-      // otherwise the effect is invisible.
       duration: duration ?? 300,
       css: (t: number) => {
-        // Quantize opacity into 4 distinct "steps" (1, 0.75, 0.5, 0.25, 0)
         const steppedOpacity = Math.floor(t * 4) / 4;
-
-        // Quantize scale into 2 steps (1, 0.9)
         const steppedScale = 0.9 + Math.floor(t * 2) * 0.05;
-
         return `
           opacity: ${steppedOpacity};
           transform: scale(${steppedScale});
@@ -234,38 +257,32 @@ export function dematerialize(
     };
   }
 
-  // GLASS/FLAT PHYSICS: The "Ethereal Fade"
+  // B. SMOOTH (Glass & Flat)
   return {
     delay,
     duration: duration ?? speedBase,
-    easing: cubicIn,
+    easing: cubicIn, // Accelerate out
     css: (t: number, u: number) => {
-      // Blur increases linearly as item leaves (u: 0 -> 1)
-      const currentBlur = blurInt * u;
+      const currentBlur = isFlat ? 0 : blurInt * u;
 
-      // Fix "Muddy" Text:
-      // We keep opacity higher for longer using a power curve.
-      // At 50% time, opacity is still 70% (0.5^0.5 approx).
-      const distinctOpacity = Math.pow(t, 0.5);
+      // FIX 1: Linear Opacity
+      // We removed Math.pow(t, 0.5). Now it fades perfectly in sync with the movement.
+      const opacity = t;
 
+      // FIX 2: CSS Safety
+      // We add 'transition: none' to ensure global CSS styles (like on .btn)
+      // don't fight the Svelte animation frame updates.
       return `
+        transition: none;
         transform: translateY(${u * y}px) scale(${1 - u * 0.05});
-        opacity: ${distinctOpacity};
+        opacity: ${opacity};
         filter: blur(${currentBlur}px);
       `;
     },
   };
 }
 
-/**
- * ==========================================================================
- * 5. IMPLODE (Layout Exit)
- * Behavior:
- * - Collapses Width/Margin to 0 (Layout)
- * - Blurs and Grayscales (Physics)
- * - Best for: List items (prevents "ghost gaps" when items are removed).
- * ==========================================================================
- */
+// Implode remains largely the same, focusing on layout collapsing
 export function implode(
   node: HTMLElement,
   { delay = 0, duration = null } = {},
@@ -275,33 +292,19 @@ export function implode(
   const margin = parseFloat(style.marginLeft) + parseFloat(style.marginRight);
   const padding =
     parseFloat(style.paddingLeft) + parseFloat(style.paddingRight);
-
   const { speedFast, isRetro, reducedMotion } = getSystemConfig(node);
 
   if (reducedMotion) return { duration: 0, css: () => 'opacity: 0; width: 0;' };
 
   return {
     delay,
-    duration: duration ?? speedFast, // Faster than standard exit
-    easing: cubicInOut,
+    duration: duration ?? speedFast,
+    easing: cubicOut,
     css: (t: number, u: number) => {
-      // t goes 1 -> 0 (Exit)
-      // u goes 0 -> 1 (Time)
-
-      // 1. PHYSICS (Blur & Fade)
-      // Retro: Pixelate + Grayscale. Glass: Blur.
-      const filter = isRetro
-        ? `grayscale(${u * 100}%) contrast(${1 + u})`
-        : `blur(${u * 5}px)`;
-
-      const opacity = t; // Fade out
-
-      // 2. LAYOUT (The Collapse)
-      // We shrink width, padding, and margin to 0 to pull neighbors in.
-      // 'white-space: nowrap' prevents text wrapping during shrink.
+      const filter = isRetro ? `grayscale(${u * 100}%)` : `blur(${u * 5}px)`;
       return `
         overflow: hidden;
-        opacity: ${opacity};
+        opacity: ${t};
         width: ${t * width}px;
         padding-left: ${t * padding * 0.5}px;
         padding-right: ${t * padding * 0.5}px;
