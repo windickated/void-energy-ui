@@ -10,8 +10,9 @@
 // MIXINS (The Physics Engine)
 // ==========================================================================
 
+// ==========================================================================
 // 1. SURFACES
-// --------------------------------------------------------------------------
+// ==========================================================================
 
 // MIXIN: Floating Surface (Cards, Modals)
 // Context: Positive Z-Index. Floats above the void.
@@ -151,8 +152,9 @@
   }
 }
 
+// ==========================================================================
 // 2. TYPOGRAPHY & ENERGY
-// --------------------------------------------------------------------------
+// ==========================================================================
 
 // MIXIN: Neon Text Glow
 @mixin text-glow($color: var(--energy-primary)) {
@@ -254,8 +256,9 @@
   }
 }
 
+// ==========================================================================
 // 3. ANIMATIONS
-// --------------------------------------------------------------------------
+// ==========================================================================
 
 // MIXIN: Atmospheric Shimmer
 // Usage: Include in any element that acts as a loading skeleton.
@@ -300,5 +303,37 @@
       transparent 47%,
       transparent 100%
     );
+  }
+}
+
+// ==========================================================================
+// 4. STATE MANAGEMENT MIXINS
+// ==========================================================================
+
+// 1. ACTIVE STATE (Toggle / Selected / Active)
+// Targets: aria-pressed="true", aria-selected="true", data-state="active"
+@mixin state-active {
+  &[aria-pressed='true'],
+  &[aria-selected='true'],
+  &[data-state='active'] {
+    @content;
+  }
+}
+
+// 2. OPEN STATE (Dropdowns / Tooltips / Dialogs)
+// Targets: data-state="open", details[open], dialog[open]
+@mixin state-open {
+  &[data-state='open'],
+  &[open] {
+    @content;
+  }
+}
+
+// 3. LOADING STATE
+// Targets: aria-busy="true", data-status="loading"
+@mixin state-loading {
+  &[aria-busy='true'],
+  &[data-status='loading'] {
+    @content;
   }
 }

@@ -156,7 +156,6 @@
    - .btn-cta         : "Gemini Laser" (Primary).
    - .btn-icon        : Circle (44px) for SVGs.
    - .btn-void        : Naked reset.
-   - aria-pressed="true" : Active state toggle.
 
    VARIANTS: .btn-orb, .btn-signal, .btn-alert, .btn-system
 
@@ -170,4 +169,20 @@
    - .tile-small          : Data Chip (Blue).
    - .tile-small-{color}  : Variants (premium, system, success, error).
    - .tile-labeled        : Adds top tab (via data-label="...").
+
+   --------------------------------------------------------------------------
+   11. STATE PROTOCOL (Attribute-Driven UI)
+   --------------------------------------------------------------------------
+   PHILOSOPHY: "State is DOM, not Memory."
+   We do not use classes like `.active` or `.show`. We use semantic attributes.
+   This ensures Accessibility (A11y) and CSS Specificity are always aligned.
+
+   CONTEXT          | ATTRIBUTE       | VALUES              | EXAMPLE
+   ---------------- | --------------- | ------------------- | --------------------------------
+   Toggle Button    | aria-pressed    | true / false        | <button aria-pressed={isOn}>
+   Tabs / Selection | aria-selected   | true / false        | <button role="tab" aria-selected={isActive}>
+   Dropdowns        | data-state      | open / closed       | <div data-state={isOpen ? 'open' : 'closed'}>
+   Generic Logic    | data-state      | active / inactive   | <div class="tile" data-state={isActive ? 'active' : 'inactive'}>
+   Loading/Process  | data-status     | loading / idle      | <button data-status={isLoading ? 'loading' : 'idle'}>
+   
    ========================================================================== */
