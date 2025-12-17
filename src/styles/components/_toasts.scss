@@ -67,7 +67,7 @@
 
   // --- C. The Holographic Glow ---
   // Subtle border and ambient glow based on the accent color
-  border: 1px solid alpha(var(--toast-accent), 25%) !important;
+  border: 1px solid alpha(var(--toast-accent), 25%);
   box-shadow:
     0 4px 15px -5px rgba(0, 0, 0, 0.5),
     // Depth
@@ -78,7 +78,7 @@
 
   // Hover Effect: Lift & Brighten
   &:hover {
-    border-color: alpha(var(--toast-accent), 50%) !important;
+    border-color: alpha(var(--toast-accent), 50%);
     box-shadow:
       0 6px 20px -5px rgba(0, 0, 0, 0.6),
       0 0 15px -4px alpha(var(--toast-accent), 60%);
@@ -94,7 +94,7 @@
 
     border-radius: 0;
     background: blend(var(--bg-canvas), var(--toast-accent), 10%);
-    border: 2px solid var(--toast-accent) !important;
+    border: 2px solid var(--toast-accent);
     box-shadow: 4px 4px 0 var(--bg-sink); // Hard shadow
 
     &:hover {

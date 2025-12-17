@@ -184,13 +184,13 @@ export function dematerialize(
   if (isRetro) {
     return {
       delay,
-      // Force a minimum duration (150ms) even if global speed is 0s, 
+      // Force a minimum duration (150ms) even if global speed is 0s,
       // otherwise the effect is invisible.
       duration: duration ?? 300,
       css: (t: number) => {
         // Quantize opacity into 4 distinct "steps" (1, 0.75, 0.5, 0.25, 0)
         const steppedOpacity = Math.floor(t * 4) / 4;
-        
+
         // Quantize scale into 2 steps (1, 0.9)
         const steppedScale = 0.9 + Math.floor(t * 2) * 0.05;
 
@@ -211,7 +211,7 @@ export function dematerialize(
     css: (t: number, u: number) => {
       // Blur increases linearly as item leaves (u: 0 -> 1)
       const currentBlur = blurInt * u;
-      
+
       // Fix "Muddy" Text:
       // We keep opacity higher for longer using a power curve.
       // At 50% time, opacity is still 70% (0.5^0.5 approx).

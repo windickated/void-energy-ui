@@ -43,7 +43,7 @@
     box-shadow var(--speed-base) var(--ease-snap);
 
   // Directional Logic (Glass Effect Borders)
-  @at-root [data-physics='glass'] & {
+  @at-root :where([data-physics='glass']) & {
     background: linear-gradient(
       to bottom,
       blend(var(--bg-surface), var(--energy-secondary), 10%) 0%,
@@ -63,8 +63,8 @@
   }
 
   // FLAT / RETRO FALLBACKS
-  @at-root [data-physics='flat'] &,
-    [data-physics='retro'] & {
+  @at-root :where([data-physics='flat']) &,
+    :where([data-physics='retro']) & {
     border-color: var(--border-highlight);
     box-shadow: var(--void-shadow);
   }
@@ -85,7 +85,7 @@
           16px
           rgba(0, 0, 0, calc(0.5 * var(--shadow-strength)));
 
-        @at-root [data-physics='glass'] & {
+        @at-root :where([data-physics='glass']) & {
           box-shadow:
             0 8px 32px rgba(0, 0, 0, calc(0.5 * var(--shadow-strength))),
             0 0 15px
@@ -116,7 +116,7 @@
   border: var(--physics-border-width) solid var(--border-shadow);
   border-radius: var(--radius-base);
 
-  @at-root [data-physics='glass'] & {
+  @at-root :where([data-physics='glass']) & {
     box-shadow: inset var(--void-shadow);
   }
 
@@ -139,12 +139,12 @@
           transparent
         );
 
-    @at-root [data-physics='flat'] & {
+    @at-root :where([data-physics='flat']) & {
       box-shadow: inset var(--void-shadow);
       outline: var(--physics-border-width) solid var(--border-shadow);
     }
 
-    @at-root [data-physics='retro'] & {
+    @at-root :where([data-physics='retro']) & {
       box-shadow: none;
       outline: var(--physics-border-width) solid var(--border-shadow);
     }
@@ -159,7 +159,7 @@
   color: $color;
   text-shadow: 0 0 15px alpha($color, 60%);
 
-  @at-root [data-mode='light'] & {
+  @at-root :where([data-mode='light']) & {
     text-shadow: 0 0 1px alpha($color, 40%);
   }
 }
@@ -207,7 +207,7 @@
     opacity: 1;
 
     // Retro physics override: segmented radar sweep.
-    @at-root [data-physics='retro'] & {
+    @at-root :where([data-physics='retro']) & {
       background: conic-gradient(
         from 0deg,
         transparent 0deg,
@@ -277,7 +277,7 @@
   );
 
   // Light mode override to mimic reflective ink.
-  @at-root [data-mode='light'] & {
+  @at-root :where([data-mode='light']) & {
     background-image: linear-gradient(
       90deg,
       transparent 0%,
@@ -289,7 +289,7 @@
   }
 
   // Terminal override creates a scanline pulse.
-  @at-root [data-physics='retro'] & {
+  @at-root :where([data-physics='retro']) & {
     opacity: 0.5;
     background-image: linear-gradient(
       90deg,
