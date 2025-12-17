@@ -3,6 +3,7 @@
   import { showModal } from '../stores/modal.svelte';
   import { tooltip } from '../actions/tooltip';
   import { toast } from '../stores/toast.svelte';
+  import { live, singularity } from '../lib/transitions.svelte';
 
   const engine = theme.raw;
 
@@ -65,6 +66,10 @@
   ];
 
   const setDensity = (d: 'high' | 'standard' | 'low') => theme.setDensity(d);
+
+  // Sample small tiles for the "Active Modules" section
+  let smallTiles = $state(['Neural Net', 'Firewall', 'Log v.1']);
+  let newSmallTile = $state(null);
 </script>
 
 <main class="w-full min-h-screen">
@@ -399,27 +404,48 @@
             <div
               class="surface-sunk p-sm flex flex-row gap-xs flex-wrap justify-center"
             >
-              <button class="tile-small">
-                <p class="tile-label">Neural Net</p>
-                <span class="tile-remove">✕</span>
-              </button>
-              <button class="tile-small">
-                <p class="tile-label">Firewall</p>
-                <span class="tile-remove">✕</span>
-              </button>
-              <button class="tile-small">
-                <p class="tile-label">Log v.1</p>
-                <span class="tile-remove">✕</span>
-              </button>
+              {#if smallTiles.length === 0}
+                <p class="text-dim text-small">No active modules.</p>
+              {:else}
+                {#each smallTiles as btn, i (i)}
+                  <!-- svelte-ignore a11y_click_events_have_key_events -->
+                  <button class="tile-small" animate:live out:singularity>
+                    <p class="tile-label">{btn}</p>
+                    <span
+                      class="tile-remove"
+                      role="button"
+                      tabindex="0"
+                      onclick={() => {
+                        smallTiles = smallTiles.filter(
+                          (tile, index) => index !== i,
+                        );
+                      }}
+                    >
+                      ✕
+                    </span>
+                  </button>
+                {/each}
+              {/if}
             </div>
 
             <div class="flex flex-row gap-sm">
-              <select class="flex-1">
-                <option>Select Module...</option>
-                <option>Physics Engine</option>
-                <option>Audio Synth</option>
+              <select class="flex-1" bind:value={newSmallTile}>
+                <option value={null} hidden>Select Module...</option>
+                <option value="Physics Engine">Physics Engine</option>
+                <option value="Audio Synth">Audio Synth</option>
+                <option value="Visual Renderer">Visual Renderer</option>
+                <option value="Data Analyzer">Data Analyzer</option>
+                <option value="Network Monitor">Network Monitor</option>
               </select>
-              <button class="btn">Add Module</button>
+              <button
+                class="btn"
+                onclick={() => {
+                  smallTiles.push(newSmallTile!);
+                }}
+                disabled={!newSmallTile}
+              >
+                Add Module
+              </button>
             </div>
           </div>
         </div>

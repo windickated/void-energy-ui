@@ -3,7 +3,8 @@
  * RESPONSIBILITY: Physics-based motion primitives (Glass vs. Retro vs. Flat).
  */
 
-import { cubicOut, cubicIn, quartOut } from 'svelte/easing';
+import { flip } from 'svelte/animate';
+import { cubicOut, cubicIn, cubicInOut } from 'svelte/easing';
 
 /* --- HELPER: Read the Physics Engine --- */
 function getSystemConfig(node: Element) {
@@ -29,6 +30,35 @@ function getSystemConfig(node: Element) {
   const isRetro = physicsMode === 'retro';
 
   return { speedBase, speedFast, blurInt, isRetro, reducedMotion };
+}
+
+/**
+ * ==========================================================================
+ * 0. VOID LIST (Animation)
+ * Behavior:
+ * - A smart wrapper for `animate:flip`.
+ * - Glass: Uses smooth cubic easing.
+ * - Retro: Uses "Stepped" easing (Cyber Slide) for robotic movement.
+ * Usage: <div animate:voidList={{ duration: 300 }}>
+ * ==========================================================================
+ */
+export function live(
+  node: HTMLElement,
+  { from, to }: { from: DOMRect; to: DOMRect },
+  params: any = {},
+) {
+  const { isRetro } = getSystemConfig(node);
+
+  // ROBOTIC EASING: Quantizes movement into 4 discrete steps
+  const steppedEasing = (t: number) => Math.floor(t * 4) / 4;
+
+  const options = {
+    duration: params.duration ?? 300,
+    easing: isRetro ? steppedEasing : cubicOut,
+    ...params,
+  };
+
+  return flip(node, { from, to }, options);
 }
 
 /**
@@ -168,6 +198,7 @@ export function glitch(node: HTMLElement, { delay = 0, duration = null } = {}) {
  * Behavior:
  * - Glass: Smooth vertical drift + Blur increase + Late opacity fade.
  * - Retro: "Data Dissolve" (Stepped opacity + Grayscale + Block shrink).
+ * - Best for: Floating elements (Toasts, Notifications).
  * ==========================================================================
  */
 export function dematerialize(
@@ -221,6 +252,63 @@ export function dematerialize(
         transform: translateY(${u * y}px) scale(${1 - u * 0.05});
         opacity: ${distinctOpacity};
         filter: blur(${currentBlur}px);
+      `;
+    },
+  };
+}
+
+/**
+ * ==========================================================================
+ * 5. IMPLODE (Layout Exit)
+ * Behavior:
+ * - Collapses Width/Margin to 0 (Layout)
+ * - Blurs and Grayscales (Physics)
+ * - Best for: List items (prevents "ghost gaps" when items are removed).
+ * ==========================================================================
+ */
+export function implode(
+  node: HTMLElement,
+  { delay = 0, duration = null } = {},
+) {
+  const style = getComputedStyle(node);
+  const width = parseFloat(style.width);
+  const margin = parseFloat(style.marginLeft) + parseFloat(style.marginRight);
+  const padding =
+    parseFloat(style.paddingLeft) + parseFloat(style.paddingRight);
+
+  const { speedFast, isRetro, reducedMotion } = getSystemConfig(node);
+
+  if (reducedMotion) return { duration: 0, css: () => 'opacity: 0; width: 0;' };
+
+  return {
+    delay,
+    duration: duration ?? speedFast, // Faster than standard exit
+    easing: cubicInOut,
+    css: (t: number, u: number) => {
+      // t goes 1 -> 0 (Exit)
+      // u goes 0 -> 1 (Time)
+
+      // 1. PHYSICS (Blur & Fade)
+      // Retro: Pixelate + Grayscale. Glass: Blur.
+      const filter = isRetro
+        ? `grayscale(${u * 100}%) contrast(${1 + u})`
+        : `blur(${u * 5}px)`;
+
+      const opacity = t; // Fade out
+
+      // 2. LAYOUT (The Collapse)
+      // We shrink width, padding, and margin to 0 to pull neighbors in.
+      // 'white-space: nowrap' prevents text wrapping during shrink.
+      return `
+        overflow: hidden;
+        opacity: ${opacity};
+        width: ${t * width}px;
+        padding-left: ${t * padding * 0.5}px;
+        padding-right: ${t * padding * 0.5}px;
+        margin-left: ${t * margin * 0.5}px;
+        margin-right: ${t * margin * 0.5}px;
+        filter: ${filter};
+        white-space: nowrap; 
       `;
     },
   };

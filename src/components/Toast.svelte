@@ -1,6 +1,6 @@
 <script lang="ts">
   import { toast } from '../stores/toast.svelte';
-  import { materialize, dematerialize } from '../lib/transitions.svelte';
+  import { materialize, dematerialize, live } from '../lib/transitions.svelte';
 
   const icons = {
     info: 'ℹ️', // Standard Info
@@ -17,7 +17,6 @@
       type="button"
       data-type={item.type}
       onclick={() => toast.close(item.id)}
-      in:materialize
       out:dematerialize
     >
       <span class="toast-icon">
