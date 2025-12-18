@@ -73,7 +73,6 @@
           height: 12px;
           // Scoped: Reads the atmosphere's primary energy
           background: var(--energy-primary);
-          box-shadow: 0 0 6px var(--energy-primary);
           z-index: 1;
         }
       }

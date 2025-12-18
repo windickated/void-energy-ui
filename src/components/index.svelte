@@ -168,7 +168,7 @@
     <section class="flex flex-col gap-md mt-md">
       <div class="flex flex-row justify-between items-end">
         <h2>01 // CONFIGURATION</h2>
-        <p>SECURE CONNECTION</p>
+        <p class="hidden tablet:block">SECURE CONNECTION</p>
       </div>
 
       <div class="surface-glass p-lg flex flex-col gap-lg">
