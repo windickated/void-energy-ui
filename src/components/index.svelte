@@ -69,8 +69,16 @@
   const setDensity = (d: 'high' | 'standard' | 'low') => theme.setDensity(d);
 
   // Sample small tiles for the "Active Modules" section
-  let smallTiles = $state(['Neural Net', 'Firewall', 'Log v.1']);
-  let newSmallTile = $state(null);
+  let moduleTiles = $state(['Neural Net', 'Firewall', 'Log v.1']);
+  let newModuleTile = $state(null);
+  let environmentTiles = $state([
+    'Physics Engine',
+    'Audio Synth',
+    'Visual Renderer',
+  ]);
+  let newEnvironmentTile = $state(null);
+  let premiumTiles = $state(['Quantum Core', 'AI Supervisor']);
+  let newPremiumTile = $state(null);
 </script>
 
 <main class="w-full min-h-screen">
@@ -166,9 +174,7 @@
       <div class="surface-glass p-lg flex flex-col gap-lg">
         <div class="flex flex-row flex-wrap gap-md">
           <div class="flex flex-col gap-xs flex-1">
-            <label class="px-md" for="system-identifier">
-              System Identifier
-            </label>
+            <label for="system-identifier"> System Identifier </label>
             <input
               id="system-identifier"
               type="text"
@@ -177,9 +183,7 @@
           </div>
 
           <div class="flex flex-col gap-xs flex-1">
-            <label class="px-md" for="security-clearance">
-              Security Clearance
-            </label>
+            <label for="security-clearance"> Security Clearance </label>
             <select id="security-clearance">
               <option>Level 1 - Observer</option>
               <option>Level 2 - Operator</option>
@@ -199,7 +203,7 @@
         </p>
 
         <div class="flex flex-col gap-xs flex-1">
-          <label class="px-md" for="energy-output">Energy Output</label>
+          <label for="energy-output">Energy Output</label>
           <input id="energy-output" type="range" value="50" min="0" max="100" />
         </div>
 
@@ -296,68 +300,9 @@
     </section>
 
     <section class="flex flex-col gap-md mt-md">
-      <h2>03 // DATA UPLOAD</h2>
+      <h2>03 // PARAMETERS</h2>
 
-      <div class="p-md surface-glass">
-        <div class="dropzone">
-          <input type="file" />
-          <div class="dropzone-content">
-            <span class="btn-icon">📂</span>
-            <p>Upload Neural Patterns</p>
-          </div>
-        </div>
-      </div>
-    </section>
-  </div>
-
-  <section class="flex flex-col gap-md my-md">
-    <h2 class="container">04 // RECENT ANOMALIES</h2>
-
-    <div class="tiles-collection">
-      <a href="/" class="tile">
-        <img
-          src="https://media.dgrslabs.ink/conexus-sections/dischordiansaga.avif"
-          alt="Cyber"
-        />
-        <div class="tile-data">
-          <h5>Sector 7G</h5>
-          <p>
-            Status: <strong class="text-success">Active</strong>
-          </p>
-        </div>
-      </a>
-
-      <a href="/" class="tile">
-        <img
-          src="https://images.unsplash.com/photo-1618005182384-a83a8bd57fbe?q=80&w=800&auto=format&fit=crop"
-          alt="Abstract"
-        />
-        <div class="tile-data">
-          <h5>Deep Net</h5>
-          <p>Signal: 98%</p>
-        </div>
-      </a>
-
-      <a href="/" class="tile">
-        <img
-          src="https://media.dgrslabs.ink/conexus-sections/communitypicks.avif"
-          alt="Fluid"
-        />
-        <div class="tile-data">
-          <h5>Core Dump</h5>
-          <p>Size: 4.2 TB</p>
-        </div>
-      </a>
-
-      <div class="loading-tile"></div>
-    </div>
-  </section>
-
-  <section class="flex flex-col gap-md mt-md">
-    <h2 class="container">05 // PARAMETERS</h2>
-
-    <div class="container">
-      <div class="card-glass my-0 px-md">
+      <div class="surface-glass p-lg flex flex-col gap-lg">
         <div class="settings-grid">
           <div class="settings-label">Rendering</div>
           <div class="settings-content flow-row">
@@ -393,10 +338,12 @@
             <div
               class="surface-sunk p-sm flex flex-row gap-xs flex-wrap justify-center"
             >
-              {#if smallTiles.length === 0}
-                <p class="text-dim text-small">No active modules.</p>
+              {#if moduleTiles.length === 0}
+                <p class="text-uppercase text-dim text-caption">
+                  No active modules
+                </p>
               {:else}
-                {#each smallTiles as btn, i (i)}
+                {#each moduleTiles as btn, i (i)}
                   <!-- svelte-ignore a11y_click_events_have_key_events -->
                   <button class="tile-small" animate:live out:singularity>
                     <p class="tile-label">{btn}</p>
@@ -405,7 +352,7 @@
                       role="button"
                       tabindex="0"
                       onclick={() => {
-                        smallTiles = smallTiles.filter(
+                        moduleTiles = moduleTiles.filter(
                           (tile, index) => index !== i,
                         );
                       }}
@@ -418,7 +365,7 @@
             </div>
 
             <div class="flex flex-row gap-sm">
-              <select class="flex-1" bind:value={newSmallTile}>
+              <select class="flex-1" bind:value={newModuleTile}>
                 <option value={null} hidden>Select Module...</option>
                 <option value="Physics Engine">Physics Engine</option>
                 <option value="Audio Synth">Audio Synth</option>
@@ -427,11 +374,10 @@
                 <option value="Network Monitor">Network Monitor</option>
               </select>
               <button
-                class="btn"
                 onclick={() => {
-                  smallTiles.push(newSmallTile!);
+                  moduleTiles.push(newModuleTile!);
                 }}
-                disabled={!newSmallTile}
+                disabled={!newModuleTile}
               >
                 Add Module
               </button>
@@ -442,92 +388,194 @@
         <hr />
 
         <div class="settings-grid">
-          <div class="settings-label">Sync Threshold</div>
+          <div class="settings-label">Environment</div>
           <div class="settings-content">
             <div
-              class="flex flex-row justify-between text-highlight text-small"
+              class="surface-sunk p-sm flex flex-row gap-xs flex-wrap justify-center"
             >
-              <span>LATENCY</span>
-              <span>SYNCED</span>
-              <span>INSTANT</span>
+              {#if environmentTiles.length === 0}
+                <p class="text-uppercase text-dim text-caption">
+                  No environments selected
+                </p>
+              {:else}
+                {#each environmentTiles as btn, i (i)}
+                  <!-- svelte-ignore a11y_click_events_have_key_events -->
+                  <button
+                    class="tile-small-system"
+                    animate:live
+                    out:singularity
+                  >
+                    <p class="tile-label">{btn}</p>
+                    <span
+                      class="tile-remove"
+                      role="button"
+                      tabindex="0"
+                      onclick={() => {
+                        environmentTiles = environmentTiles.filter(
+                          (tile, index) => index !== i,
+                        );
+                      }}
+                    >
+                      ✕
+                    </span>
+                  </button>
+                {/each}
+              {/if}
             </div>
-            <input type="range" min="0" max="100" value="75" />
+
+            <div class="flex flex-row gap-sm">
+              <select class="flex-1" bind:value={newEnvironmentTile}>
+                <option value={null} hidden>Select Environment...</option>
+                <option value="Physics Engine">Physics Engine</option>
+                <option value="Audio Synth">Audio Synth</option>
+                <option value="Visual Renderer">Visual Renderer</option>
+                <option value="Data Analyzer">Data Analyzer</option>
+                <option value="Network Monitor">Network Monitor</option>
+              </select>
+              <button
+                class="btn-system"
+                onclick={() => {
+                  environmentTiles.push(newEnvironmentTile!);
+                }}
+                disabled={!newEnvironmentTile}
+              >
+                Add Module
+              </button>
+            </div>
+          </div>
+        </div>
+
+        <hr />
+
+        <div class="settings-grid">
+          <div class="settings-label">Premium Modules</div>
+          <div class="settings-content">
+            <div
+              class="surface-sunk p-sm flex flex-row gap-xs flex-wrap justify-center"
+            >
+              {#if premiumTiles.length === 0}
+                <p class="text-uppercase text-dim text-caption">
+                  No premium modules
+                </p>
+              {:else}
+                {#each premiumTiles as btn, i (i)}
+                  <!-- svelte-ignore a11y_click_events_have_key_events -->
+                  <button
+                    class="tile-small-premium"
+                    animate:live
+                    out:singularity
+                  >
+                    <p class="tile-label">{btn}</p>
+                    <span
+                      class="tile-remove"
+                      role="button"
+                      tabindex="0"
+                      onclick={() => {
+                        premiumTiles = premiumTiles.filter(
+                          (tile, index) => index !== i,
+                        );
+                      }}
+                    >
+                      ✕
+                    </span>
+                  </button>
+                {/each}
+              {/if}
+            </div>
+
+            <div class="flex flex-row gap-sm">
+              <select class="flex-1" bind:value={newPremiumTile}>
+                <option value={null} hidden>Select Premium Module...</option>
+                <option value="Quantum Core">Quantum Core</option>
+                <option value="AI Supervisor">AI Supervisor</option>
+                <option value="Neural Interface">Neural Interface</option>
+                <option value="Temporal Anchor">Temporal Anchor</option>
+                <option value="Network Monitor">Network Monitor</option>
+              </select>
+              <button
+                class="btn-premium"
+                onclick={() => {
+                  premiumTiles.push(newPremiumTile!);
+                }}
+                disabled={!newPremiumTile}
+              >
+                Add Module
+              </button>
+            </div>
           </div>
         </div>
       </div>
-    </div>
-  </section>
+    </section>
 
-  <section class="container flex flex-col gap-md my-md">
-    <h2>06 // ENTITY TAGS</h2>
+    <section class="flex flex-col gap-md mt-md">
+      <h2>04 // DATA UPLOAD</h2>
 
-    <div class="container card-glass mt-0">
-      <div class="flex flex-col gap-sm">
-        <h5 class="text-dim">Standard Entities</h5>
-        <div class="flex flex-row flex-wrap gap-sm">
-          <button class="tile-small-system">
-            <p class="tile-label">System</p>
-            <span class="tile-remove">✕</span>
-          </button>
-
-          <button class="tile-small-premium">
-            <p class="tile-label">Premium</p>
-            <span class="tile-remove">✕</span>
-          </button>
-
-          <button class="tile-small-success">
-            <p class="tile-label">Status</p>
-            <span class="tile-remove">✕</span>
-          </button>
-
-          <button class="tile-small-error">
-            <p class="tile-label">Threat</p>
-            <span class="tile-remove">✕</span>
-          </button>
-
-          <button class="tile-small">
-            <p class="tile-label">Archive</p>
-            <span class="tile-remove">✕</span>
-          </button>
-        </div>
-      </div>
-
-      <div class="flex flex-col gap-sm">
-        <h5 class="text-dim">Labeled Entities (Data-Attribute)</h5>
-        <div class="flex flex-row flex-wrap gap-sm pt-sm">
-          <div class="tile-small-system tile-labeled" data-label="Config">
-            <p class="tile-label">AI Model</p>
-            <p class="tile-label-sunken">GPT-4</p>
-          </div>
-
-          <div class="tile-small-premium tile-labeled" data-label="Web3">
-            <p class="tile-label">Wallet</p>
-            <p class="tile-label-sunken">0x...8F</p>
-          </div>
-
-          <div class="tile-small-success tile-labeled" data-label="Active">
-            <p class="tile-label">Connected</p>
-            <span class="tile-remove">✕</span>
+      <div class="p-md surface-glass">
+        <div class="dropzone">
+          <input type="file" />
+          <div class="dropzone-content">
+            <span class="btn-icon">📂</span>
+            <p>Upload Neural Patterns</p>
           </div>
         </div>
       </div>
+    </section>
+  </div>
 
-      <div class="flex flex-col gap-sm">
-        <h5 class="text-dim">Interactive States</h5>
-        <div class="flex flex-row flex-wrap gap-sm">
-          <button class="tile-small">
-            <p class="tile-label">Hover Me</p>
-            <p class="tile-label-sunken">Interactive</p>
-            <span class="tile-remove">✕</span>
-          </button>
+  <section class="flex flex-col gap-md mt-2xl">
+    <h2 class="container">05 // RECENT ANOMALIES</h2>
 
-          <button class="tile-small" disabled>
-            <p class="tile-label">Disabled</p>
-            <p class="tile-label-sunken">Offline</p>
-            <span class="tile-remove">✕</span>
-          </button>
+    <div class="tiles-collection">
+      <a href="/" class="tile">
+        <img
+          src="https://media.dgrslabs.ink/conexus-sections/dischordiansaga.avif"
+          alt="Cyber"
+        />
+        <div class="tile-data">
+          <h5>Sector 7G</h5>
+          <p>
+            Status: <strong class="text-success">Active</strong>
+          </p>
         </div>
-      </div>
+      </a>
+
+      <a href="/" class="tile">
+        <img
+          src="https://media.dgrslabs.ink/conexus-sections/communitypicks.avif"
+          alt="Fluid"
+        />
+        <div class="tile-data">
+          <h5>Core Dump</h5>
+          <p>Size: 4.2 TB</p>
+        </div>
+      </a>
+
+      <a href="/" class="tile">
+        <img
+          src="https://media.dgrslabs.ink/conexus-sections/collabs.avif"
+          alt="Fluid"
+        />
+        <div class="tile-data">
+          <h5>Collaborations</h5>
+        </div>
+      </a>
+
+      <a href="/" class="tile">
+        <img
+          src="https://images.unsplash.com/photo-1618005182384-a83a8bd57fbe?q=80&w=800&auto=format&fit=crop"
+          alt="Abstract"
+        />
+        <div class="tile-data">
+          <h5>Deep Net</h5>
+          <p>Signal: 98%</p>
+        </div>
+      </a>
+
+      <div class="loading-tile"></div>
+
+      <div class="loading-tile"></div>
+
+      <div class="loading-tile"></div>
     </div>
   </section>
 </main>

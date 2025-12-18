@@ -110,6 +110,7 @@
               .text-premium, .text-system, .text-dim, .text-main
    - Size:    .text-caption, .text-small, text-body,
               .text-h5, .text-h4, .text-h3, .text-h2, .text-h1
+   - Transform: .text-uppercase, .text-capitalize
    - Access:  .sr-only (Screen reader only)
 
    - Radius:  .rounded-sm, .rounded (Base/Md), .rounded-lg, .rounded-xl, .rounded-none
@@ -157,7 +158,7 @@
    - .btn-icon        : Circle (44px) for SVGs.
    - .btn-void        : Naked reset.
 
-   VARIANTS: .btn-orb, .btn-signal, .btn-alert, .btn-system
+   VARIANTS: .btn-premium, .btn-signal, .btn-alert, .btn-system
 
    --------------------------------------------------------------------------
    10. COMPONENTS: INPUTS & TILES

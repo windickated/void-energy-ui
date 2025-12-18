@@ -121,6 +121,9 @@ $size-map: (
     $val: var(--space-#{$name});
 
     // Padding
+    .#{$prefix}p-0 {
+      padding: 0;
+    }
     .#{$prefix}p-#{$name} {
       padding: $val;
     }
@@ -138,6 +141,9 @@ $size-map: (
     }
 
     // Margin
+    .#{$prefix}m-0 {
+      margin: 0;
+    }
     .#{$prefix}m-#{$name} {
       margin: $val;
     }
@@ -218,6 +224,14 @@ $size-map: (
 }
 .text-right {
   text-align: right;
+}
+
+// Text Transform
+.text-uppercase {
+  text-transform: uppercase;
+}
+.text-capitalize {
+  text-transform: capitalize;
 }
 
 // Text Colors

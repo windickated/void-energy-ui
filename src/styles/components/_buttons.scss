@@ -187,7 +187,7 @@ button:not(.btn-void),
     }
   }
 
-  &.btn-orb:not(:disabled) {
+  &.btn-premium:not(:disabled) {
     @include btn-variant(var(--color-premium));
   }
   &.btn-system:not(:disabled) {
