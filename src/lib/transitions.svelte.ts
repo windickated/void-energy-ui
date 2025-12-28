@@ -59,24 +59,28 @@ const REGISTRY = THEME_REGISTRY as Registry;
 // PHYSICS CONSTANTS (Mirrors src/styles/abstracts/_physics-presets.scss)
 // --------------------------------------------------------------------------
 // We mirror the SCSS tokens here to avoid `getComputedStyle` layout thrashing.
-const PHYSICS_SPECS: Record<string, { speedBase: number; speedFast: number; blur: number }> = {
+const PHYSICS_SPECS: Record<
+  string,
+  { speedBase: number; speedFast: number; blur: number }
+> = {
   glass: { speedBase: 300, speedFast: 200, blur: 20 },
-  flat:  { speedBase: 200, speedFast: 133, blur: 0 },  // flat is ~0.66x of base
-  retro: { speedBase: 0,   speedFast: 0,   blur: 0 }
+  flat: { speedBase: 200, speedFast: 133, blur: 0 }, // flat is ~0.66x of base
+  retro: { speedBase: 0, speedFast: 0, blur: 0 },
 };
 
 /* --- HELPER: Read the Physics Engine (Zero-Reflow) --- */
 function getSystemConfig() {
   // 1. READ ENVIRONMENT
-  const reducedMotion = typeof matchMedia !== 'undefined' 
-    ? matchMedia('(prefers-reduced-motion: reduce)').matches 
-    : false;
+  const reducedMotion =
+    typeof matchMedia !== 'undefined'
+      ? matchMedia('(prefers-reduced-motion: reduce)').matches
+      : false;
 
   // 2. READ GLOBAL STATE (The Triad)
   // We use the theme adapter to get the current atmosphere explicitly.
   const currentAtmosphere = theme.atmosphere || 'void';
   const themeConfig = REGISTRY[currentAtmosphere] || REGISTRY['void'];
-  
+
   // 3. DERIVE PHYSICS
   // Default to 'glass' if configuration is missing
   const physicsMode = themeConfig.physics || 'glass';
@@ -85,13 +89,13 @@ function getSystemConfig() {
   const isRetro = physicsMode === 'retro';
   const isFlat = physicsMode === 'flat';
 
-  return { 
-    speedBase: specs.speedBase, 
-    speedFast: specs.speedFast, 
-    blurInt: specs.blur, 
-    isRetro, 
-    isFlat, 
-    reducedMotion 
+  return {
+    speedBase: specs.speedBase,
+    speedFast: specs.speedFast,
+    blurInt: specs.blur,
+    isRetro,
+    isFlat,
+    reducedMotion,
   };
 }
 
@@ -132,7 +136,8 @@ export function materialize(
   node: HTMLElement,
   { delay = 0, duration = null, y = 15 } = {},
 ) {
-  const { speedBase, blurInt, isRetro, isFlat, reducedMotion } = getSystemConfig();
+  const { speedBase, blurInt, isRetro, isFlat, reducedMotion } =
+    getSystemConfig();
 
   // A. RETRO / REDUCED (Instant)
   if (reducedMotion || isRetro) {
@@ -172,7 +177,8 @@ export function singularity(
   node: HTMLElement,
   { delay = 0, duration = null } = {},
 ) {
-  const { speedFast, blurInt, isRetro, isFlat, reducedMotion } = getSystemConfig();
+  const { speedFast, blurInt, isRetro, isFlat, reducedMotion } =
+    getSystemConfig();
 
   if (reducedMotion || isRetro) {
     return { duration: 0, css: () => 'opacity: 0;' };
@@ -250,7 +256,8 @@ export function dematerialize(
   node: HTMLElement,
   { delay = 0, duration = null, y = -20 } = {},
 ) {
-  const { speedBase, blurInt, isRetro, isFlat, reducedMotion } = getSystemConfig();
+  const { speedBase, blurInt, isRetro, isFlat, reducedMotion } =
+    getSystemConfig();
 
   if (reducedMotion) return { duration: 0, css: () => 'opacity: 0;' };
 
@@ -279,7 +286,7 @@ export function dematerialize(
     css: (t: number, u: number) => {
       const currentBlur = isFlat ? 0 : blurInt * u;
       const opacity = t; // Linear opacity
-      
+
       return `
         transition: none;
         transform: translateY(${u * y}px) scale(${1 - u * 0.05});
@@ -304,8 +311,9 @@ export function implode(
   const style = getComputedStyle(node);
   const width = parseFloat(style.width);
   const margin = parseFloat(style.marginLeft) + parseFloat(style.marginRight);
-  const padding = parseFloat(style.paddingLeft) + parseFloat(style.paddingRight);
-  
+  const padding =
+    parseFloat(style.paddingLeft) + parseFloat(style.paddingRight);
+
   const { speedFast, isRetro, reducedMotion } = getSystemConfig();
 
   if (reducedMotion) return { duration: 0, css: () => 'opacity: 0; width: 0;' };

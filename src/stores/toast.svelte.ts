@@ -7,6 +7,9 @@ export type ToastType = 'info' | 'success' | 'error' | 'warning' | 'loading';
 
 export interface ToastItem {
   id: number;
+  /** * The text content.
+   * ⚠️ WARNING: Renders as RAW HTML. Do not pass user input.
+   */
   message: string;
   type: ToastType;
 }
@@ -20,7 +23,8 @@ class ToastStore {
 
   /**
    * Main entry point. Shows a toast of a specific type.
-   * Usage: toast.show('Saved successfully', 'success')
+   * @param message - Trusted internal string (supports HTML). ⚠️ NO USER INPUT.
+   * @param type - 'info' | 'success' | 'error' | 'warning' | 'loading'
    */
   show(message: string, type: ToastType = 'info', duration = 4000) {
     const id = Date.now();
