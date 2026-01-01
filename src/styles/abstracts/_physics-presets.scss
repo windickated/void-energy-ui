@@ -58,50 +58,39 @@
    ========================================================================== */
 
 @use 'sass:map';
-@use '../config/generated-themes' as generated; // Import the generated map
+@use '../config/generated-themes' as generated;
 @use 'functions' as *;
 
 // 1. THE DEFINITIONS
-// We adhere to the Manual Override pattern:
-// We define the "Logic" here (color mixes, shadows), but pull the "Numbers" from the generator.
-
 $physics-presets: (
-  'glass': (
-    // MERGE GENERATED DATA
-    // This pulls: physics-blur, physics-border-width, speed-base, easings...
-    map.merge(
-        map.get(generated.$generated-physics, 'glass'),
-        (
-          // Manual Logic (Colors/Shadows stay here as they use variables/functions)
-          'radius-base': var(--radius-md),
-          'base-glow-opacity': 0.6,
-          'base-shadow-opacity': 0.5,
-          'surface-bg': linear-gradient(
-              to bottom,
-              color-mix(in srgb, var(--bg-surface), var(--energy-secondary) 10%)
-                0%,
-              var(--bg-surface) 100%
-            ),
-          'surface-border-top': color-mix(
-              in srgb,
-              var(--border-highlight),
-              transparent 0%
-            ),
-          'surface-border-side': color-mix(
-              in srgb,
-              var(--border-shadow),
-              transparent 0%
-            ),
-          'surface-shadow': 0 4px 16px rgba(0, 0, 0, 0.5),
-          'hover-transform': translateY(-2px),
-          'hover-shadow': 0 8px 32px rgba(0, 0, 0, 0.5),
-          // Note: Easings are now coming from the generated map!
-        )
-      ),
-  ),
-
-  'flat': (
-    map.merge(
+  'glass': map.merge(
+      map.get(generated.$generated-physics, 'glass'),
+      (
+        'radius-base': var(--radius-md),
+        'base-glow-opacity': 0.6,
+        'base-shadow-opacity': 0.5,
+        'surface-bg': linear-gradient(
+            to bottom,
+            color-mix(in srgb, var(--bg-surface), var(--energy-secondary) 10%)
+              0%,
+            var(--bg-surface) 100%
+          ),
+        'surface-border-top': color-mix(
+            in srgb,
+            var(--border-highlight),
+            transparent 0%
+          ),
+        'surface-border-side': color-mix(
+            in srgb,
+            var(--border-shadow),
+            transparent 0%
+          ),
+        'surface-shadow': 0 4px 16px rgba(0, 0, 0, 0.5),
+        'hover-transform': translateY(-2px),
+        'hover-shadow': 0 8px 32px rgba(0, 0, 0, 0.5),
+      )
+    ),
+  'flat': map.merge(
       map.get(generated.$generated-physics, 'flat'),
       (
         'radius-base': var(--radius-sm),
@@ -115,10 +104,7 @@ $physics-presets: (
         'hover-shadow': 0 4px 12px rgba(0, 0, 0, 0.12),
       )
     ),
-  ),
-
-  'retro': (
-    map.merge(
+  'retro': map.merge(
       map.get(generated.$generated-physics, 'retro'),
       (
         'radius-base': 0px,
@@ -132,7 +118,6 @@ $physics-presets: (
         'hover-shadow': 4px 4px 0px alpha(var(--energy-primary), 25%),
       )
     ),
-  ),
 );
 
 // 2. THE EMITTER (Logic Layer)
