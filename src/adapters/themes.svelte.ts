@@ -3,7 +3,7 @@
  * RESPONSIBILITY: Synchronizes VoidEngine state with Svelte 5 Runes efficiently.
  */
 
-import { VoidEngine, type RuntimeThemeDefinition } from './void-engine';
+import { VoidEngine } from './void-engine';
 
 // Extend the Window interface globally
 declare global {

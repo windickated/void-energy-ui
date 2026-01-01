@@ -50,23 +50,20 @@ import { flip } from 'svelte/animate';
 import { cubicOut, cubicIn } from 'svelte/easing';
 import { theme } from '../adapters/themes.svelte';
 import THEME_REGISTRY from '../config/void-registry.json';
+import PHYSICS_DATA from '../config/void-physics.json';
 
 // Type definition for Registry to ensure strict lookup
 type Registry = Record<string, { physics: string; mode: string }>;
 const REGISTRY = THEME_REGISTRY as Registry;
 
-// --------------------------------------------------------------------------
-// PHYSICS CONSTANTS (Mirrors src/styles/abstracts/_physics-presets.scss)
-// --------------------------------------------------------------------------
-// We mirror the SCSS tokens here to avoid `getComputedStyle` layout thrashing.
-const PHYSICS_SPECS: Record<
+// Type definition for the Physics JSON structure
+type PhysicsConfig = Record<
   string,
   { speedBase: number; speedFast: number; blur: number }
-> = {
-  glass: { speedBase: 300, speedFast: 200, blur: 20 },
-  flat: { speedBase: 200, speedFast: 133, blur: 0 }, // flat is ~0.66x of base
-  retro: { speedBase: 0, speedFast: 0, blur: 0 },
-};
+>;
+
+// Cast imported JSON to our type
+const PHYSICS_PRIMITIVES = PHYSICS_DATA as PhysicsConfig;
 
 /* --- HELPER: Read the Physics Engine (Zero-Reflow) --- */
 function getSystemConfig() {
@@ -76,23 +73,34 @@ function getSystemConfig() {
       ? matchMedia('(prefers-reduced-motion: reduce)').matches
       : false;
 
-  // 2. READ GLOBAL STATE (The Triad)
+  // 2. BROWSER DETECTION (Simple heuristic for expensive filters)
+  // Firefox handles dynamic backdrop-filter blur poorly compared to Chromium/Webkit.
+  const isFirefox =
+    typeof navigator !== 'undefined' && /firefox/i.test(navigator.userAgent);
+
+  // 3. READ GLOBAL STATE (The Triad)
   // We use the theme adapter to get the current atmosphere explicitly.
   const currentAtmosphere = theme.atmosphere || 'void';
   const themeConfig = REGISTRY[currentAtmosphere] || REGISTRY['void'];
 
-  // 3. DERIVE PHYSICS
+  // 4. DERIVE PHYSICS
   // Default to 'glass' if configuration is missing
   const physicsMode = themeConfig.physics || 'glass';
-  const specs = PHYSICS_SPECS[physicsMode] || PHYSICS_SPECS['glass'];
+
+  // NEW: Lookup from generated JSON
+  const specs = PHYSICS_PRIMITIVES[physicsMode] || PHYSICS_PRIMITIVES['glass'];
 
   const isRetro = physicsMode === 'retro';
   const isFlat = physicsMode === 'flat';
 
+  // SAFETY CAP: If Reduced Motion OR Firefox, kill the blur animation.
+  // We keep the opacity/transform, but skip the expensive filter recalculation.
+  const blurInt = reducedMotion || isFirefox ? 0 : specs.blur;
+
   return {
     speedBase: specs.speedBase,
     speedFast: specs.speedFast,
-    blurInt: specs.blur,
+    blurInt,
     isRetro,
     isFlat,
     reducedMotion,

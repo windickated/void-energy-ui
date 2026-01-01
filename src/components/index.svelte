@@ -113,7 +113,7 @@
             e.currentTarget.value || null,
           )}
       >
-        {#each fontOptions as font}
+        {#each fontOptions as font (font.label)}
           <option value={font.value}>{font.label}</option>
         {/each}
       </select>
@@ -129,7 +129,7 @@
         <div
           class="surface-sunk p-xs rounded-md flex flex-row gap-xs justify-between"
         >
-          {#each scaleLevels as level}
+          {#each scaleLevels as level (level.value)}
             <button
               aria-pressed={activeScaleStep.value === level.value}
               onclick={() => setScale(level.value)}
@@ -151,7 +151,7 @@
         <div
           class="surface-sunk p-xs rounded-md flex flex-row gap-xs justify-between"
         >
-          {#each densityOptions as opt}
+          {#each densityOptions as opt (opt.value)}
             <button
               aria-pressed={currentDensity === opt.value}
               onclick={() =>

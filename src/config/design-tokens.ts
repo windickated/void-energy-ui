@@ -1,110 +1,152 @@
 /**
  * ==========================================================================
- * 🌌 VOID ENERGY THEME CONFIGURATION (SSOT)
+ * 🌌 VOID ENERGY UI — DESIGN SYSTEM CONFIGURATION (SSOT)
  * ==========================================================================
- * * MANUAL: HOW TO ADD A NEW THEME
- * --------------------------------------------------------------------------
- * This file is the SINGLE SOURCE OF TRUTH. It defines both the "Soul" (Colors)
- * and the "Brain" (Physics/Logic) for the entire application.
+ *
+ * ⚠️ SINGLE SOURCE OF TRUTH
+ * This file acts as the database for the entire UI.
+ * It controls:
+ * 1. THE SOUL (Themes/Colors)
+ * 2. THE LAWS (Physics/Motion)
+ * 3. THE LOGIC (Density/Scaling)
  *
  * --------------------------------------------------------------------------
- * 🔒 PUBLIC CONTRACT (API v1)
- * --------------------------------------------------------------------------
- * Collaborators may create custom themes by providing a "Palette" object.
- * To ensure the UI Physics engine works, the Palette MUST contain the following keys:
- *
- * [GROUP 1: THE CANVAS] - Depth layers
- * - 'bg-canvas'      : The absolute floor (The Void).
- * - 'bg-surface'     : Floating elements (Glass/Cards).
- * - 'bg-sink'        : Recessed elements (Inputs/Wells).
- * - 'bg-spotlight'   : Top-down ambient light source.
- *
- * [GROUP 2: THE ENERGY] - Brand Identity
- * - 'energy-primary'   : Main action color (Buttons, Active States).
- * - 'energy-secondary' : Supporting color (Scrollbars, Gradients).
- * - 'border-highlight' : Top/Left light source (Glass reflection).
- * - 'border-shadow'    : Bottom/Right shadow (Depth definition).
- *
- * [GROUP 3: THE SIGNAL] - Typography & Data
- * - 'text-main' : High emphasis (Headings, Data).
- * - 'text-dim'  : Medium emphasis (Body, Labels).
- * - 'text-mute' : Low emphasis (Captions, Placeholders).
- *
- * [GROUP 4: SEMANTIC] - Utility Colors
- * - 'color-success'
- * - 'color-error'
- * - 'color-warning' (Optional)
- * - 'color-premium' (Optional)
- *
- * [GROUP 5: FONTS]
- * - 'font-atmos-heading'
- * - 'font-atmos-body'
- *
+ * 👨‍💻 DEVELOPER WORKFLOW: HOW TO ADD A NEW THEME
  * --------------------------------------------------------------------------
  *
- * 👉 TO ADD A NEW THEME:
- * * STEP 1: DEFINE THEME (In this file)
- * 1. Scroll down to `VOID_TOKENS.themes`.
- * 2. Copy an existing block (e.g., 'void').
- * 3. Rename the key (e.g., 'my-new-theme').
- * 4. Adjust the properties:
- * - type: 'dark' | 'light'
- * - physics: 'glass' | 'flat' | 'retro'
- * - palette: { ...colors }
- * * STEP 2: HYDRATE THE ENGINE
- * 1. Run the token builder in your terminal:
- * $ npm run build:tokens
- * * (This command automatically generates src/styles/config/_generated-themes.scss
- * AND src/config/void-registry.json, keeping them perfectly in sync).
+ * 1. DEFINE:
+ * Scroll to `VOID_TOKENS.themes`. Copy the 'void' block, rename the key,
+ * and adjust the palette values.
+ *
+ * 2. HYDRATE:
+ * You MUST run the build script to compile these tokens into SCSS/JSON.
+ * 👉 TERMINAL COMMAND: npm run build:tokens
+ *
+ * 3. USE:
+ * Your new theme is now available in the UI via `data-atmosphere="your-theme-name"`.
  *
  * --------------------------------------------------------------------------
- * HOW IT WORKS (Under the Hood)
+ * 🎨 THE PALETTE CONTRACT (What do these keys mean?)
  * --------------------------------------------------------------------------
- * 1. DESIGN-TOKENS.TS (You are here): You define the raw data.
- * 2. GENERATE-TOKENS.TS (The Script): Reads this file and splits it into:
- * - Styles: SCSS variables for CSS painting.
- * - Logic: JSON registry for the Runtime Engine to validate themes.
+ * To ensure the 3D Physics Engine renders correctly, you must provide:
  *
- * ⚠️ CRITICAL: If you change this file, you MUST run `npm run build:tokens`
- * for the changes to take effect in the UI.
+ * [LAYER 1: CANVAS - Z-INDEX 0 & -1]
+ * - bg-canvas        : The absolute floor (Page Background). Usually the darkest tone.
+ * - bg-sink          : Recessed areas (Inputs, Wells). Appears "carved" into the surface.
+ * - bg-spotlight     : Ambient light source from the top. Used for gradients/highlights.
+ *
+ * [LAYER 2: SURFACE - Z-INDEX 1+]
+ * - bg-surface       : Floating elements (Cards, Modals, Headers).
+ * For 'glass' physics, use RGBA with opacity (e.g., rgba(0,0,0,0.5)).
+ *
+ * [LAYER 3: ENERGY - INTERACTION]
+ * - energy-primary   : The Brand Color. Used for Buttons, Links, Focus states, & Glows.
+ * - energy-secondary : Supporting accent. Used for Borders, Scrollbars, & Subtle indicators.
+ *
+ * [LAYER 4: LIGHTING - THE 3D ILLUSION]
+ * - border-highlight : Top/Left border color. Simulates light hitting the edge.
+ * - border-shadow    : Bottom/Right border color. Simulates cast shadow.
+ *
+ * [LAYER 5: SIGNAL - DATA HIERARCHY]
+ * - text-main        : High Emphasis (Headings, Active Data).
+ * - text-dim         : Medium Emphasis (Body copy, Labels).
+ * - text-mute        : Low Emphasis (Placeholders, Disabled states).
+ *
  * ==========================================================================
  */
 
-// 1. SHARED DEFINITIONS (Fonts & Semantics)
+/**
+ * --------------------------------------------------------------------------
+ * 🛡️ TYPE DEFINITIONS (Strict Contract)
+ * --------------------------------------------------------------------------
+ */
+
+export interface VoidPalette {
+  // CANVAS
+  'bg-canvas': string;
+  'bg-surface': string;
+  'bg-sink': string;
+  'bg-spotlight': string;
+
+  // ENERGY
+  'energy-primary': string;
+  'energy-secondary': string;
+  'border-highlight': string;
+  'border-shadow': string;
+
+  // SIGNAL
+  'text-main': string;
+  'text-dim': string;
+  'text-mute': string;
+
+  // SEMANTIC
+  'color-premium': string;
+  'color-system': string;
+  'color-success': string;
+  'color-error': string;
+
+  // TYPOGRAPHY
+  'font-atmos-heading': string;
+  'font-atmos-body': string;
+}
+
+// Primitives for Physics (Time/Space/Matter)
+export interface PhysicsPrimitive {
+  blur: number; // px (Integer)
+  borderWidth: number; // px (Integer)
+  speedBase: number; // ms (Integer) - Standard Transition
+  speedFast: number; // ms (Integer) - Micro-interactions
+  easeStabilize: string; // CSS Easing for Entry
+  easeSnap: string; // CSS Easing for Interaction
+  easeFlow: string; // CSS Easing for Color/Background
+}
+
+export interface ThemeDefinition {
+  type: VoidMode; // 'light' | 'dark'
+  physics: VoidPhysics; // 'glass' | 'flat' | 'retro'
+  palette: VoidPalette;
+}
+
+// --------------------------------------------------------------------------
+// 🧩 SHARED ASSETS (Fonts & Colors)
+// --------------------------------------------------------------------------
+
 const FONTS = {
-  tech: "'Hanken Grotesk', sans-serif", // Void
-  clean: "'Inter', sans-serif", // Onyx / Focus
-  code: "'Courier Prime', monospace", // Terminal
-  horror: "'Merriweather', serif", // Crimson
-  nature: "'Lora', serif", // Overgrowth
-  hand: "'Caveat', cursive", // Velvet
-  book: "'PT Serif Caption', serif", // Paper
-  arcane: "'Cinzel', serif", // Solar
-  mystic: "'Exo 2', sans-serif", // Nebula
-  lab: "'Open Sans', sans-serif", // Laboratory
-  fun: "'Comic Neue', sans-serif", // Playground
+  tech: "'Hanken Grotesk', sans-serif",
+  clean: "'Inter', sans-serif",
+  code: "'Courier Prime', monospace",
+  horror: "'Merriweather', serif",
+  nature: "'Lora', serif",
+  hand: "'Caveat', cursive",
+  book: "'PT Serif Caption', serif",
+  arcane: "'Cinzel', serif",
+  mystic: "'Exo 2', sans-serif",
+  lab: "'Open Sans', sans-serif",
+  fun: "'Comic Neue', sans-serif",
 };
 
 const SEMANTIC_DARK = {
-  'color-premium': '#ff8c00', // Orb Orange
-  'color-system': '#a078ff', // Deep Purple
-  'color-success': '#00e055', // Signal Green
-  'color-error': '#ff3c40', // Alert Red
+  'color-premium': '#ff8c00', // Gold/Orange
+  'color-system': '#a078ff', // Purple
+  'color-success': '#00e055', // Green
+  'color-error': '#ff3c40', // Red
 };
 
 const SEMANTIC_LIGHT = {
-  'color-premium': '#b45309', // Ochre Ink
-  'color-system': '#6d28d9', // Royal Purple Ink
-  'color-success': '#15803d', // Emerald Stamp
-  'color-error': '#dc2626', // Red Pen Correction
+  'color-premium': '#b45309',
+  'color-system': '#6d28d9',
+  'color-success': '#15803d',
+  'color-error': '#dc2626',
 };
 
-// 2. THEMES CONFIGURATION
+// --------------------------------------------------------------------------
+// 🚀 THE CONFIGURATION (Edit below)
+// --------------------------------------------------------------------------
+
 export const VOID_TOKENS = {
-  // Global Density Maps (Scales) - Matches your SCSS spacing-scale
+  // 1. DENSITY MAPS (Space & Scale)
+  // Controls the global whitespace density of the application.
   density: {
-    // A. The Reference Scale (1x Standard)
-    // Used by SCSS generator to create base variables
     scale: {
       xs: '0.5rem', // 8px
       sm: '1rem', // 16px
@@ -113,18 +155,48 @@ export const VOID_TOKENS = {
       xl: '3rem', // 48px
       '2xl': '4rem', // 64px
     },
-    // B. The Multipliers (The Logic)
-    // Applied to the --density variable at runtime
     factors: {
-      high: 0.75, // Compact (~30% tighter)
+      high: 0.75, // Compact
       standard: 1, // Default
-      low: 1.25, // Relaxed (~25% looser)
+      low: 1.25, // Relaxed
     },
   },
 
-  // The Atmospheres
+  // 2. PHYSICS ENGINE (Time & Matter)
+  // Defines how elements move and feel.
+  physics: {
+    glass: {
+      blur: 20,
+      borderWidth: 1,
+      speedBase: 300,
+      speedFast: 200,
+      easeStabilize: 'cubic-bezier(0.16, 1, 0.3, 1)',
+      easeSnap: 'cubic-bezier(0.22, 1, 0.36, 1)',
+      easeFlow: 'linear',
+    },
+    flat: {
+      blur: 0,
+      borderWidth: 1,
+      speedBase: 200,
+      speedFast: 133,
+      easeStabilize: 'ease-out',
+      easeSnap: 'ease-out',
+      easeFlow: 'ease-in-out',
+    },
+    retro: {
+      blur: 0,
+      borderWidth: 2,
+      speedBase: 0,
+      speedFast: 0,
+      easeStabilize: 'steps(2)',
+      easeSnap: 'steps(2)',
+      easeFlow: 'steps(4)',
+    },
+  },
+
+  // 3. THEME REGISTRY (Color & Mood)
   themes: {
-    // 1. VOID (Default)
+    // 1. [DEFAULT THEME] - The Void
     void: {
       type: 'dark',
       physics: 'glass',
@@ -134,11 +206,11 @@ export const VOID_TOKENS = {
         'font-atmos-body': FONTS.tech,
         'bg-canvas': '#010020',
         'bg-spotlight': '#0a0c2b',
-        'bg-surface': 'rgba(22, 30, 95, 0.4)',
+        'bg-surface': 'rgba(22, 30, 95, 0.4)', // 40% Opacity for Glass
         'bg-sink': 'rgba(0, 2, 41, 0.6)',
-        'energy-primary': '#33e2e6',
-        'energy-secondary': '#3875fa',
-        'border-highlight': 'rgba(56, 117, 250, 0.3)', //
+        'energy-primary': '#33e2e6', // Cyan
+        'energy-secondary': '#3875fa', // Blue
+        'border-highlight': 'rgba(56, 117, 250, 0.3)',
         'border-shadow': 'rgba(56, 117, 250, 0.1)',
         'text-main': '#ffffff',
         'text-dim': 'rgba(255, 255, 255, 0.85)',
@@ -146,7 +218,7 @@ export const VOID_TOKENS = {
       },
     },
 
-    // 2. ONYX
+    // 2. [THEME] - Stealth / Cinema
     onyx: {
       type: 'dark',
       physics: 'glass',
@@ -168,10 +240,10 @@ export const VOID_TOKENS = {
       },
     },
 
-    // 3. TERMINAL
+    // 3. [THEME] - Retro / Hacker
     terminal: {
       type: 'dark',
-      physics: 'retro',
+      physics: 'retro', // Triggers Pixel fonts & Instant motion
       palette: {
         ...SEMANTIC_DARK,
         'font-atmos-heading': FONTS.code,
@@ -180,9 +252,9 @@ export const VOID_TOKENS = {
         'bg-spotlight': '#141414',
         'bg-surface': 'rgba(0, 20, 0, 0.9)',
         'bg-sink': '#000000',
-        'energy-primary': '#f5c518',
+        'energy-primary': '#f5c518', // Amber
         'energy-secondary': '#f5c518',
-        'border-highlight': '#f5c518',
+        'border-highlight': '#f5c518', // Hard borders (no alpha)
         'border-shadow': '#f5c518',
         'text-main': '#f5c518',
         'text-dim': 'rgba(245, 197, 24, 0.7)',
@@ -191,7 +263,7 @@ export const VOID_TOKENS = {
       },
     },
 
-    // 4. CRIMSON
+    // 4. [THEME] - Horror / Aggressive
     crimson: {
       type: 'dark',
       physics: 'glass',
@@ -213,7 +285,7 @@ export const VOID_TOKENS = {
       },
     },
 
-    // 5. OVERGROWTH
+    // 5. [THEME] - Nature / Organic
     overgrowth: {
       type: 'dark',
       physics: 'glass',
@@ -235,7 +307,7 @@ export const VOID_TOKENS = {
       },
     },
 
-    // 6. VELVET
+    // 6. [THEME] - Romance / Soft
     velvet: {
       type: 'dark',
       physics: 'glass',
@@ -257,7 +329,7 @@ export const VOID_TOKENS = {
       },
     },
 
-    // 7. SOLAR
+    // 7. [THEME] - Royal / Gold
     solar: {
       type: 'dark',
       physics: 'glass',
@@ -279,7 +351,7 @@ export const VOID_TOKENS = {
       },
     },
 
-    // 8. NEBULA
+    // 8. [THEME] - Synthwave / Mystery
     nebula: {
       type: 'dark',
       physics: 'glass',
@@ -301,10 +373,10 @@ export const VOID_TOKENS = {
       },
     },
 
-    // 9. PAPER
+    // 9. [THEME] - Light / Print
     paper: {
       type: 'light',
-      physics: 'flat',
+      physics: 'flat', // No blurs, sharp borders
       palette: {
         ...SEMANTIC_LIGHT,
         'font-atmos-heading': FONTS.book,
@@ -323,7 +395,7 @@ export const VOID_TOKENS = {
       },
     },
 
-    // 10. LABORATORY
+    // 10. [THEME] - Clinical / Science
     laboratory: {
       type: 'light',
       physics: 'flat',
@@ -345,7 +417,7 @@ export const VOID_TOKENS = {
       },
     },
 
-    // 11. PLAYGROUND
+    // 11. [THEME] - Fun / Kids
     playground: {
       type: 'light',
       physics: 'flat',
@@ -367,7 +439,7 @@ export const VOID_TOKENS = {
       },
     },
 
-    // 12. FOCUS
+    // 12. [THEME] - Distraction Free
     focus: {
       type: 'light',
       physics: 'flat',

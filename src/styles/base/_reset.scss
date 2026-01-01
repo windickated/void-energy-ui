@@ -186,3 +186,66 @@ hr {
     --text-scale: 1 !important;
   }
 }
+
+/* =========================================
+   4. ACCESSIBILITY: HIGH CONTRAST MODE
+   ========================================= */
+// This triggers ONLY when the user has forced system colors (Windows HCM).
+// It overrides your Theme Engine to ensure perfect contrast.
+@media (forced-colors: active) {
+  :root {
+    // 1. Map Canvas to System Background
+    // Ensures background is White (Light Theme) or Black (Dark Theme) matching user OS.
+    --bg-canvas: Canvas;
+    --bg-spotlight: Canvas;
+    --bg-surface: Canvas;
+    --bg-sink: Canvas;
+
+    // 2. Map Text to System Text
+    --text-main: CanvasText;
+    --text-dim: CanvasText; // Dim text is often hard to read in HCM, so we force full contrast
+    --text-mute: CanvasText;
+
+    // 3. Map Energy/Action to System Highlight
+    // 'Highlight' is the system's chosen accent color (e.g., Hot Pink, Cyan, Yellow).
+    --energy-primary: Highlight;
+    --energy-secondary: CanvasText;
+
+    // 4. Force Borders
+    // Glass physics often uses subtle borders. In HCM, we need HARD borders.
+    --physics-border-width: 2px; // Force thicker borders
+    --border-highlight: ButtonText; // Standard border color
+    --border-shadow: ButtonText;
+
+    // 5. Kill Visual Noise
+    --physics-blur: 0px; // No blur allowed
+    --optics-glow-mult: 0; // No glows
+  }
+
+  // FORCE VISIBILITY ON INTERACTIVE ELEMENTS
+  // Since we lost the "Glass" background, we must ensure buttons/inputs define their edges.
+  button,
+  .btn,
+  input,
+  select,
+  textarea,
+  .surface-glass,
+  .surface-sunk,
+  .card-glass,
+  .card-sunk {
+    border: 2px solid ButtonText !important;
+  }
+
+  // LINK VISIBILITY
+  a,
+  .link {
+    color: LinkText;
+    text-decoration: underline; // Enforce underline for safety
+  }
+
+  // SELECTION
+  ::selection {
+    background: Highlight;
+    color: HighlightText;
+  }
+}

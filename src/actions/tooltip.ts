@@ -10,7 +10,7 @@ export function tooltip(
   params: string | VoidTooltipOptions,
 ) {
   // Normalize input
-  let config: VoidTooltipOptions =
+  const config: VoidTooltipOptions =
     typeof params === 'string' ? { content: params } : params;
 
   // Initialize Logic Core

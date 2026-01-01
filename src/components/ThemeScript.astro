@@ -1,31 +1,8 @@
-<!-- ==========================================================================
-  🌌 VOID ENERGY: HYDRATION SCRIPT (Anti-FOUC)
-  ==========================================================================
-  
-  PURPOSE:
-  This critical script runs synchronously before the First Contentful Paint.
-  It reads `localStorage` and applies the user's active Atmosphere, Font,
-  and Scale immediately to the <html> root.
+---
+import THEME_REGISTRY from '../config/void-registry.json';
+---
 
-  WHY IS THIS NEEDED?
-  Without this, the UI would render in the default 'void' theme for a split
-  second before the JavaScript bundle loads, causing a jarring "Flash of 
-  Unstyled Content" (FOUC) or "Flash of Wrong Theme".
-
-  MECHANISM:
-  1. Blocking Execution: `is:inline` ensures this runs immediately.
-  2. DOM Manipulation: Sets `data-atmosphere` and CSS Variables.
-  3. Handoff: Once loaded, `void-engine.ts` takes over state management.
-  ========================================================================== -->
-
-<script is:inline>
-  // ⚠️ DATA DEPENDENCIES:
-  // This script expects 'THEME_REGISTRY' to be available globally
-  // or injected by your build tool (e.g., Vite DefinePlugin / Astro define:vars).
-  //
-  // const THEME_REGISTRY = import('../config/void-registry.json');
-  // define:vars={{ registry: THEME_REGISTRY }}
-
+<script is:inline define:vars={{ registry: THEME_REGISTRY }}>
   (function () {
     try {
       var root = document.documentElement;

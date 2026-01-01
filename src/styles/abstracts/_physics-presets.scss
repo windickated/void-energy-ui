@@ -58,122 +58,104 @@
    ========================================================================== */
 
 @use 'sass:map';
+@use '../config/generated-themes' as generated; // Import the generated map
 @use 'functions' as *;
 
-// 'glow-opacity': 0.6,
-// 'glow-strength': 1,
-// 'shadow-strength': 1,
-// 'border-opacity': 1,
+// 1. THE DEFINITIONS
+// We adhere to the Manual Override pattern:
+// We define the "Logic" here (color mixes, shadows), but pull the "Numbers" from the generator.
 
-// 1. THE DEFINITIONS (Data Layer)
 $physics-presets: (
   'glass': (
-    'physics-blur': 20px,
-    'physics-border-width': 1px,
-    'radius-base': var(--radius-md),
-    // Base Values (Before Multipliers)
-    'base-glow-opacity': 0.6,
-    'base-shadow-opacity': 0.5,
-    // Surfaces
-    'surface-bg': linear-gradient(
-        to bottom,
-        color-mix(in srgb, var(--bg-surface), var(--energy-secondary) 10%) 0%,
-        var(--bg-surface) 100%
+    // MERGE GENERATED DATA
+    // This pulls: physics-blur, physics-border-width, speed-base, easings...
+    map.merge(
+        map.get(generated.$generated-physics, 'glass'),
+        (
+          // Manual Logic (Colors/Shadows stay here as they use variables/functions)
+          'radius-base': var(--radius-md),
+          'base-glow-opacity': 0.6,
+          'base-shadow-opacity': 0.5,
+          'surface-bg': linear-gradient(
+              to bottom,
+              color-mix(in srgb, var(--bg-surface), var(--energy-secondary) 10%)
+                0%,
+              var(--bg-surface) 100%
+            ),
+          'surface-border-top': color-mix(
+              in srgb,
+              var(--border-highlight),
+              transparent 0%
+            ),
+          'surface-border-side': color-mix(
+              in srgb,
+              var(--border-shadow),
+              transparent 0%
+            ),
+          'surface-shadow': 0 4px 16px rgba(0, 0, 0, 0.5),
+          'hover-transform': translateY(-2px),
+          'hover-shadow': 0 8px 32px rgba(0, 0, 0, 0.5),
+          // Note: Easings are now coming from the generated map!
+        )
       ),
-    'surface-border-top': color-mix(
-        in srgb,
-        var(--border-highlight),
-        transparent 0%
-      ),
-    'surface-border-side': color-mix(
-        in srgb,
-        var(--border-shadow),
-        transparent 0%
-      ),
-    'surface-shadow': 0 4px 16px rgba(0, 0, 0, 0.5),
-    // Interaction
-    'hover-transform': translateY(-2px),
-    'hover-shadow': 0 8px 32px rgba(0, 0, 0, 0.5),
-    // Time
-    'speed-base': 0.3s,
-    'ease-stabilize': cubic-bezier(0.16, 1, 0.3, 1),
-    'ease-snap': cubic-bezier(0.22, 1, 0.36, 1),
-    'ease-flow': linear,
-    'ease-base': cubic-bezier(0.16, 1, 0.3, 1),
   ),
 
   'flat': (
-    'physics-blur': 0px,
-    'physics-border-width': 1px,
-    'radius-base': var(--radius-sm),
-    'base-glow-opacity': 0,
-    // Flat never glows, even in dark mode
-    'base-shadow-opacity': 0.1,
-    // Much lighter shadows
-    'surface-bg': var(--bg-surface),
-    'surface-border-top': var(--border-highlight),
-    'surface-border-side': var(--border-highlight),
-    'surface-shadow': 0 2px 8px rgba(0, 0, 0, 0.08),
-    'hover-transform': translateY(-1px),
-    'hover-shadow': 0 4px 12px rgba(0, 0, 0, 0.12),
-    'speed-base': 0.2s,
-    'ease-stabilize': ease-out,
-    'ease-snap': ease-out,
-    'ease-flow': ease-in-out,
-    'ease-base': ease-out,
+    map.merge(
+      map.get(generated.$generated-physics, 'flat'),
+      (
+        'radius-base': var(--radius-sm),
+        'base-glow-opacity': 0,
+        'base-shadow-opacity': 0.1,
+        'surface-bg': var(--bg-surface),
+        'surface-border-top': var(--border-highlight),
+        'surface-border-side': var(--border-highlight),
+        'surface-shadow': 0 2px 8px rgba(0, 0, 0, 0.08),
+        'hover-transform': translateY(-1px),
+        'hover-shadow': 0 4px 12px rgba(0, 0, 0, 0.12),
+      )
+    ),
   ),
 
   'retro': (
-    'physics-blur': 0px,
-    'physics-border-width': 2px,
-    'radius-base': 0px,
-    'base-glow-opacity': 0,
-    'base-shadow-opacity': 1,
-    // Hard shadows
-    'surface-bg': var(--bg-surface),
-    'surface-border-top': var(--border-highlight),
-    'surface-border-side': var(--border-highlight),
-    'surface-shadow': none,
-    'hover-transform': none,
-    'hover-shadow': 4px 4px 0px alpha(var(--energy-primary), 25%),
-    'speed-base': 0s,
-    'ease-stabilize': steps(2),
-    'ease-snap': steps(2),
-    'ease-flow': steps(4),
-    'ease-base': steps(2),
+    map.merge(
+      map.get(generated.$generated-physics, 'retro'),
+      (
+        'radius-base': 0px,
+        'base-glow-opacity': 0,
+        'base-shadow-opacity': 1,
+        'surface-bg': var(--bg-surface),
+        'surface-border-top': var(--border-highlight),
+        'surface-border-side': var(--border-highlight),
+        'surface-shadow': none,
+        'hover-transform': none,
+        'hover-shadow': 4px 4px 0px alpha(var(--energy-primary), 25%),
+      )
+    ),
   ),
 );
 
 // 2. THE EMITTER (Logic Layer)
 @mixin emit-physics {
-  // A. Emit Physics Presets (Geometry/Time)
+  // A. Emit Physics Presets
   @each $name, $map in $physics-presets {
     [data-physics='#{$name}'] {
       @each $key, $val in $map {
+        // Output every key in the map as a CSS variable
         --#{$key}: #{$val};
       }
-
-      // Calculate derived speed
-      $speed-base: map.get($map, 'speed-base');
-      $speed-fast: if($speed-base == 0s, 0s, $speed-base * 0.66);
-      --speed-fast: #{$speed-fast};
     }
   }
 
-  // B. Emit Optics (The Dimmer Switch)
-  // This controls the INTENSITY of the physics based on Light/Dark mode.
-
-  // DARK MODE (High Energy)
+  // B. Emit Optics (Unchanged)
   [data-mode='dark'] {
-    --optics-glow-mult: 1; // Enable neon glows
-    --optics-shadow-mult: 1; // Standard depth
-    --optics-text-glow: 1; // Enable text shadows
+    --optics-glow-mult: 1;
+    --optics-shadow-mult: 1;
+    --optics-text-glow: 1;
   }
-
-  // LIGHT MODE (Clean / Ink)
   [data-mode='light'] {
-    --optics-glow-mult: 0; // KILL all neon glows globally
-    --optics-shadow-mult: 0.5; // Reduce shadow intensity by 50%
-    --optics-text-glow: 0; // Kill text shadows for crisp reading
+    --optics-glow-mult: 0;
+    --optics-shadow-mult: 0.5;
+    --optics-text-glow: 0;
   }
 }

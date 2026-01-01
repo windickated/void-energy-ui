@@ -1,29 +1,15 @@
 /* ==========================================================================
-   VOID ENERGY UI ENGINE (Vanilla TypeScript)
+   VOID ENERGY UI ENGINE (Robust Injection)
    DOM-First Architecture / Deterministic Hydration
    ========================================================================== */
 
 import THEME_REGISTRY from '../config/void-registry.json';
 import { VOID_TOKENS } from '../config/design-tokens';
 
-export type VoidPhysics = 'glass' | 'flat' | 'retro';
-export type VoidMode = 'light' | 'dark';
-export type VoidDensity = 'high' | 'standard' | 'low';
 type ErrorHandler = (error: Error) => void;
 
 interface EngineOptions {
   onError?: ErrorHandler;
-}
-
-// The shape of a theme in the registry (logic only)
-export interface ThemeConfig {
-  physics: VoidPhysics;
-  mode: VoidMode;
-}
-
-// The shape of a FULL theme definition (for injection)
-export interface RuntimeThemeDefinition extends ThemeConfig {
-  palette: Record<string, string>; // The colors (e.g., 'energy-primary': '#f00')
 }
 
 // Mutable Registry
@@ -31,9 +17,14 @@ type Registry = Record<string, ThemeConfig>;
 
 const DENSITY_FACTORS = VOID_TOKENS.density.factors;
 
+// 1. SAFEGUARD: The Fallback Palette (Source of Truth)
+// We use the default 'void' theme as our safety net.
+const FALLBACK_PALETTE = VOID_TOKENS.themes.void.palette;
+
 function applyDensity(root: HTMLElement, density: VoidDensity) {
   const factor = DENSITY_FACTORS[density] ?? 1;
   root.style.setProperty('--density', factor.toString());
+
   // Cleanup legacy individual overrides if present
   const SPACE_KEYS = Object.keys(VOID_TOKENS.density.scale);
   SPACE_KEYS.forEach((token) => {
@@ -48,8 +39,9 @@ const KEYS = {
 
 export class VoidEngine {
   public atmosphere: string;
-  private observers: Function[]; // Loosened type for easier interop
+  private observers: Function[];
   private onError?: ErrorHandler;
+
   public userConfig: {
     fontHeading?: string | null;
     fontBody?: string | null;
@@ -57,7 +49,6 @@ export class VoidEngine {
     density: VoidDensity;
   };
 
-  // 1. The Master Registry (Starts with Static, grows with Dynamic)
   private registry: Registry;
 
   constructor(options?: EngineOptions) {
@@ -84,45 +75,101 @@ export class VoidEngine {
 
   /**
    * Injects a new theme into the engine at runtime.
-   * Useful for loading themes from a Backend API or User Upload.
+   * Uses Defensive Merging to fill in missing keys.
    */
   public injectTheme(name: string, definition: RuntimeThemeDefinition): void {
-    if (this.registry[name]) {
-      console.warn(`Void Engine: Overwriting existing theme "${name}"`);
+    try {
+      // 1. VALIDATION GUARD (Physics Only)
+      // We only check things that would crash the logic engine (like invalid physics modes).
+      this.validateThemeStructure(name, definition);
+
+      if (this.registry[name]) {
+        console.warn(`Void Engine: Overwriting existing theme "${name}"`);
+      }
+
+      // 2. DEFENSIVE MERGE [Fixes Theme Payload Validation]
+      // Logic: Start with the Safe Palette -> Overwrite with User Palette.
+      // This ensures --bg-canvas is NEVER undefined.
+      const compositePalette = {
+        ...FALLBACK_PALETTE,
+        ...definition.palette,
+      };
+
+      // 3. HANDLE EXTERNAL FONTS
+      if (definition.fonts && definition.fonts.length > 0) {
+        this.loadExternalFonts(definition.fonts);
+      }
+
+      // 4. UPDATE LOGIC REGISTRY
+      this.registry[name] = {
+        physics: definition.physics,
+        mode: definition.mode,
+      };
+
+      // 5. GENERATE CSS VARIABLES (Using the Composite Palette)
+      const cssVars = Object.entries(compositePalette)
+        .map(([key, value]) => `--${key}: ${value};`)
+        .join('\n');
+
+      const cssRule = `
+        [data-atmosphere='${name}'] {
+          color-scheme: ${definition.mode};
+          ${cssVars}
+        }
+      `;
+
+      // 6. INJECT TO DOM
+      if (typeof document !== 'undefined') {
+        let styleTag = document.getElementById('void-dynamic-themes');
+        if (!styleTag) {
+          styleTag = document.createElement('style');
+          styleTag.id = 'void-dynamic-themes';
+          document.head.appendChild(styleTag);
+        }
+        styleTag.textContent += cssRule;
+      }
+
+      // 7. NOTIFY LISTENERS
+      this.notify();
+    } catch (error) {
+      if (this.onError && error instanceof Error) {
+        this.onError(error);
+      } else {
+        console.error(error);
+      }
+    }
+  }
+
+  // --- INTERNAL UTILS ---
+
+  private validateThemeStructure(name: string, def: RuntimeThemeDefinition) {
+    // 1. Check Physics Validity
+    // We MUST enforce this because SCSS mixins rely on 'glass'/'flat'/'retro' keys existing.
+    if (!['glass', 'flat', 'retro'].includes(def.physics)) {
+      throw new Error(`Theme "${name}" has invalid physics: ${def.physics}`);
     }
 
-    // A. Update Logic Registry
-    this.registry[name] = {
-      physics: definition.physics,
-      mode: definition.mode,
-    };
-
-    // B. Generate CSS Variables
-    // We map the palette object to CSS Custom Properties
-    const cssVars = Object.entries(definition.palette)
-      .map(([key, value]) => `--${key}: ${value};`)
-      .join('\n');
-
-    const cssRule = `
-      [data-atmosphere='${name}'] {
-        color-scheme: ${definition.mode};
-        ${cssVars}
-      }
-    `;
-
-    // C. Inject to DOM
-    if (typeof document !== 'undefined') {
-      let styleTag = document.getElementById('void-dynamic-themes');
-      if (!styleTag) {
-        styleTag = document.createElement('style');
-        styleTag.id = 'void-dynamic-themes';
-        document.head.appendChild(styleTag);
-      }
-      styleTag.textContent += cssRule;
+    // 2. Check Palette Existence
+    if (!def.palette || typeof def.palette !== 'object') {
+      throw new Error(`Theme "${name}" is missing a palette object.`);
     }
 
-    // D. Notify Listeners (UI updates list)
-    this.notify();
+    // NOTE: We no longer check for individual keys here.
+    // The defensive merge in injectTheme() handles missing keys automatically.
+  }
+
+  private loadExternalFonts(fonts: { name: string; url: string }[]) {
+    if (typeof document === 'undefined') return;
+
+    fonts.forEach((font) => {
+      // Avoid duplicate loading
+      if (!document.querySelector(`link[href="${font.url}"]`)) {
+        const link = document.createElement('link');
+        link.rel = 'stylesheet';
+        link.href = font.url;
+        document.head.appendChild(link);
+      }
+    });
   }
 
   // --- STORAGE HELPERS ---
@@ -131,7 +178,7 @@ export class VoidEngine {
     try {
       if (typeof localStorage === 'undefined') return null;
       return localStorage.getItem(key);
-    } catch (e) {
+    } catch {
       return null;
     }
   }
@@ -140,13 +187,14 @@ export class VoidEngine {
     try {
       if (typeof localStorage === 'undefined') return;
       localStorage.setItem(key, value);
-    } catch (e) {}
+    } catch {}
   }
 
   // --- CORE LIFECYCLE ---
 
   private init(): void {
     if (typeof document === 'undefined') return;
+
     const root = document.documentElement;
 
     const domAtmosphere = root.getAttribute('data-atmosphere');
@@ -168,7 +216,7 @@ export class VoidEngine {
       try {
         const parsed = JSON.parse(storedConfig);
         this.userConfig = { ...this.userConfig, ...parsed };
-      } catch (e) {}
+      } catch {}
     }
 
     this.render();
@@ -180,7 +228,6 @@ export class VoidEngine {
     return !!this.registry[name];
   }
 
-  // Returns the list of valid theme keys (Static + Injected)
   public getAvailableThemes(): string[] {
     return Object.keys(this.registry);
   }

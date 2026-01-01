@@ -3,17 +3,6 @@
  * RESPONSIBILITY: Queues ephemeral system alerts.
  */
 
-export type ToastType = 'info' | 'success' | 'error' | 'warning' | 'loading';
-
-export interface ToastItem {
-  id: number;
-  /** * The text content.
-   * ⚠️ WARNING: Renders as RAW HTML. Do not pass user input.
-   */
-  message: string;
-  type: ToastType;
-}
-
 class ToastStore {
   // Svelte 5 Reactive State
   items = $state<ToastItem[]>([]);
