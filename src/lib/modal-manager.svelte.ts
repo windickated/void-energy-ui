@@ -1,36 +1,46 @@
-import { UI_MODALS } from '../config/constants';
-
-// Define the valid keys based on our constant
-type ModalID = (typeof UI_MODALS)[keyof typeof UI_MODALS];
-
-export interface ModalOptions {
-  title?: string;
-  body?: string;
-  confirmText?: string;
-  cancelText?: string;
-  cost?: number;
-  type?: ModalID;
-  size?: 'sm' | 'md' | 'lg' | 'full';
-  placeholder?: string;
-  inputValue?: string;
-}
+import { MODAL_KEYS } from '../config/modal-registry';
 
 class ModalManager {
-  activeId = $state<string | null>(null);
-  options = $state<ModalOptions>({});
+  // The Key determines which component renders
+  activeKey = $state<VoidModalKey | null>(null);
+
+  // The Props are passed directly to that component
+  props = $state<Record<string, any>>({});
+
+  // Window options (size) are separate from component props
+  windowOptions = $state<VoidModalOptions>({ size: 'md', preventClose: false });
 
   private resolvePromise: ((value: any) => void) | null = null;
   private previousActiveElement: HTMLElement | null = null;
 
-  open<T = any>(id: string, config: ModalOptions = {}): Promise<T | null> {
-    if (this.activeId) this.close(null);
+  /**
+   * Opens any modal by Key.
+   * @param key - The registry key (e.g., 'confirm')
+   * @param props - Data to pass to the fragment (title, body, etc.)
+   * @param windowOpts - Window settings (size)
+   */
+  open<T = any>(
+    key: VoidModalKey,
+    props: Record<string, any> = {},
+    windowOpts: VoidModalOptions = {},
+  ): Promise<T | null> {
+    if (this.activeKey) this.close(null);
 
     if (typeof document !== 'undefined') {
       this.previousActiveElement = document.activeElement as HTMLElement;
     }
 
-    this.activeId = id;
-    this.options = config;
+    this.activeKey = key;
+    this.props = props;
+
+    // Default to 'md' size if not specified
+    // and preventClose to false if not provided
+    this.windowOptions = {
+      size: 'md',
+      preventClose: false,
+      ...windowOpts,
+    };
+
     return new Promise((resolve) => {
       this.resolvePromise = resolve;
     });
@@ -38,34 +48,35 @@ class ModalManager {
 
   close(result: any) {
     if (this.resolvePromise) this.resolvePromise(result);
-    this.activeId = null;
-    this.options = {};
+
+    this.activeKey = null;
+    this.props = {};
     this.resolvePromise = null;
+
     if (this.previousActiveElement) {
       this.previousActiveElement.focus();
       this.previousActiveElement = null;
     }
   }
 
-  // --- HELPERS (Now Type-Safe) ---
+  // --- Convenience Helpers ---
 
   async confirm(title: string, body: string, cost = 0): Promise<boolean> {
-    const result = await this.open<boolean>(UI_MODALS.CONFIRM, {
-      title,
-      body,
-      cost,
-      size: 'sm',
-    });
+    const result = await this.open<boolean>(
+      MODAL_KEYS.CONFIRM,
+      { title, body, cost },
+      { size: 'sm' },
+    );
     return result ?? false;
   }
 
-  async prompt(title: string, placeholder = ''): Promise<string | null> {
-    return this.open<string>(UI_MODALS.INPUT, {
-      title,
-      placeholder,
-      size: 'md',
-      confirmText: 'Submit',
-    });
+  async alert(title: string, body: string): Promise<boolean> {
+    const result = await this.open<boolean>(
+      MODAL_KEYS.ALERT,
+      { title, body },
+      { size: 'sm' },
+    );
+    return result ?? true;
   }
 }
 

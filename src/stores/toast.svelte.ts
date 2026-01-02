@@ -5,7 +5,7 @@
 
 class ToastStore {
   // Svelte 5 Reactive State
-  items = $state<ToastItem[]>([]);
+  items = $state<VoidToastItem[]>([]);
 
   // Internal timer map to handle auto-dismissal
   private timers = new Map<number, ReturnType<typeof setTimeout>>();
@@ -15,7 +15,7 @@ class ToastStore {
    * @param message - Trusted internal string (supports HTML). ⚠️ NO USER INPUT.
    * @param type - 'info' | 'success' | 'error' | 'warning' | 'loading'
    */
-  show(message: string, type: ToastType = 'info', duration = 4000) {
+  show(message: string, type: VoidToastType = 'info', duration = 4000) {
     const id = Date.now();
 
     // 1. Add to the reactive stack

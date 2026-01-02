@@ -3,7 +3,7 @@
  * RESPONSIBILITY: Bridges Svelte DOM lifecycle to the VoidTooltip logic core.
  */
 
-import { VoidTooltip, type VoidTooltipOptions } from '../lib/void-tooltip';
+import { VoidTooltip } from '../lib/void-tooltip';
 
 export function tooltip(
   node: HTMLElement,

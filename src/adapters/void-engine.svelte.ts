@@ -15,7 +15,7 @@ interface UserConfig {
 // --- THE REACTIVE ENGINE ---
 export class VoidEngine {
   // 1. REACTIVE STATE (The Truth)
-  // We use $state directly. No more observers.
+  // Direct Svelte 5 runes state.
   atmosphere = $state<string>(DEFAULTS.ATMOSPHERE);
   userConfig = $state<UserConfig>({
     fontHeading: null,

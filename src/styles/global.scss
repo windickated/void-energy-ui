@@ -119,7 +119,7 @@
    5. UTILITIES: TEXT & VISUALS (Static Only)
    --------------------------------------------------------------------------
    - Align:   .text-center, .text-right, .text-left
-   - Colors:  .text-highlight (Neon Glow), .text-success, .text-error, 
+   - Colors:  .text-primary, .text-success, .text-error, 
               .text-premium, .text-system, .text-dim, .text-main
    - Size:    .text-caption, .text-small, text-body,
               .text-h5, .text-h4, .text-h3, .text-h2, .text-h1
@@ -168,10 +168,12 @@
    --------------------------------------------------------------------------
    - .btn             : Standard Glass Button.
    - .btn-cta         : "Gemini Laser" (Primary).
+   - .btn-premium     : Gold/Orange (Upsell or restricted features).
+   - .btn-system      : Purple (Configuration or System Ops).
+   - .btn-signal      : Green (Success)
+   - .btn-alert       : Red (Error)
    - .btn-icon        : Circle (44px) for SVGs.
    - .btn-void        : Naked reset.
-
-   VARIANTS: .btn-premium, .btn-signal, .btn-alert, .btn-system
 
    --------------------------------------------------------------------------
    10. COMPONENTS: INPUTS & TILES

@@ -55,58 +55,6 @@
  * ==========================================================================
  */
 
-/**
- * --------------------------------------------------------------------------
- * 🛡️ TYPE DEFINITIONS (Strict Contract)
- * --------------------------------------------------------------------------
- */
-
-export interface VoidPalette {
-  // CANVAS
-  'bg-canvas': string;
-  'bg-surface': string;
-  'bg-sink': string;
-  'bg-spotlight': string;
-
-  // ENERGY
-  'energy-primary': string;
-  'energy-secondary': string;
-  'border-highlight': string;
-  'border-shadow': string;
-
-  // SIGNAL
-  'text-main': string;
-  'text-dim': string;
-  'text-mute': string;
-
-  // SEMANTIC
-  'color-premium': string;
-  'color-system': string;
-  'color-success': string;
-  'color-error': string;
-
-  // TYPOGRAPHY
-  'font-atmos-heading': string;
-  'font-atmos-body': string;
-}
-
-// Primitives for Physics (Time/Space/Matter)
-export interface PhysicsPrimitive {
-  blur: number; // px (Integer)
-  borderWidth: number; // px (Integer)
-  speedBase: number; // ms (Integer) - Standard Transition
-  speedFast: number; // ms (Integer) - Micro-interactions
-  easeStabilize: string; // CSS Easing for Entry
-  easeSnap: string; // CSS Easing for Interaction
-  easeFlow: string; // CSS Easing for Color/Background
-}
-
-export interface ThemeDefinition {
-  type: VoidMode; // 'light' | 'dark'
-  physics: VoidPhysics; // 'glass' | 'flat' | 'retro'
-  palette: VoidPalette;
-}
-
 // --------------------------------------------------------------------------
 // 🧩 SHARED ASSETS (Fonts & Colors)
 // --------------------------------------------------------------------------

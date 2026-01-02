@@ -18,13 +18,7 @@ import {
   offset,
   flip,
   shift,
-  type Placement,
 } from '@floating-ui/dom';
-
-export interface VoidTooltipOptions {
-  content: string;
-  placement?: Placement;
-}
 
 export class VoidTooltip {
   private trigger: HTMLElement;
@@ -59,8 +53,7 @@ export class VoidTooltip {
     this.tooltip.textContent = this.options.content;
 
     // 2. Physics & A11y Attributes
-    // Check if the trigger implies a specific physics mode (optional advanced logic)
-    // For now, we rely on the global CSS, but we set role/id.
+    // We rely on global CSS for physics, but enforce accessibility roles here.
     const id = `tooltip-${Math.random().toString(36).substr(2, 9)}`;
     this.tooltip.setAttribute('id', id);
     this.tooltip.setAttribute('role', 'tooltip');

@@ -190,12 +190,12 @@ input[type='radio'] {
   // Stretch the native input over the container to capture clicks and drops.
   input[type='file'] {
     position: absolute;
-    inset: 0; // Stretch to corners
+    inset: 0;
     width: 100%;
     height: 100%;
     opacity: 0; // Invisible but clickable
     cursor: pointer;
-    z-index: z('float'); // Sit on top
+    z-index: z('float');
   }
 
   // --- B. THE FAKE CONTENT (Visible Layer) ---

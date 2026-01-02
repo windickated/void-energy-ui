@@ -2,7 +2,7 @@
   import { toast } from '../stores/toast.svelte';
   import { dematerialize, materialize } from '../lib/transitions.svelte';
 
-  const icons = {
+  const icons: Record<string, string> = {
     info: 'ℹ️', // Standard Info
     success: '✅', // Clear Check
     warning: '⚠️', // Standard Warning

@@ -226,6 +226,10 @@
       background-color: var(--energy-primary);
       animation-play-state: paused;
     }
+
+    &:hover::after {
+      background: blend(var(--bg-canvas), var(--energy-primary), 6%);
+    }
   }
 }
 
@@ -328,11 +332,9 @@
   // Note: Standard Sass cannot compile CSS calc() inside color functions easily,
   // so we rely on native CSS variables for the multiplier interaction.
 
-  // SIMPLIFIED STRATEGY for robust CSS:
-  // We return a color-mix where the transparent amount is controlled by the variable.
-  // Since we can't easily do calc() inside the percentage of color-mix in all browsers yet properly with vars,
-  // we will use the `rgba` or `opacity` property at the component level where possible,
-  // OR use a simpler approach:
+  // STRATEGY:
+  // We use color-mix() to inject the optical multiplier variable into the transparency channel.
+  // This allows global light/dark mode switches to instantly affect opacity without JS.
 
   // We will define the shadow color as a variable that changes.
   @return color-mix(

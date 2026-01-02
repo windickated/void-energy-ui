@@ -76,6 +76,7 @@ button:not(.btn-void),
 
   @media (hover: hover) {
     &:hover:not(:disabled) {
+      background: blend(var(--bg-surface), var(--energy-primary), 8%);
       border-color: var(--energy-primary);
       transform: translateY(-2px);
       color: var(--text-main);
@@ -110,7 +111,6 @@ button:not(.btn-void),
   &.btn-cta:not(:disabled) {
     @include gemini-laser;
 
-    // Explicitly kill the base button background/border
     background: transparent;
     border: none;
 
@@ -155,7 +155,7 @@ button:not(.btn-void),
     @media (hover: hover) {
       &:hover:not(:disabled) {
         border-color: $color-var;
-        background: optics-alpha($color-var, 0.15, '--optics-glow-mult');
+        background: alpha($color-var, 15%);
         color: #ffffff;
 
         box-shadow:

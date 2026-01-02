@@ -40,7 +40,7 @@
       <span class="flex-1">{atm.label}</span>
 
       {#if voidEngine.atmosphere === atm.id}
-        <span class="text-highlight">●</span>
+        <span>●</span>
       {/if}
     </button>
   {/each}

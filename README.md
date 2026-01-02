@@ -33,7 +33,7 @@ We use a **Hybrid Protocol**:
     * ✅ `p-md`, `gap-lg`, `flex`, `hidden tablet:block`
     * ❌ `padding: 20px` (Breaks the Density Engine)
 * **Materials (Void SCSS):** Use component classes for physics.
-    * ✅ `.surface-glass`, `.btn-cta`, `.text-highlight`
+    * ✅ `.surface-glass`, `.btn-cta`, `.text-primary`
     * ❌ `bg-blue-500` (Breaks the Atmosphere Engine)
 
 ### 3. The Laws of Physics

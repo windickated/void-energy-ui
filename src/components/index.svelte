@@ -348,7 +348,7 @@
 
                     <button
                       type="button"
-                      class="tile-remove"
+                      class="btn-void tile-remove"
                       aria-label="Remove {btn}"
                       onclick={() => {
                         moduleTiles = moduleTiles.filter(
@@ -402,7 +402,7 @@
                     <p class="tile-label">{btn}</p>
                     <button
                       type="button"
-                      class="tile-remove"
+                      class="btn-void tile-remove"
                       aria-label="Remove {btn}"
                       onclick={() => {
                         environmentTiles = environmentTiles.filter(
@@ -457,7 +457,7 @@
                     <p class="tile-label">{btn}</p>
                     <button
                       type="button"
-                      class="tile-remove"
+                      class="btn-void tile-remove"
                       aria-label="Remove {btn}"
                       onclick={() => {
                         premiumTiles = premiumTiles.filter(
