@@ -79,3 +79,35 @@ In the Void Energy system, **Atmospheres are strict presets.** * **User Choice:*
     * *Example:* You cannot have "Paper" (Flat) with "Glass" physics.
 
 **Why?** CoNexus is a narrative platform. The visual rendering engine is part of the storytelling. Breaking the physics of a theme breaks the immersion of the story. We provide distinct themes to cover accessibility needs (e.g., "Focus" for high contrast), but we do not allow mixing and matching of Triad layers by the end-user.
+
+## 🔌 API Integration (Future Proofing)
+
+The Void Engine is ready to accept dynamic themes from an external API.
+If a collaborator needs to inject a custom brand theme, send a JSON payload matching this schema:
+
+```json
+{
+  "id": "collaborator-brand-v1",
+  "type": "light", // or "dark"
+  "physics": "flat", // "glass", "flat", or "retro"
+  "palette": {
+    "bg-canvas": "#ffffff",
+    "bg-surface": "#f0f0f0",
+    "bg-sink": "#e0e0e0",
+    "bg-spotlight": "#ffffff",
+    "energy-primary": "#0066cc",
+    "energy-secondary": "#99ccff",
+    "border-highlight": "#cccccc",
+    "border-shadow": "#bbbbbb",
+    "text-main": "#000000",
+    "text-dim": "#666666",
+    "text-mute": "#999999",
+    "color-premium": "#ffcc00",
+    "color-system": "#cc00ff",
+    "color-success": "#00cc66",
+    "color-error": "#ff0033"
+  }
+}
+```
+
+Implementation: Pass this object to voidEngine.registerTheme(id, data) and the system will render it instantly.

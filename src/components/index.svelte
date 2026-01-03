@@ -18,12 +18,11 @@
   ];
 
   const scaleLevels = [
-    { label: 'XS', value: 0.75, name: 'Minimal' },
-    { label: 'S', value: 0.85, name: 'Compact' },
+    { label: 'XS', value: 0.85, name: 'Minimal' },
+    { label: 'S', value: 0.925, name: 'Compact' },
     { label: 'M', value: 1.0, name: 'Standard' },
-    { label: 'L', value: 1.25, name: 'Large' },
-    { label: 'XL', value: 1.5, name: 'Extra' },
-    { label: 'MAX', value: 2.0, name: 'Maximum' },
+    { label: 'L', value: 1.125, name: 'Large' },
+    { label: 'XL', value: 1.25, name: 'Extra' },
   ];
 
   const densityOptions = [

@@ -13,22 +13,22 @@
 
 // Size logic validated for responsive readability.
 $font-scale: (
-  // 16px -> 16.8px
-  'body': clamp(1rem, 1.5vw, 1.05rem),
-  // 14px -> 16px
-  'small': clamp(0.875rem, 1.2vw, 1rem),
-  // 12px -> 14px
-  'caption': clamp(0.75rem, 1vw, 0.875rem),
-  // 24px -> 40px (Mobile-friendly)
-  'h1': clamp(1.5rem, 3vw, 2.5rem),
-  // 28px -> 48px
-  'h2': clamp(1.75rem, 4vw, 3rem),
-  // 24px -> 40px
-  'h3': clamp(1.5rem, 3vw, 2.5rem),
-  // 20px -> 24px
-  'h4': clamp(1.25rem, 2.5vw, 1.5rem),
-  // 18px -> 20px
-  'h5': clamp(1.125rem, 1.5vw, 1.25rem)
+  // Mobile: 14px (0.875rem) -> Desktop: 18px (1.125rem)
+  'body': clamp(0.875rem, 0.8rem + 0.5vw, 1.125rem),
+  // Mobile: 12px -> Desktop: 16px
+  'small': clamp(0.75rem, 0.7rem + 0.3vw, 1rem),
+  // Mobile: 11px -> Desktop: 14px
+  'caption': clamp(0.6875rem, 0.65rem + 0.25vw, 0.875rem),
+  // Mobile: 32px -> Desktop: 56px (High Contrast Hero)
+  'h1': clamp(2rem, 1.5rem + 3vw, 3.5rem),
+  // Mobile: 24px -> Desktop: 40px
+  'h2': clamp(1.5rem, 1.25rem + 2vw, 2.5rem),
+  // Mobile: 20px -> Desktop: 32px
+  'h3': clamp(1.25rem, 1.1rem + 1.5vw, 2rem),
+  // Mobile: 18px -> Desktop: 24px
+  'h4': clamp(1.125rem, 1rem + 1vw, 1.5rem),
+  // Mobile: 16px -> Desktop: 20px
+  'h5': clamp(1rem, 0.95rem + 0.5vw, 1.25rem)
 );
 
 // Weight Logic (Graduated hierarchy)

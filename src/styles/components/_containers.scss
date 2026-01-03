@@ -194,8 +194,9 @@
 
   // 2. DESKTOP (Side-by-Side)
   @include respond-up(small-desktop) {
-    // 10rem is tighter than 14rem, matches your screenshot better
-    grid-template-columns: 10rem 1fr;
+    // 10rem = 40 units (40 * 0.25rem = 10rem)
+    // We multiply by var(--density, 1) so this width breathes with the user settings.
+    grid-template-columns: calc(40 * var(--unit) * var(--density, 1)) 1fr;
     gap: var(--space-lg);
   }
 

@@ -53,6 +53,10 @@ html {
   padding-block: 0;
   overflow-x: hidden;
 
+  // Ensure fluid math is respected on mobile rotation
+  -webkit-text-size-adjust: 100%;
+  text-size-adjust: 100%;
+
   background-color: var(--bg-canvas);
   background-image: radial-gradient(
     circle at 50% 0%,
@@ -178,13 +182,6 @@ hr {
   background: var(--energy-secondary);
   opacity: 0.3;
   margin: 1.5rem 0;
-}
-
-// Mobile Reset
-@include mobile-only {
-  :root {
-    --text-scale: 1 !important;
-  }
 }
 
 /* =========================================

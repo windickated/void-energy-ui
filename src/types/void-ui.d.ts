@@ -54,12 +54,17 @@ interface VoidThemeConfig {
 }
 
 interface VoidThemeDefinition extends VoidThemeConfig {
-  palette: Partial<VoidPalette>; // Partial allows overriding specific colors
+  id?: string; // Internal ID (e.g., 'collaborator-v1')
+  label?: string; // Human readable name (e.g., "Brand X")
+  palette: VoidPalette; // Strict palette (must provide all base colors)
   fonts?: Array<{
     name: string;
     url: string;
   }>;
 }
+
+// The shape of our Runtime Registry
+type ThemeRegistry = Record<string, VoidThemeDefinition>;
 
 // ==========================================================================
 // 3. COMPONENT: TOASTS
