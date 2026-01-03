@@ -65,26 +65,74 @@ export class VoidEngine {
   // --- ACTIONS ---
 
   // Registers a theme payload from an API source.
-  registerTheme(id: string, definition: VoidThemeDefinition) {
-    if (!definition.physics || !definition.mode || !definition.palette) {
-      console.error(`Void: Invalid theme definition for ${id}`);
+
+  /**
+   * Registers a theme with "Safety Merge" logic.
+   * If the incoming theme is missing keys, we fill gaps with the Default Void theme.
+   */
+  registerTheme(id: string, definition: Partial<VoidThemeDefinition>) {
+    console.group(`Void: Registering Atmosphere "${id}"`);
+
+    // A. THE SAFETY NET
+    // We grab the "Void" theme from our static registry to use as a base.
+    const baseTheme = this.registry[DEFAULTS.ATMOSPHERE];
+
+    if (!baseTheme) {
+      console.error('CRITICAL: Default Void theme missing from registry.');
+      console.groupEnd();
       return;
     }
 
-    // Inject into the reactive registry
-    this.registry[id] = { ...definition, id };
+    // B. THE PARTIAL MERGE (The Fix)
+    // We strictly reconstruct the object to ensure structural integrity.
+    const safeTheme: VoidThemeDefinition = {
+      // 1. Metadata: Fallback to base if missing
+      id: id,
+      mode: definition.mode || baseTheme.mode || 'dark',
+      physics: definition.physics || baseTheme.physics || 'glass',
 
-    // This ensures that next time the user reloads, we have the data instantly.
-    if (typeof localStorage !== 'undefined') {
-      // We read existing cache, add new theme, and save back
-      const cache = JSON.parse(
-        localStorage.getItem('void_theme_cache') || '{}',
+      // 2. Palette: Deep Merge (Crucial!)
+      // This ensures that if they miss 'bg-canvas', we use the Void one.
+      palette: {
+        ...baseTheme.palette, // Lay the foundation
+        ...(definition.palette || {}), // Paint the override
+      },
+
+      // 3. Fonts: Optional, so we just pass what we have
+      fonts: definition.fonts || [],
+    };
+
+    // C. VALIDATION REPORT (Optional but helpful for debugging)
+    const missingKeys = Object.keys(baseTheme.palette).filter(
+      (key) => !definition.palette || !(key in definition.palette),
+    );
+
+    if (missingKeys.length > 0) {
+      console.warn(
+        `Void: Theme "${id}" incomplete. Auto-filled ${missingKeys.length} missing keys:`,
+        missingKeys,
       );
-      cache[id] = definition;
-      localStorage.setItem('void_theme_cache', JSON.stringify(cache));
+    } else {
+      console.log('Void: Theme definition valid.');
     }
 
-    console.log(`Void: Registered atmosphere "${id}"`);
+    // D. COMMIT TO STATE
+    this.registry[id] = safeTheme;
+
+    // E. PERSIST TO CACHE (Backpack)
+    if (typeof localStorage !== 'undefined') {
+      try {
+        const cache = JSON.parse(
+          localStorage.getItem('void_theme_cache') || '{}',
+        );
+        cache[id] = safeTheme; // Save the SANITIZED version, not the raw input
+        localStorage.setItem('void_theme_cache', JSON.stringify(cache));
+      } catch (e) {
+        console.warn('Void: Cache Save Failed', e);
+      }
+    }
+
+    console.groupEnd();
   }
 
   setAtmosphere(name: string) {
