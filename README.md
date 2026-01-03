@@ -14,35 +14,56 @@ Every pixel on screen is calculated by the intersection of three layers:
 
 Note on Customization: While these layers are distinct in code, they are coupled in the user experience. We treat Atmospheres as Strict Presets to ensure visual integrity. See The Law of Immutability below.
 
-## 🛠 Developer Workflow
+### The Law of Immutability
+In the Void Energy system, **Atmospheres are strict presets.** * **User Choice:** Users select an **Atmosphere** (e.g., "Void", "Paper", "Terminal").
+* **System Enforced:** The Atmosphere dictates the **Physics** and **Mode**.
+    * *Example:* You cannot have "Void" (Cyberpunk) in "Light Mode".
+    * *Example:* You cannot have "Paper" (Flat) with "Glass" physics.
 
-### 1. The Single Source of Truth
-We utilize a **Token-First** architecture. You do **not** edit SCSS theme files manually.
+**Why?** CoNexus is a narrative platform. The visual rendering engine is part of the storytelling. Breaking the physics of a theme breaks the immersion of the story. We provide distinct themes to cover accessibility needs (e.g., "Focus" for high contrast), but we do not allow mixing and matching of Triad layers by the end-user.
 
-* **Logic Core:** [`src/config/design-tokens.ts`](./src/config/design-tokens.ts)
-* **Command:** `npm run build:tokens`
+## ⚠️ ARCHITECTURE & DISCIPLINE (READ BEFORE CODING)
 
-This command generates:
-* `src/styles/config/_generated-themes.scss` (The Paint)
-* `src/config/void-registry.json` (The Brain)
+This project uses a strict **Hybrid Protocol** to manage the complexity of the Void Engine. 
+To keep maintenance low for our small team, you must follow these rules.
 
-### 2. Syntax & Usage
-We use a **Hybrid Protocol**:
+### 1. The Separation of Concerns (Hybrid Protocol)
+We separate **Layout** (Geometry) from **Materials** (Physics).
 
-* **Layout (Tailwind):** Use standard utilities for geometry.
-    * ✅ `p-md`, `gap-lg`, `flex`, `hidden tablet:block`
-    * ❌ `padding: 20px` (Breaks the Density Engine)
-* **Materials (Void SCSS):** Use component classes for physics.
-    * ✅ `.surface-glass`, `.btn-cta`, `.text-primary`
-    * ❌ `bg-blue-500` (Breaks the Atmosphere Engine)
+* **HTML/Svelte (`.svelte`, `.astro`):** * Use **Tailwind** for Layout, Spacing, and Sizing.
+    * ✅ `flex flex-col gap-md p-lg w-full`
+    * ❌ `<div style="margin-top: 20px">` (Breaks Density Engine)
+    * ❌ `.my-custom-wrapper { margin: 20px }` (SCSS Layout Bleed)
+
+* **SCSS (`src/styles/**/*.scss`):**
+    * Use **SCSS** for Visuals, Physics, and Complex States.
+    * ✅ `.card-glass { @include glass-float; }`
+    * ❌ `.card-glass { width: 300px; margin-bottom: 20px; }` (Layout Bleed)
+
+### 2. The Law of Tokens
+* **Never hardcode pixels or colors.**
+* All spacing must use semantic tokens (`gap-md`, `p-sm`) to respect the User Density Engine.
+* All colors must use semantic variables (`bg-canvas`, `energy-primary`) to respect the Atmosphere Engine.
 
 ### 3. The Laws of Physics
-
 | Concept | Rule |
 | :--- | :--- |
 | **Light is Signal** | We do not use shadows for contrast; we use **Glows**. If it glows, it is interactive. |
 | **Depth is Logic** | **Float (+Z):** Cards/Modals (Glass). **Sink (-Z):** Inputs/Wells (Void Depth). |
 | **Atmosphere is Context** | The UI adapts to the story. Switching from `void` to `paper` changes physics instantly. |
+
+### 4. The Single Source of Truth
+* **DO NOT** edit `_generated-themes.scss` or `void-registry.json`.
+* Edit `src/config/design-tokens.ts` and run `npm run build:tokens`.
+
+### 5. The State Protocol
+* **State lives in the DOM.** Do not use classes like `.active` or `.show`.
+* Use semantic attributes: `[data-state="open"]`, `[aria-pressed="true"]`.
+* This ensures CSS transitions (Enter/Exit) trigger correctly via the Physics Engine.
+
+### 6. Critical Hydration
+* The `ThemeScript` must run synchronously in `<head>`. 
+* Deferring this script will cause a FOUC (Flash of Unstyled Content) where the default Void theme flashes before user preferences load.
 
 ## 🧞 Commands
 
@@ -71,14 +92,6 @@ We use a **Hybrid Protocol**:
 └── scripts/
     └── generate-tokens.ts        <-- The Compiler
 ```
-
-### 4. The Law of Immutability
-In the Void Energy system, **Atmospheres are strict presets.** * **User Choice:** Users select an **Atmosphere** (e.g., "Void", "Paper", "Terminal").
-* **System Enforced:** The Atmosphere dictates the **Physics** and **Mode**.
-    * *Example:* You cannot have "Void" (Cyberpunk) in "Light Mode".
-    * *Example:* You cannot have "Paper" (Flat) with "Glass" physics.
-
-**Why?** CoNexus is a narrative platform. The visual rendering engine is part of the storytelling. Breaking the physics of a theme breaks the immersion of the story. We provide distinct themes to cover accessibility needs (e.g., "Focus" for high contrast), but we do not allow mixing and matching of Triad layers by the end-user.
 
 ## 🔌 API Integration (Future Proofing)
 

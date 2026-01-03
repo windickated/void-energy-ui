@@ -11,9 +11,12 @@ export default {
     container: false, // We use a custom .container class in SCSS
   },
 
+  // ⚠️ ARCHITECTURE WARNING:
+  // This configuration is STRICTLY mapped to `src/config/design-tokens.ts`.
+  // Do not add custom colors or spacing here.
+  // If you need a new value, add it to the Design Tokens and rebuild.
   theme: {
     // 2. HARDCODED SCREENS (Breakpoints)
-    // Matches src/config/design-tokens.ts
     screens: {
       mobile: '0px',
       tablet: '768px',

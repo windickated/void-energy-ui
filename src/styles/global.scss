@@ -30,6 +30,25 @@
       - `p-md` = `var(--space-md)` (Dynamic Math, NOT fixed pixels).
       - Spacing scales automatically with the User Density setting (0.75x - 1.25x).
 
+   This architecture relies on strict separation of Layout (Tailwind) and 
+   Materials (SCSS). Breaking this rule creates specificity wars.
+
+   PROTOCOL A: THE HYBRID RULE
+   --------------------------------------------------------------------------
+   1. LAYOUT IS TAILWIND: 
+      - Use `flex`, `grid`, `gap-md`, `p-lg`, `w-full` in your HTML.
+      - DO NOT write layout rules (margin, padding, width, display) in these SCSS files
+        unless strictly required for internal component mechanics (e.g. ::before).
+   
+   2. MATERIAL IS SCSS:
+      - Use SCSS classes (`.surface-glass`, `.btn-cta`) for Visual Physics.
+      - Includes: Backgrounds, Borders, Shadows, Blurs, Filters, Z-Index.
+
+   PROTOCOL B: THE TOKEN RULE
+   --------------------------------------------------------------------------
+   - NO MAGIC PIXELS. Use `var(--space-md)` or Tailwind `p-md`.
+   - NO MAGIC COLORS. Use `var(--energy-primary)` or Tailwind `text-primary`.
+
    --------------------------------------------------------------------------
    1. THE ATMOSPHERES (Logic Layer)
    --------------------------------------------------------------------------
